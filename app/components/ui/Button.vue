@@ -86,9 +86,7 @@ const classes = computed(() => [
     <!-- The spinner replaces the label rather than sitting beside it, so the
          button never changes width mid-action. -->
     <span v-if="loading" class="absolute inset-0 grid place-items-center" aria-hidden="true">
-      <span
-        class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
-      />
+      <span class="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
     </span>
 
     <span

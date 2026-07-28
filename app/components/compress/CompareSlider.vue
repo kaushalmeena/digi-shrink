@@ -98,7 +98,7 @@ function onFrameClick(event: MouseEvent): void {
     <div class="flex flex-wrap items-center gap-2">
       <UiSegmented v-model="view" :options="VIEWS" aria-label="Comparison layout" size="sm" />
       <div class="ml-auto flex items-center gap-2">
-        <Maximize2 class="h-3.5 w-3.5 text-ink-soft" aria-hidden="true" />
+        <Maximize2 class="size-3.5 text-ink-soft" aria-hidden="true" />
         <UiSegmented v-model="zoom" :options="ZOOMS" aria-label="Zoom level" size="sm" />
       </div>
     </div>
@@ -107,7 +107,7 @@ function onFrameClick(event: MouseEvent): void {
       <!-- ------------------------------------------------------ Split view -->
       <div v-if="view === 'split'" key="split" class="space-y-3">
         <div
-          class="relative overflow-auto overscroll-contain rounded-xl edge bg-surface-2 pop-2 pop-soft"
+          class="relative overflow-auto overscroll-contain rounded-xl bg-surface-2 pop-2 edge pop-soft"
           :class="scale === 0 && 'overflow-hidden'"
         >
           <div
@@ -127,7 +127,7 @@ function onFrameClick(event: MouseEvent): void {
             <img
               :src="afterSrc"
               :alt="`${alt} — ${afterLabel}`"
-              class="absolute inset-0 h-full w-full object-contain"
+              class="absolute inset-0 size-full object-contain"
               draggable="false"
             />
 
@@ -135,19 +135,19 @@ function onFrameClick(event: MouseEvent): void {
             <img
               :src="beforeSrc"
               :alt="`${alt} — ${beforeLabel}`"
-              class="absolute inset-0 h-full w-full object-contain"
+              class="absolute inset-0 size-full object-contain"
               :style="{ clipPath: `inset(0 ${100 - position}% 0 0)` }"
               draggable="false"
             />
 
             <!-- Corner labels, each pinned to its own side. -->
             <span
-              class="pointer-events-none absolute top-2 left-2 rounded-full edge bg-surface px-2.5 py-1 font-display text-2xs font-bold pop-1"
+              class="pointer-events-none absolute top-2 left-2 rounded-full bg-surface px-2.5 py-1 font-display text-2xs font-bold pop-1 edge"
             >
               {{ beforeLabel }}
             </span>
             <span
-              class="pointer-events-none absolute top-2 right-2 rounded-full edge bg-accent px-2.5 py-1 font-display text-2xs font-bold text-on-accent pop-1"
+              class="pointer-events-none absolute top-2 right-2 rounded-full bg-accent px-2.5 py-1 font-display text-2xs font-bold text-on-accent pop-1 edge"
             >
               {{ afterLabel }}
             </span>
@@ -160,14 +160,14 @@ function onFrameClick(event: MouseEvent): void {
             />
             <button
               type="button"
-              class="absolute top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize touch-none place-items-center rounded-full edge bg-surface pop-2 transition-transform duration-200 ease-(--ease-bounce) hover:scale-110 active:scale-95"
+              class="absolute top-1/2 grid size-11 -translate-1/2 cursor-ew-resize touch-none place-items-center rounded-full bg-surface pop-2 transition-transform duration-200 ease-bounce edge hover:scale-110 active:scale-95"
               :style="{ left: `${position}%` }"
               aria-label="Drag to move the comparison divider"
               @pointerdown="onHandleDown"
               @pointermove="onHandleMove"
               @click.stop
             >
-              <SplitSquareHorizontal class="h-5 w-5 text-ink" />
+              <SplitSquareHorizontal class="size-5 text-ink" />
             </button>
           </div>
         </div>
@@ -195,7 +195,7 @@ function onFrameClick(event: MouseEvent): void {
           class="space-y-2"
         >
           <div
-            class="overflow-auto rounded-xl edge bg-surface-2 pop-2 pop-soft"
+            class="overflow-auto rounded-xl bg-surface-2 pop-2 edge pop-soft"
             :class="scale === 0 && 'overflow-hidden'"
           >
             <div
@@ -210,7 +210,7 @@ function onFrameClick(event: MouseEvent): void {
               <img
                 :src="pane.src"
                 :alt="`${alt} — ${pane.label}`"
-                class="absolute inset-0 h-full w-full object-contain"
+                class="absolute inset-0 size-full object-contain"
                 draggable="false"
               />
             </div>
@@ -218,7 +218,7 @@ function onFrameClick(event: MouseEvent): void {
 
           <figcaption class="text-center">
             <span
-              class="inline-block rounded-full edge px-2.5 py-1 font-display text-2xs font-bold pop-1"
+              class="inline-block rounded-full px-2.5 py-1 font-display text-2xs font-bold pop-1 edge"
               :class="pane.tone"
             >
               {{ pane.label }}
@@ -229,7 +229,7 @@ function onFrameClick(event: MouseEvent): void {
     </Transition>
 
     <p class="flex items-center gap-1.5 text-2xs text-ink-soft">
-      <Columns2 class="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+      <Columns2 class="size-3.5 shrink-0" aria-hidden="true" />
       Zoom to 200% or more to judge fine detail — most compression artefacts are invisible at fit.
     </p>
   </div>

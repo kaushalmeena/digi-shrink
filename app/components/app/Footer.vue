@@ -37,12 +37,12 @@ const since = computed(() => {
       <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
         <div class="max-w-sm space-y-3">
           <AppLogo size="sm" />
-          <p class="text-xs leading-relaxed text-ink-soft">
+          <p class="text-xs/relaxed text-ink-soft">
             A local image compressor. Your files are decoded, resized and re-encoded by WebAssembly
             running in this tab — there is no server, no upload and no account.
           </p>
           <p class="flex items-center gap-1.5 text-2xs font-semibold text-ink-soft">
-            <HardDrive class="h-3.5 w-3.5" />
+            <HardDrive class="size-3.5" />
             Works fully offline once installed
           </p>
         </div>
@@ -70,7 +70,7 @@ const since = computed(() => {
       </div>
 
       <div
-        class="mt-8 flex flex-col gap-3 border-t-2 border-(--color-line) pt-6 text-2xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
+        class="mt-8 flex flex-col gap-3 border-t-2 border-line pt-6 text-2xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
       >
         <p>Built with Nuxt, Tailwind and WebAssembly codecs from the Squoosh project.</p>
 
@@ -83,7 +83,7 @@ const since = computed(() => {
             rel="noopener noreferrer"
             class="inline-flex items-center gap-1.5 font-bold transition-colors hover:text-accent"
           >
-            <component :is="link.icon" class="h-3.5 w-3.5" />
+            <component :is="link.icon" class="size-3.5" />
             {{ link.label }}
           </a>
         </nav>

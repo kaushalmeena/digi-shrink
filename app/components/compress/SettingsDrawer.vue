@@ -114,8 +114,8 @@ function applyToFinished(): void {
         <!-- Auto mode: pick which formats get raced against each other. -->
         <Transition name="collapse">
           <div v-if="settings.format === 'auto'" class="grid">
-            <div class="rounded-xl edge-soft bg-surface-2 p-4">
-              <p class="mb-3 text-xs leading-snug text-ink-soft">
+            <div class="rounded-xl bg-surface-2 p-4 edge-soft">
+              <p class="mb-3 text-xs/snug text-ink-soft">
                 Each image is encoded to every ticked format and the smallest result wins. More
                 formats means better results and a slower run.
               </p>
@@ -190,11 +190,7 @@ function applyToFinished(): void {
           </div>
 
           <!-- Lossless -->
-          <p
-            v-else
-            key="lossless"
-            class="rounded-lg bg-mint-wash p-3 text-xs leading-snug text-ink"
-          >
+          <p v-else key="lossless" class="rounded-lg bg-mint-wash p-3 text-xs/snug text-ink">
             Not a single pixel changes. Savings come from better compression alone, so they're
             modest on photos and large on screenshots, logos and flat colour.
           </p>
@@ -213,7 +209,7 @@ function applyToFinished(): void {
 
         <Transition name="collapse">
           <div v-if="settings.resize.enabled" class="grid">
-            <div class="space-y-4 rounded-xl edge-soft bg-surface-2 p-4">
+            <div class="space-y-4 rounded-xl bg-surface-2 p-4 edge-soft">
               <UiSegmented
                 v-model="settings.resize.mode"
                 :options="RESIZE_MODES"
@@ -321,7 +317,7 @@ function applyToFinished(): void {
           Encoder settings for {{ FORMAT_META[focusedFormat].encoder }}.
         </p>
 
-        <div class="space-y-4 rounded-xl edge-soft bg-surface-2 p-4">
+        <div class="space-y-4 rounded-xl bg-surface-2 p-4 edge-soft">
           <!-- JPEG -->
           <template v-if="focusedFormat === 'jpeg'">
             <UiField
@@ -490,14 +486,14 @@ function applyToFinished(): void {
       <section class="space-y-3">
         <h3 class="font-display text-base font-bold">Behaviour</h3>
 
-        <div class="space-y-3 rounded-xl edge-soft bg-surface-2 p-4">
+        <div class="space-y-3 rounded-xl bg-surface-2 p-4 edge-soft">
           <UiSwitch
             v-model="settings.keepIfLarger"
             label="Keep the original if it's already smaller"
             hint="Re-encoding a well-optimised image can make it bigger. With this on, we hand back the original and tell you."
           />
 
-          <p class="border-t-2 border-(--color-line) pt-3 text-2xs leading-relaxed text-ink-soft">
+          <p class="border-t-2 border-line pt-3 text-2xs/relaxed text-ink-soft">
             <strong class="text-ink">Metadata is always removed.</strong>
             Re-encoding goes through raw pixels, so EXIF, GPS coordinates and camera details cannot
             survive the round trip. That's deliberate.
@@ -509,7 +505,7 @@ function applyToFinished(): void {
     <template #footer>
       <div class="flex items-center gap-2">
         <UiButton variant="ghost" size="sm" @click="reset">
-          <RotateCcw class="h-4 w-4" />
+          <RotateCcw class="size-4" />
           Reset
         </UiButton>
 
@@ -520,7 +516,7 @@ function applyToFinished(): void {
             size="sm"
             @click="applyToFinished"
           >
-            <Wand2 class="h-4 w-4" />
+            <Wand2 class="size-4" />
             Re-run all
           </UiButton>
 

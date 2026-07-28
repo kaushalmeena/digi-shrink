@@ -96,7 +96,7 @@ async function download(): Promise<void> {
         <div
           v-for="row in STAT_ROWS"
           :key="row.label"
-          class="rounded-xl edge-soft p-3"
+          class="rounded-xl p-3 edge-soft"
           :class="row.highlight ? 'bg-mint-wash' : 'bg-surface-2'"
         >
           <dt class="eyebrow text-ink-soft">{{ row.label }}</dt>
@@ -119,11 +119,8 @@ async function download(): Promise<void> {
       />
 
       <!-- Honest fallback rather than a broken image frame. -->
-      <div
-        v-else
-        class="flex items-start gap-3 rounded-xl edge-soft bg-sun-wash p-4 text-xs leading-snug"
-      >
-        <ImageOff class="mt-0.5 h-4 w-4 shrink-0" />
+      <div v-else class="flex items-start gap-3 rounded-xl bg-sun-wash p-4 text-xs/snug edge-soft">
+        <ImageOff class="mt-0.5 size-4 shrink-0" />
         <p>
           This browser can't display the original
           <strong>{{ item.originalType.replace('image/', '').toUpperCase() }}</strong>
@@ -132,7 +129,7 @@ async function download(): Promise<void> {
         </p>
       </div>
 
-      <div class="border-t-2 border-(--color-line) pt-6">
+      <div class="border-t-2 border-line pt-6">
         <CompressFormatLab :item="item" />
       </div>
     </div>
@@ -148,7 +145,7 @@ async function download(): Promise<void> {
         </p>
 
         <UiButton v-if="item?.result" size="sm" @click="download">
-          <Download class="h-4 w-4" />
+          <Download class="size-4" />
           Download
         </UiButton>
       </div>

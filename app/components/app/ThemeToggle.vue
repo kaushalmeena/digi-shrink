@@ -35,15 +35,15 @@ const NEXT_LABEL = {
       :title="`Theme: ${mode}`"
       @click="cycle"
     >
-      <span class="relative grid h-4 w-4 place-items-center overflow-hidden">
+      <span class="relative grid size-4 place-items-center overflow-hidden">
         <Transition name="roll" mode="out-in">
-          <component :is="ICONS[mode]" :key="mode" class="h-4 w-4 stroke-2" />
+          <component :is="ICONS[mode]" :key="mode" class="size-4 stroke-2" />
         </Transition>
       </span>
     </UiButton>
 
     <template #fallback>
-      <span class="h-9 w-9 shrink-0 rounded-full edge-soft bg-surface-2" aria-hidden="true" />
+      <span class="size-9 shrink-0 rounded-full bg-surface-2 edge-soft" aria-hidden="true" />
     </template>
   </ClientOnly>
 </template>

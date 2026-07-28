@@ -54,13 +54,13 @@ const fill = computed(() => {
       '[&::-moz-range-track]:border-(--color-outline) [&::-moz-range-track]:bg-surface-2',
       '[&::-moz-range-progress]:h-3 [&::-moz-range-progress]:rounded-full [&::-moz-range-progress]:bg-accent',
       // Thumb — a sticker disc that lifts on hover, like every other control.
-      '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:w-6',
+      '[&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none',
       '[&::-webkit-slider-thumb]:-mt-2.5 [&::-webkit-slider-thumb]:rounded-full',
       '[&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-(--color-outline)',
       '[&::-webkit-slider-thumb]:bg-surface [&::-webkit-slider-thumb]:shadow-[2px_2px_0_0_var(--color-shade)]',
       '[&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-150',
       'hover:[&::-webkit-slider-thumb]:scale-110 active:[&::-webkit-slider-thumb]:scale-95',
-      '[&::-moz-range-thumb]:h-6 [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:rounded-full',
+      '[&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:rounded-full',
       '[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-(--color-outline)',
       '[&::-moz-range-thumb]:bg-surface [&::-moz-range-thumb]:shadow-[2px_2px_0_0_var(--color-shade)]',
     ]"

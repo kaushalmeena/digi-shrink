@@ -49,7 +49,7 @@ async function run(): Promise<void> {
 
       <div class="min-w-0 flex-1">
         <h3 class="font-display text-base font-bold">Format lab</h3>
-        <p class="mt-0.5 text-xs leading-snug text-ink-soft">
+        <p class="mt-0.5 text-xs/snug text-ink-soft">
           Encode this image to all four formats at
           {{ settings.mode === 'lossless' ? 'lossless' : `quality ${settings.quality}` }} and
           compare the real numbers.
@@ -65,22 +65,22 @@ async function run(): Promise<void> {
       block
       @click="run"
     >
-      <FlaskConical class="h-4 w-4" />
+      <FlaskConical class="size-4" />
       Run the comparison
     </UiButton>
 
     <Transition name="collapse">
       <div v-if="ranked.length > 0" class="grid">
         <div class="overflow-x-auto rounded-xl edge-soft">
-          <table class="w-full min-w-[26rem] border-collapse text-left text-xs">
+          <table class="w-full min-w-104 border-collapse text-left text-xs">
             <thead>
               <tr class="bg-surface-2">
-                <th scope="col" class="eyebrow px-3 py-2.5 text-ink-soft">Format</th>
-                <th scope="col" class="eyebrow px-3 py-2.5 text-right text-ink-soft">Size</th>
-                <th scope="col" class="eyebrow px-3 py-2.5 text-right text-ink-soft">
+                <th scope="col" class="px-3 py-2.5 eyebrow text-ink-soft">Format</th>
+                <th scope="col" class="px-3 py-2.5 text-right eyebrow text-ink-soft">Size</th>
+                <th scope="col" class="px-3 py-2.5 text-right eyebrow text-ink-soft">
                   vs original
                 </th>
-                <th scope="col" class="eyebrow px-3 py-2.5 text-right text-ink-soft">Time</th>
+                <th scope="col" class="px-3 py-2.5 text-right eyebrow text-ink-soft">Time</th>
               </tr>
             </thead>
 
@@ -88,14 +88,14 @@ async function run(): Promise<void> {
               <tr
                 v-for="candidate in ranked"
                 :key="candidate.format"
-                class="border-t-2 border-(--color-line) transition-colors"
+                class="border-t-2 border-line transition-colors"
                 :class="candidate === winner ? 'bg-mint-wash' : 'bg-surface'"
               >
                 <th scope="row" class="px-3 py-2.5 font-bold text-ink">
                   <span class="flex items-center gap-1.5">
                     <Trophy
                       v-if="candidate === winner"
-                      class="h-3.5 w-3.5 shrink-0 text-mint"
+                      class="size-3.5 shrink-0 text-mint"
                       aria-label="Smallest"
                     />
                     {{ FORMAT_META[candidate.format].label }}
@@ -129,7 +129,7 @@ async function run(): Promise<void> {
     </Transition>
 
     <div v-if="ranked.length > 0" class="flex items-center gap-2">
-      <p v-if="winner" class="flex-1 text-2xs leading-snug text-ink-soft">
+      <p v-if="winner" class="flex-1 text-2xs/snug text-ink-soft">
         <strong class="text-ink">{{ FORMAT_META[winner.format].label }}</strong> wins for this
         image.
         {{ FORMAT_META[winner.format].blurb }}

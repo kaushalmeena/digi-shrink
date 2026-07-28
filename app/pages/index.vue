@@ -127,7 +127,7 @@ const STEPS = [
         <div class="relative z-10 mx-auto max-w-2xl text-center">
           <!-- Tilted sticker banner, straight out of the design system. -->
           <p
-            class="eyebrow inline-block -rotate-1 rounded-lg edge bg-sun px-3 py-1.5 text-[#1e293b] pop-1"
+            class="inline-block -rotate-1 rounded-lg bg-sun px-3 py-1.5 eyebrow text-[#1e293b] pop-1 edge"
           >
             No uploads · No accounts · No limits
           </p>
@@ -137,7 +137,7 @@ const STEPS = [
             <span class="marker-underline [--mark-c:var(--color-berry)]">giving them away</span>
           </h1>
 
-          <p class="mx-auto mt-5 max-w-xl text-base leading-relaxed text-ink-soft">
+          <p class="mx-auto mt-5 max-w-xl text-base/relaxed text-ink-soft">
             A batch image compressor that runs entirely on your own device. Real WebAssembly codecs,
             an honest report of what you saved, and a before/after slider so you can see exactly
             what you traded.
@@ -171,7 +171,7 @@ const STEPS = [
               <h2 id="trust-heading" class="text-2xl sm:text-3xl">
                 Private by architecture, not by promise
               </h2>
-              <p class="mt-3 text-sm leading-relaxed text-ink-soft">
+              <p class="mt-3 text-sm/relaxed text-ink-soft">
                 Most online compressors ask you to upload your photos to someone else's computer.
                 This one can't, because it has nowhere to send them.
               </p>
@@ -184,7 +184,7 @@ const STEPS = [
               Columns only ever form a single row, so the wide gap costs nothing
               there.
             -->
-            <div class="stagger mt-8 grid gap-x-5 gap-y-10 md:grid-cols-3 md:gap-y-5">
+            <div class="mt-8 grid stagger gap-x-5 gap-y-10 md:grid-cols-3 md:gap-y-5">
               <UiCard
                 v-for="(point, index) in TRUST_POINTS"
                 :key="point.title"
@@ -207,7 +207,7 @@ const STEPS = [
                 </UiIconBadge>
 
                 <h3 class="font-display text-lg font-bold">{{ point.title }}</h3>
-                <p class="mt-2 text-sm leading-relaxed text-ink-soft">{{ point.body }}</p>
+                <p class="mt-2 text-sm/relaxed text-ink-soft">{{ point.body }}</p>
               </UiCard>
             </div>
           </section>
@@ -217,21 +217,21 @@ const STEPS = [
               <h2 id="steps-heading" class="text-2xl sm:text-3xl">Three steps, no sign-up</h2>
             </div>
 
-            <ol class="stagger mt-8 grid gap-5 md:grid-cols-3">
+            <ol class="mt-8 grid stagger gap-5 md:grid-cols-3">
               <li
                 v-for="(step, index) in STEPS"
                 :key="step.title"
-                class="relative rounded-2xl edge bg-surface p-5 pop-2 pop-soft"
+                class="relative rounded-2xl bg-surface p-5 pop-2 edge pop-soft"
                 :style="{ '--stagger-index': index }"
               >
                 <span
-                  class="grid h-10 w-10 place-items-center rounded-full edge bg-accent font-display text-base font-extrabold text-on-accent pop-1"
+                  class="grid size-10 place-items-center rounded-full bg-accent font-display text-base font-extrabold text-on-accent pop-1 edge"
                   aria-hidden="true"
                 >
                   {{ index + 1 }}
                 </span>
                 <h3 class="mt-4 font-display text-base font-bold">{{ step.title }}</h3>
-                <p class="mt-1.5 text-sm leading-relaxed text-ink-soft">{{ step.body }}</p>
+                <p class="mt-1.5 text-sm/relaxed text-ink-soft">{{ step.body }}</p>
               </li>
             </ol>
           </section>
@@ -271,7 +271,7 @@ const STEPS = [
 
                   <div class="min-w-0">
                     <dt class="font-display text-sm font-bold">{{ extra.label }}</dt>
-                    <dd class="mt-1 text-xs leading-relaxed text-ink-soft">{{ extra.body }}</dd>
+                    <dd class="mt-1 text-xs/relaxed text-ink-soft">{{ extra.body }}</dd>
                   </div>
                 </div>
               </dl>

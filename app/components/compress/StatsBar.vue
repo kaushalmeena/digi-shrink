@@ -73,8 +73,8 @@ const TILES = computed(() => [
         <div class="decor-layer pattern-dots opacity-50" aria-hidden="true" />
 
         <div class="relative z-10 flex items-center gap-5">
-          <div class="relative h-24 w-24 shrink-0">
-            <svg viewBox="0 0 100 100" class="h-full w-full -rotate-90" aria-hidden="true">
+          <div class="relative size-24 shrink-0">
+            <svg viewBox="0 0 100 100" class="size-full -rotate-90" aria-hidden="true">
               <circle
                 cx="50"
                 cy="50"
@@ -93,7 +93,7 @@ const TILES = computed(() => [
                 stroke-linecap="round"
                 :stroke-dasharray="RING"
                 :stroke-dashoffset="ringOffset"
-                class="transition-[stroke-dashoffset] duration-700 ease-(--ease-out-soft)"
+                class="transition-[stroke-dashoffset] duration-700 ease-out-soft"
               />
             </svg>
 
@@ -107,8 +107,8 @@ const TILES = computed(() => [
           </div>
 
           <div class="min-w-0">
-            <span class="eyebrow flex items-center gap-1.5 text-ink-soft">
-              <PiggyBank class="h-3.5 w-3.5" />
+            <span class="flex items-center gap-1.5 eyebrow text-ink-soft">
+              <PiggyBank class="size-3.5" />
               Total saved
             </span>
 
@@ -116,7 +116,7 @@ const TILES = computed(() => [
               <UiCountUp :value="stats.savedBytes" :format="formatBytes" />
             </p>
 
-            <p class="mt-2 text-xs leading-snug text-ink-soft">
+            <p class="mt-2 text-xs/snug text-ink-soft">
               from {{ formatBytes(stats.originalBytes) }} down to
               {{ formatBytes(stats.outputBytes) }}
             </p>
@@ -127,9 +127,9 @@ const TILES = computed(() => [
         <Transition name="collapse">
           <p
             v-if="stats.unchanged > 0"
-            class="relative z-10 mt-4 flex items-start gap-2 rounded-lg bg-sun-wash p-2.5 text-2xs leading-snug font-semibold text-ink"
+            class="relative z-10 mt-4 flex items-start gap-2 rounded-lg bg-sun-wash p-2.5 text-2xs/snug font-semibold text-ink"
           >
-            <ShieldCheck class="mt-px h-3.5 w-3.5 shrink-0" />
+            <ShieldCheck class="mt-px size-3.5 shrink-0" />
             {{ stats.unchanged }} image{{ stats.unchanged === 1 ? ' was' : 's were' }} already
             optimal — the original file was kept instead of a bigger re-encode.
           </p>
@@ -137,13 +137,13 @@ const TILES = computed(() => [
       </UiCard>
 
       <!-- Supporting tiles. -->
-      <div class="stagger grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+      <div class="grid stagger grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
         <UiCard
           v-for="(tile, index) in TILES"
           :key="tile.key"
           :depth="2"
           tone="soft"
-          class="!p-4"
+          class="p-4!"
           :style="{ '--stagger-index': index }"
         >
           <UiIconBadge :tone="tile.tone" size="sm" shape="squircle">
@@ -154,7 +154,7 @@ const TILES = computed(() => [
           <p class="mt-1 font-display text-xl leading-none font-extrabold" data-numeric>
             {{ tile.value }}
           </p>
-          <p class="mt-1.5 text-2xs leading-snug text-ink-soft">{{ tile.note }}</p>
+          <p class="mt-1.5 text-2xs/snug text-ink-soft">{{ tile.note }}</p>
         </UiCard>
       </div>
     </div>

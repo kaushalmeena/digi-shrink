@@ -26,7 +26,7 @@ const TONES = {
 
 <template>
   <div
-    class="w-full overflow-hidden rounded-full edge bg-surface-2"
+    class="w-full overflow-hidden rounded-full bg-surface-2 edge"
     :class="size === 'sm' ? 'h-2' : 'h-3.5'"
     role="progressbar"
     :aria-label="label"
@@ -36,7 +36,7 @@ const TONES = {
   >
     <div
       v-if="indeterminate"
-      class="h-full w-full pattern-stripes opacity-70"
+      class="size-full pattern-stripes opacity-70"
       :class="TONES[tone]"
       style="background-size: 200% 100%; animation: var(--animate-shimmer)"
     />

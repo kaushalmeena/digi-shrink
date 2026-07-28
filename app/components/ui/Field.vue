@@ -36,7 +36,7 @@ const hintId = computed(() => (props.hint && props.for ? `${props.for}-hint` : u
 
     <slot :hint-id="hintId" />
 
-    <p v-if="hint" :id="hintId" class="text-xs leading-snug text-ink-soft">
+    <p v-if="hint" :id="hintId" class="text-xs/snug text-ink-soft">
       {{ hint }}
     </p>
   </div>

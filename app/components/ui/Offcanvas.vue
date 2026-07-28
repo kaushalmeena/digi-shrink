@@ -130,7 +130,7 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
             v-if="open"
             ref="panel"
             tabindex="-1"
-            class="absolute flex flex-col bg-canvas border-(--color-outline) shadow-[-8px_0_0_0_var(--color-shade-soft)] outline-none"
+            class="absolute flex flex-col border-(--color-outline) bg-canvas shadow-[-8px_0_0_0_var(--color-shade-soft)] outline-none"
             :class="[POSITION[side], SIZE]"
           >
             <!-- Header: stays put while the body scrolls. -->
@@ -149,11 +149,11 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
                 aria-label="Close panel"
                 @click="open = false"
               >
-                <X class="h-4 w-4 stroke-3" />
+                <X class="size-4 stroke-3" />
               </UiButton>
             </header>
 
-            <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-5">
+            <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
               <slot />
             </div>
 

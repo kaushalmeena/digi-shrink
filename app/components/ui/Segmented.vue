@@ -89,7 +89,7 @@ function onKeydown(event: KeyboardEvent): void {
   <div
     ref="root"
     role="radiogroup"
-    class="relative edge bg-surface-2 p-1"
+    class="relative bg-surface-2 p-1 edge"
     :class="
       columns
         ? // A pill radius is half the container's height, so on a multi-row grid
@@ -105,7 +105,7 @@ function onKeydown(event: KeyboardEvent): void {
          directly, because a pill can't travel sensibly across wrapped rows. -->
     <span
       v-if="pill.ready"
-      class="absolute top-1 bottom-1 left-0 rounded-full bg-accent transition-[translate,width] duration-300 ease-(--ease-bounce)"
+      class="absolute inset-y-1 left-0 rounded-full bg-accent transition-[translate,width] duration-300 ease-bounce"
       :style="{ translate: `${pill.left}px 0`, width: `${pill.width}px` }"
       aria-hidden="true"
     />

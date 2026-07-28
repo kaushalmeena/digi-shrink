@@ -44,7 +44,7 @@ const SHAPES: ConfettiShape[] = [
 
 <template>
   <div
-    class="relative overflow-hidden rounded-3xl edge bg-surface transition-[background-color,box-shadow,transform] duration-300 ease-(--ease-bounce)"
+    class="relative overflow-hidden rounded-3xl bg-surface transition-[background-color,box-shadow,transform] duration-300 ease-bounce edge"
     :class="
       isDraggingOver
         ? 'scale-101 bg-accent-wash pop-4 pop-accent'
@@ -58,7 +58,7 @@ const SHAPES: ConfettiShape[] = [
     <!-- Dashed inner rule reads as "put something here" without a second border. -->
     <div
       class="pointer-events-none absolute inset-3 rounded-2xl border-2 border-dashed transition-colors duration-300"
-      :class="isDraggingOver ? 'border-accent' : 'border-(--color-line)'"
+      :class="isDraggingOver ? 'border-accent' : 'border-line'"
       aria-hidden="true"
     />
 
@@ -72,7 +72,7 @@ const SHAPES: ConfettiShape[] = [
         shape="squircle"
         outlined
         wiggle
-        class="transition-transform duration-300 ease-(--ease-bounce)"
+        class="transition-transform duration-300 ease-bounce"
         :class="isDraggingOver && 'scale-110 -rotate-6'"
       >
         <Layers v-if="isDraggingOver" />
@@ -87,22 +87,22 @@ const SHAPES: ConfettiShape[] = [
         </template>
       </h2>
 
-      <p v-if="!compact" class="mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
+      <p v-if="!compact" class="mt-3 max-w-md text-sm/relaxed text-ink-soft">
         JPEG, PNG, WebP, AVIF, GIF, BMP and HEIC. Drop a whole folder if you like — everything is
         processed right here in your browser.
       </p>
 
       <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
         <UiButton :size="compact ? 'md' : 'lg'" @click="pickFiles(ACCEPT_ATTRIBUTE)">
-          <FolderOpen class="h-4 w-4" />
+          <FolderOpen class="size-4" />
           Choose images
         </UiButton>
 
         <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-soft">
-          <ClipboardPaste class="h-3.5 w-3.5" />
+          <ClipboardPaste class="size-3.5" />
           or press
           <kbd
-            class="rounded-md border-2 border-(--color-line) bg-surface-2 px-1.5 py-0.5 font-mono text-2xs font-bold text-ink"
+            class="rounded-md border-2 border-line bg-surface-2 px-1.5 py-0.5 font-mono text-2xs font-bold text-ink"
           >
             {{ pasteKey }}V
           </kbd>

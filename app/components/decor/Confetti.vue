@@ -59,7 +59,7 @@ const TONE_CLASS: Record<Tone, string> = {
     >
       <svg
         viewBox="0 0 48 48"
-        class="h-full w-full"
+        class="size-full"
         fill="none"
         stroke="currentColor"
         stroke-width="3"

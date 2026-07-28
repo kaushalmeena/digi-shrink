@@ -26,13 +26,13 @@ const TONE_RING = {
       <DecorSquiggle tone="line" class="hidden h-2 flex-1 sm:block" />
     </div>
 
-    <div class="stagger grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+    <div class="grid stagger grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       <button
         v-for="(preset, index) in presets"
         :key="preset.id"
         type="button"
         :aria-pressed="activePresetId === preset.id"
-        class="group relative flex flex-col items-start gap-1 rounded-xl edge p-3 text-left sticker"
+        class="group relative flex sticker flex-col items-start gap-1 rounded-xl p-3 text-left edge"
         :class="[
           TONE_RING[preset.accent],
           // Both background states live here. Leaving a `bg-surface` in the
@@ -60,7 +60,7 @@ const TONE_RING = {
           </Transition>
         </span>
 
-        <span class="text-2xs leading-snug text-ink-soft">{{ preset.blurb }}</span>
+        <span class="text-2xs/snug text-ink-soft">{{ preset.blurb }}</span>
       </button>
     </div>
   </section>

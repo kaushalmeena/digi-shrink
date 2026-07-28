@@ -101,7 +101,7 @@ async function rerun(): Promise<void> {
       <!-- Thumbnail. Doubles as the source of the intrinsic dimensions, so the
            preview we already render pays for the metadata too. -->
       <div
-        class="relative grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-lg edge bg-surface-2 pattern-dots-dense sm:h-16 sm:w-16"
+        class="relative grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg bg-surface-2 pattern-dots-dense edge sm:size-16"
       >
         <img
           v-if="item.previewUrl && !previewFailed"
@@ -109,11 +109,11 @@ async function rerun(): Promise<void> {
           :alt="`Preview of ${item.name}`"
           loading="lazy"
           decoding="async"
-          class="h-full w-full object-cover"
+          class="size-full object-cover"
           @load="onPreviewLoad"
           @error="previewFailed = true"
         />
-        <ImageOff v-else class="h-5 w-5 text-ink-soft" />
+        <ImageOff v-else class="size-5 text-ink-soft" />
 
         <!-- Working overlay: the bar lives on the thumbnail so the row height
              doesn't change when a batch starts. -->
@@ -122,7 +122,7 @@ async function rerun(): Promise<void> {
             v-if="item.status === 'working'"
             class="absolute inset-0 grid place-items-center bg-accent/80 backdrop-blur-[2px]"
           >
-            <Loader2 class="h-5 w-5 animate-spin stroke-3 text-on-accent" />
+            <Loader2 class="size-5 animate-spin stroke-3 text-on-accent" />
           </div>
         </Transition>
       </div>
@@ -161,9 +161,9 @@ async function rerun(): Promise<void> {
           </p>
           <p
             v-else-if="item.status === 'error'"
-            class="mt-1.5 flex items-start gap-1 text-2xs leading-snug font-semibold text-danger"
+            class="mt-1.5 flex items-start gap-1 text-2xs/snug font-semibold text-danger"
           >
-            <AlertTriangle class="mt-px h-3 w-3 shrink-0 stroke-3" />
+            <AlertTriangle class="mt-px size-3 shrink-0 stroke-3" />
             {{ item.error }}
           </p>
         </Transition>
@@ -179,7 +179,7 @@ async function rerun(): Promise<void> {
             outlined
             size="md"
           >
-            <Check v-if="!item.result.usedOriginal && savings > 0" class="h-3 w-3 stroke-3" />
+            <Check v-if="!item.result.usedOriginal && savings > 0" class="size-3 stroke-3" />
             <span data-numeric>
               <template v-if="item.result.usedOriginal">already optimal</template>
               <template v-else-if="savings > 0">−{{ formatPercent(savings, 1) }}</template>
@@ -204,7 +204,7 @@ async function rerun(): Promise<void> {
           title="Before / after"
           @click="emit('compare', item.id)"
         >
-          <Columns2 class="h-4 w-4" />
+          <Columns2 class="size-4" />
         </UiButton>
 
         <UiButton
@@ -216,7 +216,7 @@ async function rerun(): Promise<void> {
           title="Download"
           @click="download"
         >
-          <Download class="h-4 w-4" />
+          <Download class="size-4" />
         </UiButton>
 
         <UiButton
@@ -230,7 +230,7 @@ async function rerun(): Promise<void> {
         >
           <component
             :is="item.status === 'queued' ? Sliders : ChevronDown"
-            class="h-4 w-4 transition-transform duration-300"
+            class="size-4 transition-transform duration-300"
             :class="isExpanded && item.status !== 'queued' && 'rotate-180'"
           />
         </UiButton>
@@ -243,7 +243,7 @@ async function rerun(): Promise<void> {
           title="Remove"
           @click="removeItem(item.id)"
         >
-          <X class="h-4 w-4" />
+          <X class="size-4" />
         </UiButton>
       </div>
     </div>
@@ -251,7 +251,7 @@ async function rerun(): Promise<void> {
     <!-- Per-image overrides -->
     <Transition name="collapse">
       <div v-if="isExpanded" class="grid">
-        <div class="border-t-2 border-(--color-line) bg-surface-2 p-4">
+        <div class="border-t-2 border-line bg-surface-2 p-4">
           <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div class="flex-1">
               <UiField
@@ -297,7 +297,7 @@ async function rerun(): Promise<void> {
                 :loading="item.status === 'working'"
                 @click="rerun"
               >
-                <RotateCw class="h-4 w-4" />
+                <RotateCw class="size-4" />
                 {{ item.result ? 'Re-compress' : 'Compress' }}
               </UiButton>
             </div>
@@ -310,7 +310,7 @@ async function rerun(): Promise<void> {
 
           <dl
             v-if="item.result"
-            class="mt-4 grid grid-cols-2 gap-3 border-t-2 border-(--color-line) pt-3 text-2xs sm:grid-cols-4"
+            class="mt-4 grid grid-cols-2 gap-3 border-t-2 border-line pt-3 text-2xs sm:grid-cols-4"
           >
             <div>
               <dt class="eyebrow text-ink-soft">Format</dt>

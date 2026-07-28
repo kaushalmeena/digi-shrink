@@ -90,14 +90,14 @@ async function saveToFolder(): Promise<void> {
             :value="overallProgress"
             size="sm"
             label="Overall compression progress"
-            class="!rounded-none !border-0"
+            class="rounded-none! border-0!"
           />
         </div>
       </Transition>
 
       <div class="flex flex-wrap items-center gap-2 p-3 sm:gap-3 sm:p-4">
         <UiButton v-if="!isRunning" size="md" :disabled="!canCompress" @click="compressAll">
-          <Play class="h-4 w-4" />
+          <Play class="size-4" />
           Compress
           <template v-if="pending.length > 0">
             <span data-numeric>{{ pending.length }}</span>
@@ -105,7 +105,7 @@ async function saveToFolder(): Promise<void> {
         </UiButton>
 
         <UiButton v-else variant="danger" size="md" @click="cancel">
-          <X class="h-4 w-4" />
+          <X class="size-4" />
           Stop
         </UiButton>
 
@@ -113,7 +113,7 @@ async function saveToFolder(): Promise<void> {
           v-if="isRunning"
           class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-soft"
         >
-          <Loader2 class="h-3.5 w-3.5 animate-spin" />
+          <Loader2 class="size-3.5 animate-spin" />
           <span data-numeric>{{ completed.length }} / {{ items.length }}</span>
           <span v-if="eta" data-numeric>· {{ eta }}</span>
         </span>
@@ -128,12 +128,12 @@ async function saveToFolder(): Promise<void> {
             :loading="isExporting"
             @click="saveToFolder"
           >
-            <FolderDown class="h-4 w-4" />
+            <FolderDown class="size-4" />
             Save to folder
           </UiButton>
 
           <UiButton variant="sun" size="md" :loading="isExporting" @click="downloadZip">
-            <Download class="h-4 w-4" />
+            <Download class="size-4" />
             <span class="hidden sm:inline">Download</span> ZIP
             <span data-numeric>({{ completed.length }})</span>
           </UiButton>
@@ -146,7 +146,7 @@ async function saveToFolder(): Promise<void> {
           title="Compress everything again with the current settings"
           @click="requeueAll"
         >
-          <Sparkles class="h-4 w-4" />
+          <Sparkles class="size-4" />
           <span class="hidden md:inline">Re-run</span>
         </UiButton>
 
@@ -159,7 +159,7 @@ async function saveToFolder(): Promise<void> {
           title="Clear finished"
           @click="clearCompleted"
         >
-          <RotateCcw class="h-4 w-4" />
+          <RotateCcw class="size-4" />
         </UiButton>
 
         <UiButton
@@ -170,7 +170,7 @@ async function saveToFolder(): Promise<void> {
           title="Clear everything"
           @click="clear"
         >
-          <Trash2 class="h-4 w-4" />
+          <Trash2 class="size-4" />
         </UiButton>
       </div>
     </UiCard>

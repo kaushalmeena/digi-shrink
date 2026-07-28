@@ -90,7 +90,7 @@ watch(visible, (rows) => {
       />
 
       <div class="ml-auto flex items-center gap-2">
-        <ArrowDownWideNarrow class="h-3.5 w-3.5 text-ink-soft" aria-hidden="true" />
+        <ArrowDownWideNarrow class="size-3.5 text-ink-soft" aria-hidden="true" />
         <UiSegmented v-model="sort" :options="SORTS" aria-label="Sort images" size="sm" />
       </div>
     </div>
