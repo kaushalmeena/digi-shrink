@@ -1,0 +1,84 @@
+name: Deploy
+
+# Builds the app as a static site and publishes it to GitHub Pages.
+#
+# One-time repository setup: Settings → Pages → Source → "GitHub Actions".
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  # Required by actions/deploy-pages to mint its OIDC token.
+  id-token: write
+
+# Let a queued deploy wait rather than cancelling one that is mid-flight —
+# cancelling a deploy can leave Pages serving a half-published site.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # Must come before setup-node, which needs pnpm on PATH to resolve its
+      # cache directory. The version comes from `packageManager` in package.json.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Build
+        run: pnpm generate
+        env:
+          # A project site lives at /<repo>/, so every asset URL needs that
+          # prefix. `configure-pages` reports it *without* a trailing slash (and
+          # as "" for a user site); `nuxt.config.ts` normalises it and threads it
+          # through the manifest, icons and service worker.
+          NUXT_APP_BASE_URL: ${{ steps.pages.outputs.base_path }}
+          NITRO_PRESET: github_pages
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: .output/public
+          # `.nojekyll` is a dotfile, and v4+ drops hidden files by default.
+          # Without it, GitHub would treat `_nuxt/` as a Jekyll partial and
+          # refuse to serve the entire bundle.
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
