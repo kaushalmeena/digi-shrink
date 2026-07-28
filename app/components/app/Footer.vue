@@ -47,26 +47,34 @@ const since = computed(() => {
           </p>
         </div>
 
-        <!-- Lifetime tally. Hidden until there's something to celebrate. -->
-        <UiCard v-if="stats.images > 0" tone="mint" :depth="3" class="w-full sm:max-w-xs">
-          <div class="flex items-center gap-2">
-            <UiIconBadge tone="mint" size="sm">
-              <Sparkles />
-            </UiIconBadge>
-            <span class="eyebrow text-ink-soft">Your running total</span>
-          </div>
+        <!--
+          Lifetime tally. Hidden until there's something to celebrate.
 
-          <p class="mt-3 font-display text-3xl font-extrabold" data-numeric>
-            {{ formatBytes(savedBytes) }}
-          </p>
-          <p class="mt-1 text-xs text-ink-soft" data-numeric>
-            saved across {{ stats.images.toLocaleString() }} image{{
-              stats.images === 1 ? '' : 's'
-            }}
-            <template v-if="since"> since {{ since }}</template>
-            · {{ savedPercent.toFixed(0) }}% smaller
-          </p>
-        </UiCard>
+          Client-only: the totals come from `localStorage`, so the server always
+          renders the empty state while a returning visitor's client renders the
+          card. Vue reports that difference as a hydration mismatch.
+        -->
+        <ClientOnly>
+          <UiCard v-if="stats.images > 0" tone="mint" :depth="3" class="w-full sm:max-w-xs">
+            <div class="flex items-center gap-2">
+              <UiIconBadge tone="mint" size="sm">
+                <Sparkles />
+              </UiIconBadge>
+              <span class="eyebrow text-ink-soft">Your running total</span>
+            </div>
+
+            <p class="mt-3 font-display text-3xl font-extrabold" data-numeric>
+              {{ formatBytes(savedBytes) }}
+            </p>
+            <p class="mt-1 text-xs text-ink-soft" data-numeric>
+              saved across {{ stats.images.toLocaleString() }} image{{
+                stats.images === 1 ? '' : 's'
+              }}
+              <template v-if="since"> since {{ since }}</template>
+              · {{ savedPercent.toFixed(0) }}% smaller
+            </p>
+          </UiCard>
+        </ClientOnly>
       </div>
 
       <div
