@@ -74,6 +74,13 @@ auto-fixable with `pnpm lint:fix`. Two things to know about that setup:
   `h-9 w-9`.
 - A new shared class therefore has to be declared with `@utility`, not as a plain
   CSS class, or `no-unknown-classes` will flag every use of it.
+- **After adding a `@utility` to an imported partial, touch `main.css`.** The
+  plugin caches the compiled Tailwind context and invalidates it on the mtime of
+  `entryPoint` _alone_ — editing `patterns.css` or `transitions.css` leaves
+  `main.css` untouched, so a long-lived ESLint process (your editor's server)
+  keeps serving the old context and reports the new utility as unknown. The CLI
+  is unaffected because each run is a fresh process. Either `touch
+app/assets/css/main.css` or restart the ESLint server.
 - `enforce-consistent-line-wrapping` is off: Prettier owns formatting, and two
   tools rewriting the same bytes fight each other.
 
