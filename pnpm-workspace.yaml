@@ -1,0 +1,16 @@
+# pnpm settings.
+#
+# These live here rather than in `.npmrc` because they are pnpm-only keys: npm
+# reads `.npmrc` too and prints "Unknown project config" warnings for every one
+# of them, on every `npm` invocation. pnpm 10 reads its own settings from this
+# file, so the noise goes away without changing behaviour.
+
+# Nuxt's module ecosystem expects a flat node_modules layout.
+shamefullyHoist: true
+strictPeerDependencies: false
+
+# Native build scripts we explicitly trust. pnpm blocks postinstall scripts by
+# default; anything not listed here stays unbuilt and prints a warning on install.
+onlyBuiltDependencies:
+  - esbuild # bundler used by Vite
+  - unrs-resolver # native module resolution for ESLint's import plugin
