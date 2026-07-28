@@ -1,150 +1,174 @@
-# DigiCompress
+<div align="center">
 
-A batch image compressor that runs entirely on your own device. No uploads, no
-accounts, no server — and it keeps working with the network switched off.
+<img src="public/favicon.svg" alt="DigiShrink logo" width="96" height="96" />
 
-Drop in JPEG, PNG, WebP, AVIF, GIF, BMP or HEIC files and get back genuinely
-smaller images, with an honest report of what you traded and a before/after
-slider to check it.
+# DigiShrink
 
-## Why it exists
+[![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?logo=opensourceinitiative&logoColor=white)](LICENSE) [![Nuxt](https://img.shields.io/badge/Nuxt-4-00875A?logo=nuxt&logoColor=white)](https://nuxt.com) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-0E7490?logo=tailwindcss&logoColor=white)](https://tailwindcss.com) [![PWA](https://img.shields.io/badge/PWA-ready-5A0FC8?logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
 
-Most online compressors ask you to upload your photos to someone else's
-computer. This one can't, because it has nowhere to send them: the codecs are
-WebAssembly binaries shipped with the app and run in a Web Worker in your tab.
-You can verify that in the network panel.
+**Shrink images without giving them away.**
 
-A useful side effect: because every image is decoded to raw pixels and
-re-encoded, EXIF, GPS coordinates and camera details cannot survive the round
-trip. Metadata removal isn't a setting — it's a property of the pipeline.
+A batch image compressor that runs **entirely on your own device** — no uploads, no accounts, no server. It uses the same WebAssembly codecs the pros do, reports honestly what you traded, and keeps working with the network switched off.
+
+[**Try it live**](https://kaushalmeena.github.io/digi-shrink/)
+
+</div>
+
+---
 
 ## Features
 
-**Compression**
+- **Real codecs** — MozJPEG, OxiPNG, libwebp and libavif compiled to
+  WebAssembly, not a canvas re-save. It shows in the file sizes.
+- **Auto format** — encodes several formats and keeps whichever came out
+  smallest, so you never have to guess which one wins for a given image.
+- **Target size** — name a byte budget and quality is binary-searched until the
+  output fits.
+- **Lossless mode** — not a single pixel changes; savings come from better
+  compression alone.
+- **Batch everything** — drag and drop whole folders, paste from the clipboard,
+  then export as a ZIP or straight into a folder you pick once.
+- **Before/after slider** — a draggable divider, side-by-side view and zoom to
+  400%, because most artefacts are invisible at "fit".
+- **Format lab** — encode one image to all four formats and compare real sizes
+  and timings instead of trusting rules of thumb.
+- **Honest reporting** — if a re-encode would come out _bigger_, the original
+  file is kept and the app tells you so.
+- **Metadata stripped** — EXIF, GPS coordinates and camera details cannot
+  survive the round trip.
+- **Offline-first PWA** — installable, works with the wifi off, and registers as
+  a handler so the OS can offer it under "Open with…".
 
-- Real encoders — MozJPEG, OxiPNG, libwebp and libavif — not a canvas re-save.
-- **Auto format**: encodes several formats and keeps whichever came out smallest.
-- **Target size**: name a byte budget and quality is binary-searched to fit it.
-- **Lossless** mode for PNG and WebP, where not a single pixel changes.
-- High-quality resizing (Lanczos3, Mitchell, Catmull-Rom, Triangle) in WASM.
-- Per-image quality overrides, because one photo in a batch always needs
-  different treatment.
-- An "already optimal" guard: if a re-encode would come out _bigger_, the
-  original bytes are returned and the UI says so.
+## How It Works
 
-**Getting images in and out**
+1. **Decode** — the browser decodes your file with `createImageBitmap`, which
+   handles EXIF orientation and formats we ship no decoder for, like HEIC.
+2. **Resize** — optional resampling in linear light, which avoids the dark halos
+   that plague naive downscaling.
+3. **Encode** — one or more WebAssembly encoders run inside a pool of web
+   workers, sized to your CPU so the interface never freezes.
+4. **Pick** — the smallest result wins; if every candidate is larger than the
+   input, the original bytes are handed back untouched.
 
-- Drag and drop anywhere on the page, including whole folders.
-- Paste from the clipboard, or use the file picker.
-- Installed as a PWA, it registers as a handler for image files, so the OS can
-  offer it under "Open with…".
-- Export as a ZIP, or write the whole batch into a folder you pick once (where
-  the File System Access API is available).
+> Everything happens **in this browser tab**. There is no server to upload to and
+> no network call in the compression path — open the network panel and check.
 
-**Seeing what happened**
+## Tech Stack
 
-- Live savings dashboard: total saved, reduction percentage, encode time.
-- Before/after comparison with a draggable divider, side-by-side mode and zoom
-  to 400% — most artefacts are invisible at "fit".
-- **Format lab**: encode one image to all four formats and compare real sizes
-  and timings, instead of trusting rules of thumb.
-- A lifetime tally of everything you've saved, kept in `localStorage`.
+| Area          | Tools                                                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------ |
+| **Framework** | [Nuxt 4](https://nuxt.com) · [Vue 3](https://vuejs.org) · [TypeScript](https://www.typescriptlang.org) |
+| **Styling**   | [Tailwind CSS 4](https://tailwindcss.com) · [Lucide](https://lucide.dev)                               |
+| **Codecs**    | [jSquash](https://github.com/jamsinclair/jSquash) — MozJPEG · OxiPNG · libwebp · libavif               |
+| **Offline**   | [Vite PWA](https://vite-pwa-org.netlify.app) · [Workbox](https://developer.chrome.com/docs/workbox)    |
+| **Utilities** | [VueUse](https://vueuse.org) · [vue-sonner](https://vue-sonner.vercel.app)                             |
+| **Tooling**   | [pnpm](https://pnpm.io) · [ESLint](https://eslint.org) · [Prettier](https://prettier.io)               |
+| **Hosting**   | [GitHub Pages](https://pages.github.com)                                                               |
 
-**The rest**
+## Getting Started
 
-- Light and dark themes, following the OS by default.
-- Full keyboard support, ARIA roles, focus trapping in panels, and
-  `prefers-reduced-motion` honoured throughout.
-- A worker pool sized to your CPU, so a large batch never freezes the interface.
+These instructions will get you a copy of the project up and running on your
+local machine for development purposes.
 
-## Getting started
+### Requirements
+
+To install and run this project you need:
+
+- [Node.js](https://nodejs.org/) `>=24` (an `.nvmrc` is included — run `nvm use` if you use [nvm](https://github.com/nvm-sh/nvm))
+- [pnpm](https://pnpm.io/installation)
+- [git](https://git-scm.com/downloads) (only to clone this repository)
+
+### Installation
+
+To set up everything on your local machine, follow these steps:
+
+1. Clone this repo and then change directory to the `digi-shrink` folder:
+
+```bash
+git clone https://github.com/kaushalmeena/digi-shrink.git
+cd digi-shrink
+```
+
+2. Install project dependencies using pnpm:
 
 ```bash
 pnpm install
+```
+
+### Running
+
+To run the project simply run:
+
+```bash
 pnpm dev
 ```
 
-Then open http://localhost:3000.
+Your app should now be running on [localhost:3000](http://localhost:3000/).
 
-### Scripts
+### Testing
 
-| Command            | What it does                            |
-| ------------------ | --------------------------------------- |
-| `pnpm dev`         | Dev server with HMR                     |
-| `pnpm build`       | Production build                        |
-| `pnpm preview`     | Serve the production build              |
-| `pnpm generate`    | Static prerender                        |
-| `pnpm lint`        | ESLint (Prettier runs as a lint rule)   |
-| `pnpm lint:fix`    | Fix what can be fixed automatically     |
-| `pnpm typecheck`   | `vue-tsc` across every Nuxt environment |
-| `pnpm build:icons` | Regenerate the PWA icons and favicon    |
+There is no unit-test suite yet. To run the same checks CI runs, lint the
+project:
 
-## Architecture
-
-```
-app/
-├── assets/css/        Design tokens, pattern utilities, transition vocabulary
-├── components/
-│   ├── ui/            Design-system primitives (Button, Card, Segmented, …)
-│   ├── decor/         Purely decorative shapes (Confetti, Squiggle)
-│   ├── app/           Shell: Header, Footer, Logo, ThemeToggle
-│   └── compress/      Feature components: DropZone, Queue, drawers, slider
-├── composables/       Queue, settings, theme, file intake, stats
-├── lib/               Framework-free logic: types, formatting, ZIP, worker pool
-├── plugins/           localStorage hydration and persistence
-├── pages/             The single page
-└── workers/           The compression worker — all image processing lives here
+```bash
+pnpm lint
 ```
 
-The important boundary is `lib/` and `workers/`: neither imports Vue. The worker
-is the only place pixels are touched, and it communicates over a typed message
-protocol (`lib/types.ts`) with buffers transferred rather than copied.
+And typecheck it across every Nuxt environment:
 
-### Notable decisions
+```bash
+pnpm typecheck
+```
 
-- **Decoding uses the browser, not WASM.** `createImageBitmap` is hardware
-  accelerated, handles EXIF orientation, and supports formats we ship no decoder
-  for (HEIC on Safari, GIF, BMP, SVG). WASM decoders are the fallback.
-- **The ZIP writer is hand-rolled** (`lib/zip.ts`, ~180 lines). Compressed images
-  are incompressible, so only the `store` method is needed; a general-purpose
-  library would be dead weight. CRC32 is streamed and the archive references the
-  source blobs, so peak memory is one image rather than the whole batch.
-- **Auto-imports are disabled.** Every `ref`, `computed`, `useState` and project
-  composable is imported by name. See `nuxt.config.ts` for the reasoning.
-- **Cross-origin isolation headers are set** so `oxipng` and the AVIF encoder can
-  use their multi-threaded WASM builds. On static hosting without those headers,
-  the codecs detect the missing `SharedArrayBuffer` and fall back to
-  single-threaded builds automatically.
+### Building
 
-## Design system
+To create a production build:
 
-The UI implements **Playful Geometric**: chunky 2px borders, hard blur-free
-offset shadows so elements read as stickers, primitive shapes and dot grids as
-decoration, and bouncy overshooting motion.
+```bash
+pnpm build
+```
 
-Everything is driven by semantic tokens in `app/assets/css/main.css` — no
-component hardcodes a hex value, which is what lets a single `.dark` class
-re-skin the whole app. Dark mode is not an inversion: the paper becomes deep
-ink-violet, surfaces sit _above_ the canvas in lightness, and accents brighten
-and swap to dark text so contrast stays comfortable.
+The build output is written to the `.output` folder. To produce a fully static
+site instead, run `pnpm generate` — that output lands in `.output/public`.
 
-Reusable visual primitives live in `app/assets/css/patterns.css` (`pop-*`,
-`sticker`, `edge`, `pattern-dots`, `blob-*`) and the shared motion vocabulary in
-`transitions.css`.
+## Deployment
 
-## Browser support
+Every push to `main` is linted, typechecked, built and deployed to GitHub Pages
+automatically by the [deploy workflow](.github/workflows/deploy.yml). One-time
+setup: in the repository's **Settings → Pages**, set **Source** to **GitHub
+Actions**.
 
-Needs a modern browser with `OffscreenCanvas` and WASM: Chrome/Edge 94+,
-Firefox 105+, Safari 16.4+.
+GitHub Pages cannot send the cross-origin-isolation headers that the
+multi-threaded AVIF and PNG encoders need, so on the hosted build those codecs
+fall back to their single-threaded variants. Compression is unaffected; AVIF and
+PNG are just slower than on a self-hosted deployment.
 
-Some things degrade rather than break:
+## Credits
 
-- **Folder picker export** needs the File System Access API (Chromium). A ZIP
-  download is always offered.
-- **HEIC previews** only render where the OS can decode them (Safari). The
-  compressed output is still correct — it goes through the WASM decoder.
-- **Multi-threaded codecs** need cross-origin isolation, as described above.
+- Image codecs by **jSquash** / the Squoosh project, licensed under
+  [Apache-2.0](https://github.com/jamsinclair/jSquash/blob/main/LICENSE).
+- [Outfit](https://fonts.google.com/specimen/Outfit) and
+  [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans)
+  typefaces, licensed under the
+  [SIL Open Font License](https://openfontlicense.org/).
 
-## Licence
+## Documentation
 
-The jSquash codec bundles are Apache-2.0, from the Squoosh project.
+- **[Architecture](docs/architecture.md)** — the compression pipeline, why the
+  worker pool is deliberately smaller than your core count, how the hand-rolled
+  ZIP writer keeps memory flat, and the gotchas that cost real debugging time.
+- **[Design](docs/design.md)** — the Playful Geometric system: colour tokens for
+  both themes, typography, the pop-shadow and pattern primitives, the shared
+  motion vocabulary, and the accessibility commitments.
+
+## Contributing
+
+Contributions are welcome! If you find a bug or have a feature request, please
+[open an issue](https://github.com/kaushalmeena/digi-shrink/issues/new/choose)
+first to discuss it. For code changes, fork the repository, create a branch, and
+open a pull request.
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE)
+file for details.

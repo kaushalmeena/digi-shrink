@@ -1,4 +1,4 @@
-# DigiCompress — working notes
+# DigiShrink — working notes
 
 A fully local, offline-capable batch image compressor. Nuxt 4 + Tailwind v4 +
 WebAssembly codecs. See `README.md` for what it does and why.
@@ -106,6 +106,16 @@ primitive-shape decoration, bouncy overshoot motion.
 
 Entrances overshoot; exits are quick and linear. All of it collapses under
 `prefers-reduced-motion`.
+
+## Deeper reference
+
+Read these before a non-trivial change; they explain the _why_ behind the rules
+above rather than repeating them.
+
+- **[docs/architecture.md](docs/architecture.md)** — pipeline, worker pool
+  sizing, state ownership, ZIP writer, PWA and base-path handling.
+- **[docs/design.md](docs/design.md)** — the full token tables for both themes,
+  the utility primitives, and the accessibility commitments.
 
 ## Accessibility
 
