@@ -127,8 +127,10 @@ primitive-shape decoration, bouncy overshoot motion.
 - Visual primitives: `app/assets/css/patterns.css` — `pop-1…4` + `pop-berry` etc.
   for shadows, `sticker` for the lift/press feel, `edge`, `pattern-dots`, `blob-*`
 - Motion: `app/assets/css/transitions.css` — use these `<Transition>` names
-  (`pop`, `fade`, `collapse`, `drawer-right`, `queue`, `roll`) rather than
-  writing one-off animations.
+  (`pop`, `fade`, `offcanvas`, `queue`, `roll`) rather than writing one-off
+  animations. Height disclosure is the `disclose` **utility**, not a transition:
+  put it on an always-mounted element and toggle `data-open`, because a
+  `v-if`-ed element has no resolved row track to animate from.
 
 Entrances overshoot; exits are quick and linear. All of it collapses under
 `prefers-reduced-motion`.
