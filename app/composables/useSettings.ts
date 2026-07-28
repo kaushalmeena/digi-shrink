@@ -1,6 +1,9 @@
+import { computed } from 'vue'
+
 import { PRESETS, applyPreset, DEFAULT_SETTINGS } from '~/lib/presets'
 import { describeSettings } from '~/lib/image'
 import { FORMAT_META } from '~/lib/constants'
+import { useState } from '#imports'
 import type { CompressionSettings, OutputFormat } from '~/lib/types'
 
 export const SETTINGS_STORAGE_KEY = 'digicompress:settings'

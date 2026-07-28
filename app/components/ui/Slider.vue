@@ -7,6 +7,8 @@
  * stepping, screen-reader announcements and touch behaviour all come for free —
  * none of which a div-based slider would give us without a lot of work.
  */
+import { computed } from 'vue'
+
 const model = defineModel<number>({ required: true })
 
 const props = withDefaults(

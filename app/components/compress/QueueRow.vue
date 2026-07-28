@@ -9,6 +9,8 @@
  * The row also carries a per-image quality override, because in practice one
  * photo in a batch always needs different treatment from the rest.
  */
+import { computed, ref } from 'vue'
+
 import {
   AlertTriangle,
   Check,
@@ -24,6 +26,9 @@ import {
 import { formatBytes, formatDimensions, formatPercent, savingsPercent } from '~/lib/format'
 import { FORMAT_META } from '~/lib/constants'
 import { saveBlob } from '~/lib/download'
+import { useCompressor } from '~/composables/useCompressor'
+import { useSettings } from '~/composables/useSettings'
+import { useToasts } from '~/composables/useToasts'
 import type { QueueItem } from '~/lib/types'
 
 const props = defineProps<{ item: QueueItem; index: number }>()

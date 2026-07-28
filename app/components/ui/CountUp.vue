@@ -11,6 +11,8 @@
  *  - the rendered text is always the formatted *current* value, so screen
  *    readers and copy/paste both see a real number.
  */
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+
 const props = withDefaults(
   defineProps<{
     value: number

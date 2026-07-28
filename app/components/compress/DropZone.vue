@@ -7,8 +7,11 @@
  * component is the visible affordance for that, and it also handles the two
  * other paths in: the file picker and a paste hint.
  */
+import { onMounted, ref } from 'vue'
+
 import { ClipboardPaste, FolderOpen, ImagePlus, Layers } from '@lucide/vue'
 import { ACCEPT_ATTRIBUTE } from '~/lib/constants'
+import { useFileIntake } from '~/composables/useFileIntake'
 import type { ConfettiShape } from '~/components/decor/Confetti.vue'
 
 defineProps<{ compact: boolean }>()

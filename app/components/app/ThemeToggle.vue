@@ -7,6 +7,7 @@
  * spells out what pressing it will do next, since the icon alone can't.
  */
 import { Monitor, Moon, Sun } from '@lucide/vue'
+import { useThemeMode } from '~/composables/useThemeMode'
 
 const { mode, cycle } = useThemeMode()
 

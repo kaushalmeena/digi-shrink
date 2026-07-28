@@ -46,6 +46,20 @@ export default defineNuxtConfig({
     ],
   },
 
+  /**
+   * Auto-imports are off on purpose.
+   *
+   * Every `ref`, `computed`, `useState` and project composable is imported
+   * explicitly. It costs one line per file and buys a lot: you can see a
+   * module's real dependencies without knowing Nuxt's magic, "go to definition"
+   * always works, and forgetting an import is a build error rather than a
+   * mystery global.
+   *
+   * Component auto-import is untouched — `<UiButton>` resolving by filename is
+   * unambiguous, since the name maps directly to a path.
+   */
+  imports: { autoImport: false },
+
   eslint: {
     // Prettier owns formatting; ESLint only owns correctness.
     config: { stylistic: false },

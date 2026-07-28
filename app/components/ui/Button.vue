@@ -7,6 +7,8 @@
  * shrinks. That lift/sink pairing is what makes it feel physical, and it all
  * comes from the shared `sticker` utility so every control behaves identically.
  */
+import { computed } from 'vue'
+
 import type { Component } from 'vue'
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'sun'

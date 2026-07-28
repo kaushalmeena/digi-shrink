@@ -6,6 +6,7 @@
  * exists in the DOM even when empty so screen readers register it up front.
  */
 import { AlertTriangle, CheckCircle2, Info, X, XCircle } from '@lucide/vue'
+import { useToasts } from '~/composables/useToasts'
 import type { ToastTone } from '~/composables/useToasts'
 
 const { toasts, dismiss } = useToasts()

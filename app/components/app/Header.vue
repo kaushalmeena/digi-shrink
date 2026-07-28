@@ -4,6 +4,7 @@
  * tell someone about this app — plus the theme toggle and the settings trigger.
  */
 import { ShieldCheck, Sliders, WifiOff } from '@lucide/vue'
+import { useSettings } from '~/composables/useSettings'
 
 defineProps<{ offline: boolean }>()
 const emit = defineEmits<{ openSettings: [] }>()

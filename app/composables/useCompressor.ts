@@ -1,7 +1,13 @@
+import { computed, markRaw } from 'vue'
+
 import { CompressionPool } from '~/lib/workerPool'
 import { MAX_QUEUE_SIZE } from '~/lib/constants'
 import { isAcceptedImage, outputFileName } from '~/lib/image'
 import { sanitizeFileName, uniqueFileName } from '~/lib/format'
+import { useState } from '#imports'
+import { useLifetimeStats } from '~/composables/useLifetimeStats'
+import { useSettings } from '~/composables/useSettings'
+import { useToasts } from '~/composables/useToasts'
 import type {
   CompressionSettings,
   FormatCandidate,

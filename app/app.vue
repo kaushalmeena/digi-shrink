@@ -8,6 +8,8 @@
  * The script is tiny, synchronous, and its own try/catch — a thrown error in
  * private-browsing mode must not stop the app from booting.
  */
+import { useHead, useSeoMeta } from '#imports'
+
 useHead({
   titleTemplate: (title) => (title ? `${title} · DigiCompress` : 'DigiCompress'),
   script: [

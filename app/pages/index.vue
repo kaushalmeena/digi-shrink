@@ -9,7 +9,12 @@
  *  - **Working** — the hero collapses to a slim dropzone and the stats, queue
  *    and action bar take over. Nothing is hidden behind a navigation step.
  */
+import { computed, onMounted, ref } from 'vue'
+import { onKeyStroke, useOnline } from '@vueuse/core'
+
 import { Cpu, Gauge, Lock, ShieldCheck, WifiOff, Zap } from '@lucide/vue'
+import { useCompressor } from '~/composables/useCompressor'
+import { useFileIntake } from '~/composables/useFileIntake'
 import type { ConfettiShape } from '~/components/decor/Confetti.vue'
 
 const { hasItems, items, compressAll, canCompress } = useCompressor()

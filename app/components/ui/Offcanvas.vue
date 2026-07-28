@@ -13,6 +13,9 @@
  * Motion comes from the shared `drawer-*` / `backdrop` transitions so it matches
  * every other appearance in the app.
  */
+import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
+import { onKeyStroke, useEventListener, useScrollLock } from '@vueuse/core'
+
 import { X } from '@lucide/vue'
 
 const open = defineModel<boolean>('open', { required: true })

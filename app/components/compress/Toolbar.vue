@@ -7,10 +7,14 @@
  * A ZIP is always offered too, since that's the only option in Safari and
  * Firefox.
  */
+import { computed, onMounted, ref } from 'vue'
+
 import { Download, FolderDown, Loader2, Play, RotateCcw, Sparkles, Trash2, X } from '@lucide/vue'
 import { createZip } from '~/lib/zip'
 import { downloadBlob, saveAllToDirectory, supportsDirectorySave } from '~/lib/download'
 import { formatEta } from '~/lib/format'
+import { useCompressor } from '~/composables/useCompressor'
+import { useToasts } from '~/composables/useToasts'
 
 const {
   items,

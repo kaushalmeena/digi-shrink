@@ -5,6 +5,8 @@
  * Wide on desktop so the comparison has room to breathe, full-width on mobile.
  * Holds three things: the numbers, the visual comparison, and the format lab.
  */
+import { computed, ref, watch } from 'vue'
+
 import { Download, ImageOff } from '@lucide/vue'
 import {
   formatBytes,
@@ -15,6 +17,7 @@ import {
 } from '~/lib/format'
 import { FORMAT_META } from '~/lib/constants'
 import { saveBlob } from '~/lib/download'
+import { useCompressor } from '~/composables/useCompressor'
 
 const open = defineModel<boolean>('open', { required: true })
 const props = defineProps<{ itemId: string | null }>()

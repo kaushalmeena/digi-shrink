@@ -1,7 +1,14 @@
+import { watch } from 'vue'
+
 import { hydrateSettings } from '~/lib/presets'
-import { emptyLifetimeStats, LIFETIME_STATS_KEY } from '~/composables/useLifetimeStats'
-import { SETTINGS_STORAGE_KEY } from '~/composables/useSettings'
-import { THEME_STORAGE_KEY } from '~/composables/useThemeMode'
+import {
+  emptyLifetimeStats,
+  LIFETIME_STATS_KEY,
+  useLifetimeStats,
+} from '~/composables/useLifetimeStats'
+import { SETTINGS_STORAGE_KEY, useSettings } from '~/composables/useSettings'
+import { THEME_STORAGE_KEY, useThemeMode } from '~/composables/useThemeMode'
+import { defineNuxtPlugin } from '#imports'
 import type { LifetimeStats } from '~/composables/useLifetimeStats'
 import type { ThemeMode } from '~/composables/useThemeMode'
 

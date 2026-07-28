@@ -7,6 +7,7 @@
  * in plain language rather than in codec jargon.
  */
 import { Check } from '@lucide/vue'
+import { useSettings } from '~/composables/useSettings'
 
 const { presets, activePresetId, usePreset } = useSettings()
 

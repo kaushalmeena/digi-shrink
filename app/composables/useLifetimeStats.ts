@@ -1,3 +1,6 @@
+import { computed } from 'vue'
+import { useState } from '#imports'
+
 export const LIFETIME_STATS_KEY = 'digicompress:lifetime'
 
 export interface LifetimeStats {

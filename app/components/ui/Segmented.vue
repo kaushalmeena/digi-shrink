@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts" generic="T extends string | number">
 /**
  * A segmented control — the primary way to pick between a handful of named
  * options in this app (format, resize mode, compression mode).
@@ -14,16 +14,10 @@
  * fallthrough attributes land it on the `role="radiogroup"` root, so there's no
  * need for a prop that just forwards a string.
  */
-export interface SegmentOption<T extends string | number> {
-  value: T
-  label: string
-  /** Optional tooltip / longer explanation. */
-  title?: string
-  disabled?: boolean
-}
-</script>
+import { computed } from 'vue'
 
-<script setup lang="ts" generic="T extends string | number">
+import type { SegmentOption } from '~/lib/types'
+
 const model = defineModel<T>({ required: true })
 
 const props = withDefaults(

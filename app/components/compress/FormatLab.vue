@@ -8,9 +8,13 @@
  * graphics and small images PNG or WebP frequently beat it. Measuring the real
  * image takes a few seconds and removes the guesswork.
  */
+import { computed, ref } from 'vue'
+
 import { FlaskConical, Trophy } from '@lucide/vue'
 import { FORMAT_META } from '~/lib/constants'
 import { formatBytes, formatDuration, formatPercent, savingsPercent } from '~/lib/format'
+import { useCompressor } from '~/composables/useCompressor'
+import { useSettings } from '~/composables/useSettings'
 import type { OutputFormat, QueueItem } from '~/lib/types'
 
 const props = defineProps<{ item: QueueItem }>()

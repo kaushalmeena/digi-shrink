@@ -10,14 +10,18 @@
  * Every control describes its trade-off in plain language. "Method 6 is slower
  * but smaller" is useful; "method: 0–6" is not.
  */
+import { computed } from 'vue'
+
 import { RotateCcw, Wand2 } from '@lucide/vue'
 import { FORMAT_META } from '~/lib/constants'
-import type { SegmentOption } from '~/components/ui/Segmented.vue'
+import { useCompressor } from '~/composables/useCompressor'
+import { useSettings } from '~/composables/useSettings'
 import type {
   CompressionMode,
   OutputFormat,
   ResizeFilter,
   ResizeMode,
+  SegmentOption,
   TargetFormat,
 } from '~/lib/types'
 

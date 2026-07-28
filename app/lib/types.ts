@@ -100,6 +100,20 @@ export interface CompressionSettings {
   png: PngSettings
 }
 
+/**
+ * One choice in a `UiSegmented` control.
+ *
+ * Lives here rather than in the component so the many callers that build option
+ * arrays can import a type from a module instead of from a `.vue` file.
+ */
+export interface SegmentOption<T extends string | number> {
+  value: T
+  label: string
+  /** Optional tooltip / longer explanation. */
+  title?: string
+  disabled?: boolean
+}
+
 /** A named bundle of settings, surfaced as one-click chips in the UI. */
 export interface Preset {
   id: string

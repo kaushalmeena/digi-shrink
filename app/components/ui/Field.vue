@@ -6,6 +6,8 @@
  * here keeps every form row identical and guarantees the `for`/`id` pairing that
  * screen readers need.
  */
+import { computed } from 'vue'
+
 const props = defineProps<{
   label: string
   /** Explanatory text under the control. Wired up via `aria-describedby`. */

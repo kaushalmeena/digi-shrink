@@ -10,10 +10,12 @@
  * Sorting is applied to a copy, never in place, so the underlying queue order
  * (and therefore the order results are exported in) stays stable.
  */
+import { computed, ref, watch } from 'vue'
+
 import { ArrowDownWideNarrow } from '@lucide/vue'
 import { savingsPercent } from '~/lib/format'
-import type { SegmentOption } from '~/components/ui/Segmented.vue'
-import type { ItemStatus } from '~/lib/types'
+import { useCompressor } from '~/composables/useCompressor'
+import type { ItemStatus, SegmentOption } from '~/lib/types'
 
 const emit = defineEmits<{ compare: [id: string] }>()
 

@@ -3,8 +3,11 @@
  * Footer. Doubles as the lifetime-savings display, which is the small reward
  * that makes the tool feel worth coming back to.
  */
+import { computed } from 'vue'
+
 import { ExternalLink, HardDrive, Sparkles } from '@lucide/vue'
 import { formatBytes } from '~/lib/format'
+import { useLifetimeStats } from '~/composables/useLifetimeStats'
 
 const { stats, savedBytes, savedPercent } = useLifetimeStats()
 

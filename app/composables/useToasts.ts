@@ -1,3 +1,6 @@
+import { readonly } from 'vue'
+import { useState } from '#imports'
+
 export type ToastTone = 'info' | 'success' | 'warning' | 'error'
 
 export interface Toast {

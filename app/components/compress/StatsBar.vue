@@ -7,8 +7,11 @@
  * still shown, as a ring, because it's the better measure of how hard the
  * settings are working.
  */
+import { computed } from 'vue'
+
 import { Clock, FileDown, FileUp, Gauge, PiggyBank, ShieldCheck } from '@lucide/vue'
 import { formatBytes, formatDuration, formatPercent } from '~/lib/format'
+import { useCompressor } from '~/composables/useCompressor'
 
 const { stats, items } = useCompressor()
 

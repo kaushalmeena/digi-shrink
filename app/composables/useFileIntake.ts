@@ -7,6 +7,12 @@
  *  3. The file picker.
  *  4. The OS "Open with…" handoff, when installed as a PWA.
  */
+import { ref } from 'vue'
+
+import { useEventListener } from '@vueuse/core'
+import { useState } from '#imports'
+import { useCompressor } from '~/composables/useCompressor'
+import { useToasts } from '~/composables/useToasts'
 
 /** Minimal shape of the PWA launch-queue API, which TS's DOM lib omits. */
 interface LaunchParams {

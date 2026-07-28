@@ -14,8 +14,10 @@
  * The clip is `inset()` on the *before* layer rather than a width change, which
  * means neither image ever reflows or re-decodes while you drag.
  */
+import { computed, ref } from 'vue'
+
 import { Columns2, Maximize2, SplitSquareHorizontal } from '@lucide/vue'
-import type { SegmentOption } from '~/components/ui/Segmented.vue'
+import type { SegmentOption } from '~/lib/types'
 
 const props = defineProps<{
   beforeSrc: string

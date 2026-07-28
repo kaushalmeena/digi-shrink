@@ -8,6 +8,7 @@
  * for the dropzone instead. This is the affordance.
  */
 import { Download } from '@lucide/vue'
+import { useFileIntake } from '~/composables/useFileIntake'
 
 defineProps<{ count: number }>()
 
