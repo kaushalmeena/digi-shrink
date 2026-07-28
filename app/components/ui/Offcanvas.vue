@@ -130,12 +130,12 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
             v-if="open"
             ref="panel"
             tabindex="-1"
-            class="absolute flex flex-col bg-canvas border-[var(--color-outline)] shadow-[-8px_0_0_0_var(--color-shade-soft)] outline-none"
+            class="absolute flex flex-col bg-canvas border-(--color-outline) shadow-[-8px_0_0_0_var(--color-shade-soft)] outline-none"
             :class="[POSITION[side], SIZE]"
           >
             <!-- Header: stays put while the body scrolls. -->
             <header
-              class="relative flex shrink-0 items-start gap-3 border-b-2 border-[var(--color-outline)] bg-surface px-5 py-4"
+              class="relative flex shrink-0 items-start gap-3 border-b-2 border-(--color-outline) bg-surface px-5 py-4"
             >
               <div class="min-w-0 flex-1">
                 <h2 :id="titleId" class="text-xl">{{ title }}</h2>
@@ -149,7 +149,7 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
                 aria-label="Close panel"
                 @click="open = false"
               >
-                <X class="h-4 w-4 stroke-[3]" />
+                <X class="h-4 w-4 stroke-3" />
               </UiButton>
             </header>
 
@@ -159,7 +159,7 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
 
             <footer
               v-if="$slots.footer"
-              class="shrink-0 border-t-2 border-[var(--color-outline)] bg-surface px-5 py-4"
+              class="shrink-0 border-t-2 border-(--color-outline) bg-surface px-5 py-4"
             >
               <slot name="footer" />
             </footer>

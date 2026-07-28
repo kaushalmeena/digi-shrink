@@ -497,9 +497,7 @@ function applyToFinished(): void {
             hint="Re-encoding a well-optimised image can make it bigger. With this on, we hand back the original and tell you."
           />
 
-          <p
-            class="border-t-2 border-[var(--color-line)] pt-3 text-2xs leading-relaxed text-ink-soft"
-          >
+          <p class="border-t-2 border-(--color-line) pt-3 text-2xs leading-relaxed text-ink-soft">
             <strong class="text-ink">Metadata is always removed.</strong>
             Re-encoding goes through raw pixels, so EXIF, GPS coordinates and camera details cannot
             survive the round trip. That's deliberate.
@@ -511,7 +509,7 @@ function applyToFinished(): void {
     <template #footer>
       <div class="flex items-center gap-2">
         <UiButton variant="ghost" size="sm" @click="reset">
-          <RotateCcw class="h-4 w-4 stroke-[2.5]" />
+          <RotateCcw class="h-4 w-4" />
           Reset
         </UiButton>
 
@@ -522,7 +520,7 @@ function applyToFinished(): void {
             size="sm"
             @click="applyToFinished"
           >
-            <Wand2 class="h-4 w-4 stroke-[2.5]" />
+            <Wand2 class="h-4 w-4" />
             Re-run all
           </UiButton>
 

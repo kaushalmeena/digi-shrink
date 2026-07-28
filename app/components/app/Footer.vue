@@ -21,7 +21,7 @@ const since = computed(() => {
 </script>
 
 <template>
-  <footer class="relative mt-20 border-t-2 border-[var(--color-outline)] bg-surface">
+  <footer class="relative mt-20 border-t-2 border-(--color-outline) bg-surface">
     <DecorSquiggle tone="line" class="absolute -top-[9px] left-0 h-4" />
 
     <div class="shell py-10">
@@ -33,7 +33,7 @@ const since = computed(() => {
             running in this tab — there is no server, no upload and no account.
           </p>
           <p class="flex items-center gap-1.5 text-2xs font-semibold text-ink-soft">
-            <HardDrive class="h-3.5 w-3.5 stroke-[2.5]" />
+            <HardDrive class="h-3.5 w-3.5" />
             Works fully offline once installed
           </p>
         </div>
@@ -61,7 +61,7 @@ const since = computed(() => {
       </div>
 
       <div
-        class="mt-8 flex flex-col gap-3 border-t-2 border-[var(--color-line)] pt-6 text-2xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
+        class="mt-8 flex flex-col gap-3 border-t-2 border-(--color-line) pt-6 text-2xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
       >
         <p>Built with Nuxt, Tailwind and WebAssembly codecs from the Squoosh project.</p>
         <a
@@ -71,7 +71,7 @@ const since = computed(() => {
           class="inline-flex items-center gap-1.5 font-bold transition-colors hover:text-accent"
         >
           jSquash codecs
-          <ExternalLink class="h-3.5 w-3.5 stroke-[2.5]" />
+          <ExternalLink class="h-3.5 w-3.5" />
         </a>
       </div>
     </div>

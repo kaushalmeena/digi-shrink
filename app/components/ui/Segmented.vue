@@ -66,7 +66,7 @@ function onKeydown(event: KeyboardEvent): void {
          translate can track the selection; the grid layout uses per-cell fills. -->
     <span
       v-if="!columns && activeIndex >= 0"
-      class="absolute top-1 bottom-1 left-1 rounded-full bg-accent transition-transform duration-300 ease-[var(--ease-bounce)]"
+      class="absolute top-1 bottom-1 left-1 rounded-full bg-accent transition-transform duration-300 ease-(--ease-bounce)"
       :style="{
         width: `calc((100% - 0.5rem) / ${options.length})`,
         transform: `translateX(${activeIndex * 100}%)`,

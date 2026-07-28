@@ -27,7 +27,7 @@ defineProps<{
       aria-hidden="true"
     >
       <span
-        class="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-surface shadow-[1px_1px_0_0_var(--color-shade)] transition-transform duration-300 ease-[var(--ease-bounce)] peer-checked:translate-x-5 group-hover:scale-110"
+        class="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-surface shadow-[1px_1px_0_0_var(--color-shade)] transition-transform duration-300 ease-(--ease-bounce) peer-checked:translate-x-5 group-hover:scale-110"
         :class="model && 'translate-x-5'"
       />
     </span>

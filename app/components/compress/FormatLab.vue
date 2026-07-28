@@ -65,7 +65,7 @@ async function run(): Promise<void> {
       block
       @click="run"
     >
-      <FlaskConical class="h-4 w-4 stroke-[2.5]" />
+      <FlaskConical class="h-4 w-4" />
       Run the comparison
     </UiButton>
 
@@ -88,14 +88,14 @@ async function run(): Promise<void> {
               <tr
                 v-for="candidate in ranked"
                 :key="candidate.format"
-                class="border-t-2 border-[var(--color-line)] transition-colors"
+                class="border-t-2 border-(--color-line) transition-colors"
                 :class="candidate === winner ? 'bg-mint-wash' : 'bg-surface'"
               >
                 <th scope="row" class="px-3 py-2.5 font-bold text-ink">
                   <span class="flex items-center gap-1.5">
                     <Trophy
                       v-if="candidate === winner"
-                      class="h-3.5 w-3.5 shrink-0 stroke-[2.5] text-mint"
+                      class="h-3.5 w-3.5 shrink-0 text-mint"
                       aria-label="Smallest"
                     />
                     {{ FORMAT_META[candidate.format].label }}

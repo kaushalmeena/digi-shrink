@@ -186,6 +186,22 @@
     color: #1e293b;
   }
 
+  /*
+   * Iconography, straight from the design system: chunky 2.5px strokes with
+   * round caps and joins.
+   *
+   * Set once here rather than repeated as a utility on every icon, for two
+   * reasons: it's a system-wide rule, not a per-instance decision, and Tailwind's
+   * `stroke-<number>` utility only accepts integers — a fractional one silently
+   * does nothing, and the arbitrary-value form would need spelling out 30+ times.
+   * Individual icons can still override with `stroke-2` / `stroke-3`.
+   */
+  svg.lucide {
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
   /* Tabular figures everywhere numbers change in place, so stats don't jitter. */
   [data-numeric] {
     font-variant-numeric: tabular-nums;

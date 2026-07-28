@@ -58,12 +58,12 @@ useSeoMeta({
       :toast-options="{
         classes: {
           toast:
-            '!rounded-xl !border-2 !border-[var(--color-outline)] !bg-surface !text-ink !font-sans !shadow-[4px_4px_0_0_var(--color-shade-soft)] !gap-3',
+            '!rounded-xl !border-2 !border-(--color-outline) !bg-surface !text-ink !font-sans !shadow-[4px_4px_0_0_var(--color-shade-soft)] !gap-3',
           title: '!font-display !font-bold !text-xs !text-ink',
           description: '!text-2xs !text-ink-soft',
           icon: '!text-accent',
           closeButton:
-            '!rounded-full !border-2 !border-[var(--color-outline)] !bg-surface !text-ink hover:!bg-sun',
+            '!rounded-full !border-2 !border-(--color-outline) !bg-surface !text-ink hover:!bg-sun',
           success: '!shadow-[4px_4px_0_0_var(--color-mint)]',
           error: '!shadow-[4px_4px_0_0_var(--color-berry)]',
           warning: '!shadow-[4px_4px_0_0_var(--color-sun)]',

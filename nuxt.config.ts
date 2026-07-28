@@ -67,6 +67,21 @@ export default defineNuxtConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    /*
+     * Dev-server copies of the cross-origin-isolation headers below.
+     *
+     * These are not redundant: Vite's own middleware serves `/_nuxt/*` in dev and
+     * never sees Nitro's `routeRules`. Without them the document is isolated but
+     * the worker script is not, so the browser refuses to start the worker — and
+     * a blocked worker *load* fires a bare `Event` with no message, which is
+     * genuinely hard to trace back to a missing header.
+     */
+    server: {
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+      },
+    },
     // The codecs are ES modules that dynamically import their own WASM. Keeping
     // them out of dep-prebundling avoids a broken dev server, and `format: 'es'`
     // lets the worker use those dynamic imports.

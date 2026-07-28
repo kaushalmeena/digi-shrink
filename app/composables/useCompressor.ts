@@ -33,9 +33,16 @@ const fingerprintOf = (file: File) => `${file.name}:${file.size}:${file.lastModi
 async function ensurePool(): Promise<CompressionPool> {
   if (pool) return pool
 
-  // Dynamically imported so the worker chunk (and the WASM it pulls in) never
-  // blocks first paint, and so this module stays importable during SSR.
-  const { default: CompressWorker } = await import('~/workers/compress.worker?worker')
+  /*
+   * Dynamically imported so the worker chunk (and the WASM it pulls in) never
+   * blocks first paint, and so this module stays importable during SSR.
+   *
+   * The path must be *relative*. With the `~/` alias, Vite's worker plugin emits
+   * a malformed `/_nuxt/@fs/app/workers/…` URL — `@fs/` expects an absolute
+   * filesystem path — and the worker then fails to load with an empty error
+   * event, which is near-impossible to diagnose from the outside.
+   */
+  const { default: CompressWorker } = await import('../workers/compress.worker?worker')
   pool = new CompressionPool(() => new CompressWorker())
   return pool
 }
@@ -249,10 +256,20 @@ export function useCompressor() {
 
   /* -------------------------------------------------------------- execution */
 
-  /** Merge a per-item override into the global settings. */
+  /**
+   * Merge a per-item override into the global settings, as a plain object.
+   *
+   * The JSON round-trip is load-bearing, not defensive copying: `settings` is a
+   * Vue reactive Proxy, and `postMessage` cannot structured-clone a Proxy — it
+   * throws "could not be cloned". `toRaw` wouldn't be enough either, because the
+   * nested `resize`/`jpeg`/`webp`/… objects are proxies of their own. Settings
+   * are pure JSON data by construction (see `CompressionSettings`), so this is
+   * both safe and cheap.
+   */
   function settingsFor(item: QueueItem): CompressionSettings {
-    if (item.qualityOverride === null) return settings.value
-    return { ...settings.value, quality: item.qualityOverride }
+    const plain = JSON.parse(JSON.stringify(settings.value)) as CompressionSettings
+    if (item.qualityOverride !== null) plain.quality = item.qualityOverride
+    return plain
   }
 
   async function runItem(item: QueueItem): Promise<void> {

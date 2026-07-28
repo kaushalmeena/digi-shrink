@@ -123,7 +123,7 @@ async function download(): Promise<void> {
         v-else
         class="flex items-start gap-3 rounded-xl edge-soft bg-sun-wash p-4 text-xs leading-snug"
       >
-        <ImageOff class="mt-0.5 h-4 w-4 shrink-0 stroke-[2.5]" />
+        <ImageOff class="mt-0.5 h-4 w-4 shrink-0" />
         <p>
           This browser can't display the original
           <strong>{{ item.originalType.replace('image/', '').toUpperCase() }}</strong>
@@ -132,7 +132,7 @@ async function download(): Promise<void> {
         </p>
       </div>
 
-      <div class="border-t-2 border-[var(--color-line)] pt-6">
+      <div class="border-t-2 border-(--color-line) pt-6">
         <CompressFormatLab :item="item" />
       </div>
     </div>
@@ -148,7 +148,7 @@ async function download(): Promise<void> {
         </p>
 
         <UiButton v-if="item?.result" size="sm" @click="download">
-          <Download class="h-4 w-4 stroke-[2.5]" />
+          <Download class="h-4 w-4" />
           Download
         </UiButton>
       </div>

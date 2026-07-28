@@ -19,7 +19,7 @@ const { isDraggingOver } = useFileIntake()
   <Transition name="fade">
     <div
       v-if="isDraggingOver"
-      class="pointer-events-none fixed inset-0 z-[55] grid place-items-center bg-accent/15 p-6 backdrop-blur-sm"
+      class="pointer-events-none fixed inset-0 z-55 grid place-items-center bg-accent/15 p-6 backdrop-blur-sm"
       aria-hidden="true"
     >
       <div

@@ -20,7 +20,7 @@ const TONE_CLASS = {
   berry: 'text-berry',
   sun: 'text-sun',
   mint: 'text-mint',
-  line: 'text-[var(--color-line)]',
+  line: 'text-(--color-line)',
 } as const
 </script>
 

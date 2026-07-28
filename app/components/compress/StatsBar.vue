@@ -93,7 +93,7 @@ const TILES = computed(() => [
                 stroke-linecap="round"
                 :stroke-dasharray="RING"
                 :stroke-dashoffset="ringOffset"
-                class="transition-[stroke-dashoffset] duration-700 ease-[var(--ease-out-soft)]"
+                class="transition-[stroke-dashoffset] duration-700 ease-(--ease-out-soft)"
               />
             </svg>
 
@@ -108,7 +108,7 @@ const TILES = computed(() => [
 
           <div class="min-w-0">
             <span class="eyebrow flex items-center gap-1.5 text-ink-soft">
-              <PiggyBank class="h-3.5 w-3.5 stroke-[2.5]" />
+              <PiggyBank class="h-3.5 w-3.5" />
               Total saved
             </span>
 
@@ -129,7 +129,7 @@ const TILES = computed(() => [
             v-if="stats.unchanged > 0"
             class="relative z-10 mt-4 flex items-start gap-2 rounded-lg bg-sun-wash p-2.5 text-2xs leading-snug font-semibold text-ink"
           >
-            <ShieldCheck class="mt-px h-3.5 w-3.5 shrink-0 stroke-[2.5]" />
+            <ShieldCheck class="mt-px h-3.5 w-3.5 shrink-0" />
             {{ stats.unchanged }} image{{ stats.unchanged === 1 ? ' was' : 's were' }} already
             optimal — the original file was kept instead of a bigger re-encode.
           </p>

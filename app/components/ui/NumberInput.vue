@@ -47,7 +47,7 @@ function nudge(direction: 1 | -1): void {
       :aria-label="`Decrease ${ariaLabel ?? 'value'}`"
       @click="nudge(-1)"
     >
-      <Minus class="h-4 w-4 stroke-[3]" />
+      <Minus class="h-4 w-4 stroke-3" />
     </button>
 
     <input
@@ -73,7 +73,7 @@ function nudge(direction: 1 | -1): void {
       :aria-label="`Increase ${ariaLabel ?? 'value'}`"
       @click="nudge(1)"
     >
-      <Plus class="h-4 w-4 stroke-[3]" />
+      <Plus class="h-4 w-4 stroke-3" />
     </button>
   </div>
 </template>

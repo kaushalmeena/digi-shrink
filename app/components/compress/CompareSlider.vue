@@ -98,7 +98,7 @@ function onFrameClick(event: MouseEvent): void {
     <div class="flex flex-wrap items-center gap-2">
       <UiSegmented v-model="view" :options="VIEWS" aria-label="Comparison layout" size="sm" />
       <div class="ml-auto flex items-center gap-2">
-        <Maximize2 class="h-3.5 w-3.5 stroke-[2.5] text-ink-soft" aria-hidden="true" />
+        <Maximize2 class="h-3.5 w-3.5 text-ink-soft" aria-hidden="true" />
         <UiSegmented v-model="zoom" :options="ZOOMS" aria-label="Zoom level" size="sm" />
       </div>
     </div>
@@ -154,20 +154,20 @@ function onFrameClick(event: MouseEvent): void {
 
             <!-- Divider + grab handle -->
             <div
-              class="pointer-events-none absolute inset-y-0 w-0.5 bg-[var(--color-outline)]"
+              class="pointer-events-none absolute inset-y-0 w-0.5 bg-(--color-outline)"
               :style="{ left: `${position}%` }"
               aria-hidden="true"
             />
             <button
               type="button"
-              class="absolute top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize touch-none place-items-center rounded-full edge bg-surface pop-2 transition-transform duration-200 ease-[var(--ease-bounce)] hover:scale-110 active:scale-95"
+              class="absolute top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize touch-none place-items-center rounded-full edge bg-surface pop-2 transition-transform duration-200 ease-(--ease-bounce) hover:scale-110 active:scale-95"
               :style="{ left: `${position}%` }"
               aria-label="Drag to move the comparison divider"
               @pointerdown="onHandleDown"
               @pointermove="onHandleMove"
               @click.stop
             >
-              <SplitSquareHorizontal class="h-5 w-5 stroke-[2.5] text-ink" />
+              <SplitSquareHorizontal class="h-5 w-5 text-ink" />
             </button>
           </div>
         </div>
@@ -229,7 +229,7 @@ function onFrameClick(event: MouseEvent): void {
     </Transition>
 
     <p class="flex items-center gap-1.5 text-2xs text-ink-soft">
-      <Columns2 class="h-3.5 w-3.5 shrink-0 stroke-[2.5]" aria-hidden="true" />
+      <Columns2 class="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
       Zoom to 200% or more to judge fine detail — most compression artefacts are invisible at fit.
     </p>
   </div>
