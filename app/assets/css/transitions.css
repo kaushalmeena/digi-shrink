@@ -1,0 +1,212 @@
+/*
+ * ============================================================================
+ *  Shared <Transition> vocabulary
+ * ============================================================================
+ *  Every appear/disappear in the app uses one of these names, so motion reads as
+ *  a single language rather than a pile of one-off animations.
+ *
+ *  The system's rule: things ENTER with overshoot (they pop, they bounce past
+ *  their resting size and settle) and LEAVE quickly and linearly. Entrances get
+ *  the personality; exits get out of the way.
+ *
+ *  Every block here is inert under `prefers-reduced-motion`, which `main.css`
+ *  collapses globally to ~0ms.
+ * ============================================================================
+ */
+
+/* ---- pop: the default for anything appearing in place --------------------- */
+
+.pop-enter-active {
+  transition:
+    opacity 0.28s ease-out,
+    transform 0.42s var(--ease-bounce);
+}
+.pop-leave-active {
+  transition:
+    opacity 0.16s ease-in,
+    transform 0.16s ease-in;
+}
+.pop-enter-from {
+  opacity: 0;
+  transform: scale(0.85) translateY(8px);
+}
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.94);
+}
+
+/* ---- fade: for content swaps where movement would be noise ---------------- */
+
+.fade-enter-active {
+  transition: opacity 0.25s var(--ease-out-soft);
+}
+.fade-leave-active {
+  transition: opacity 0.15s ease-in;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* ---- backdrop: the offcanvas scrim --------------------------------------- */
+
+.backdrop-enter-active {
+  transition: opacity 0.3s var(--ease-out-soft);
+}
+.backdrop-leave-active {
+  transition: opacity 0.22s ease-in;
+}
+.backdrop-enter-from,
+.backdrop-leave-to {
+  opacity: 0;
+}
+
+/* ---- drawer: offcanvas panels -------------------------------------------- */
+/*
+ * Panels slide in on a soft-overshoot curve and slide out on a plain ease.
+ * Translating by 101% rather than 100% hides the hard shadow, which would
+ * otherwise stay visible as a bar along the screen edge.
+ */
+
+.drawer-right-enter-active,
+.drawer-left-enter-active,
+.drawer-bottom-enter-active {
+  transition: transform 0.42s var(--ease-out-soft);
+}
+.drawer-right-leave-active,
+.drawer-left-leave-active,
+.drawer-bottom-leave-active {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 1, 1);
+}
+
+.drawer-right-enter-from,
+.drawer-right-leave-to {
+  transform: translateX(101%);
+}
+.drawer-left-enter-from,
+.drawer-left-leave-to {
+  transform: translateX(-101%);
+}
+.drawer-bottom-enter-from,
+.drawer-bottom-leave-to {
+  transform: translateY(101%);
+}
+
+/* ---- toast: slides up from the bottom edge -------------------------------- */
+
+.toast-enter-active {
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.45s var(--ease-bounce);
+}
+.toast-leave-active {
+  transition:
+    opacity 0.2s ease-in,
+    transform 0.2s ease-in;
+  /* Taken out of flow on the way out so the survivors close the gap smoothly. */
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(24px) scale(0.9);
+}
+.toast-leave-to {
+  opacity: 0;
+  transform: translateX(28px) scale(0.95);
+}
+.toast-move {
+  transition: transform 0.35s var(--ease-bounce);
+}
+
+/* ---- queue: TransitionGroup for the image list ---------------------------- */
+/*
+ * `queue-move` is what makes removing a row feel considered: the rows below it
+ * glide up into place (Vue's FLIP) instead of snapping.
+ */
+
+.queue-enter-active {
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.5s var(--ease-bounce);
+}
+.queue-leave-active {
+  transition:
+    opacity 0.2s ease-in,
+    transform 0.2s ease-in;
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+.queue-enter-from {
+  opacity: 0;
+  transform: scale(0.94) translateY(-10px);
+}
+.queue-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateX(-24px);
+}
+.queue-move {
+  transition: transform 0.4s var(--ease-bounce);
+}
+
+/* ---- collapse: height-animated disclosure -------------------------------- */
+/*
+ * Driven by `grid-template-rows: 0fr → 1fr`, which animates to *content* height
+ * without JavaScript measuring anything. The inner wrapper needs
+ * `min-height: 0` and `overflow: hidden` for the row to actually collapse.
+ */
+
+.collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.35s var(--ease-out-soft);
+}
+.collapse > * {
+  min-height: 0;
+  overflow: hidden;
+}
+.collapse[data-open='false'] {
+  grid-template-rows: 0fr;
+}
+
+.collapse-enter-active,
+.collapse-leave-active {
+  transition:
+    grid-template-rows 0.35s var(--ease-out-soft),
+    opacity 0.25s ease;
+}
+.collapse-enter-from,
+.collapse-leave-to {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+/* ---- stagger: children enter in sequence --------------------------------- */
+/*
+ * Set `--stagger-index` on each child (usually from a v-for index) and they
+ * cascade in instead of arriving as one block.
+ */
+
+.stagger > * {
+  animation: pop-in 0.45s var(--ease-bounce) both;
+  animation-delay: calc(var(--stagger-index, 0) * 55ms);
+}
+
+/* ---- number-roll: for figures that change in place ----------------------- */
+
+.roll-enter-active,
+.roll-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.3s var(--ease-bounce);
+}
+.roll-enter-from {
+  opacity: 0;
+  transform: translateY(60%);
+}
+.roll-leave-to {
+  opacity: 0;
+  transform: translateY(-60%);
+}
