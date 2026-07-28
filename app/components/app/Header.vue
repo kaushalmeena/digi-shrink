@@ -17,7 +17,7 @@ const { summary } = useSettings()
     class="sticky top-0 z-40 border-b-2 border-(--color-outline) bg-canvas/90 backdrop-blur-md"
   >
     <div class="shell flex h-16 items-center gap-3">
-      <NuxtLink to="/" class="group shrink-0 rounded-lg" aria-label="DigiCompress home">
+      <NuxtLink to="/" class="group shrink-0 rounded-lg" aria-label="DigiShrink home">
         <AppLogo />
       </NuxtLink>
 

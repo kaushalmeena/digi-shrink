@@ -118,7 +118,7 @@ export async function saveAllToDirectory(
 
   let directory: FileSystemDirectoryHandleLike
   try {
-    directory = await picker({ mode: 'readwrite', id: 'digicompress-output' })
+    directory = await picker({ mode: 'readwrite', id: 'digishrink-output' })
   } catch (error) {
     if (isAbortError(error)) return null
     throw error

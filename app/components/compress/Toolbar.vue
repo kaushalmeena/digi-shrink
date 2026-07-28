@@ -52,7 +52,7 @@ async function downloadZip(): Promise<void> {
   try {
     const stamp = new Date().toISOString().slice(0, 10)
     const zip = await createZip(entries)
-    downloadBlob(zip, `digicompress-${stamp}.zip`)
+    downloadBlob(zip, `digishrink-${stamp}.zip`)
     toasts.success(`Zipped ${entries.length} image${entries.length === 1 ? '' : 's'}.`)
   } catch (error) {
     toasts.error(error instanceof Error ? error.message : 'Could not build the ZIP.')

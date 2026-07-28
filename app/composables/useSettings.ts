@@ -6,7 +6,7 @@ import { FORMAT_META } from '~/lib/constants'
 import { useState } from '#imports'
 import type { CompressionSettings, OutputFormat } from '~/lib/types'
 
-export const SETTINGS_STORAGE_KEY = 'digicompress:settings'
+export const SETTINGS_STORAGE_KEY = 'digishrink:settings'
 
 /**
  * The active compression settings.

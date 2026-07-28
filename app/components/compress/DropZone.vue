@@ -83,7 +83,7 @@ const SHAPES: ConfettiShape[] = [
         <template v-if="isDraggingOver">Let go — we've got it</template>
         <template v-else>
           Drop images to
-          <span class="marker-underline">squeeze</span>
+          <span class="marker-underline">shrink</span>
         </template>
       </h2>
 

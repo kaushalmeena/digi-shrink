@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useState } from '#imports'
 
-export const LIFETIME_STATS_KEY = 'digicompress:lifetime'
+export const LIFETIME_STATS_KEY = 'digishrink:lifetime'
 
 export interface LifetimeStats {
   /** Images successfully compressed, ever. */

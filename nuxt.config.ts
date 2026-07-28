@@ -1,7 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 
 /**
- * DigiCompress is a fully local, offline-capable image compressor.
+ * DigiShrink is a fully local, offline-capable image compressor.
  *
  * Two hard constraints shape this config:
  *  1. No image bytes may ever leave the device — there is no server runtime, no
@@ -9,6 +9,25 @@ import tailwindcss from '@tailwindcss/vite'
  *  2. The app must work with the network switched off, so every asset (fonts,
  *     codecs, icons) is self-hosted and precached by the service worker.
  */
+
+/**
+ * A GitHub Pages *project* site is served from `/<repo>/`, not `/`. Nuxt rewrites
+ * its own bundled asset URLs from `app.baseURL`, but literal paths we write by
+ * hand — favicons, manifest icons, the service worker's navigation fallback —
+ * are not touched, and would 404 under a sub-path.
+ *
+ * The deploy workflow sets `NUXT_APP_BASE_URL` from the Pages config, so this
+ * resolves to `/` locally and `/digi-shrink/` in CI.
+ *
+ * `configure-pages` reports the path *without* a trailing slash
+ * (`/digi-shrink`), and as an empty string for a user site — while Nuxt expects
+ * `app.baseURL` to end in one. Normalising here rather than in the workflow keeps
+ * the YAML free of shell string-munging.
+ */
+const rawBase = process.env.NUXT_APP_BASE_URL?.trim() || '/'
+const baseURL = rawBase.endsWith('/') ? rawBase : `${rawBase}/`
+const withBase = (path: string) => `${baseURL}${path.replace(/^\//, '')}`
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
 
@@ -24,11 +43,12 @@ export default defineNuxtConfig({
   },
 
   app: {
+    baseURL,
     head: {
       htmlAttrs: { lang: 'en' },
       link: [
-        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-        { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
+        { rel: 'icon', type: 'image/svg+xml', href: withBase('favicon.svg') },
+        { rel: 'apple-touch-icon', href: withBase('icons/apple-touch-icon.png') },
       ],
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
@@ -116,33 +136,33 @@ export default defineNuxtConfig({
   pwa: {
     registerType: 'autoUpdate',
     manifest: {
-      id: '/',
-      name: 'DigiCompress — Local Image Compressor',
-      short_name: 'DigiCompress',
+      id: baseURL,
+      name: 'DigiShrink — Local Image Compressor',
+      short_name: 'DigiShrink',
       description:
-        'Squeeze images down to size entirely on your own device. No uploads, no accounts, works offline.',
+        'Shrink images down to size entirely on your own device. No uploads, no accounts, works offline.',
       lang: 'en',
-      start_url: '/',
-      scope: '/',
+      start_url: baseURL,
+      scope: baseURL,
       display: 'standalone',
       orientation: 'any',
       background_color: '#fffdf5',
       theme_color: '#8b5cf6',
       categories: ['utilities', 'photo', 'productivity'],
       icons: [
-        { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-        { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+        { src: withBase('icons/icon-192.png'), sizes: '192x192', type: 'image/png' },
+        { src: withBase('icons/icon-512.png'), sizes: '512x512', type: 'image/png' },
         {
-          src: '/icons/icon-maskable-512.png',
+          src: withBase('icons/icon-maskable-512.png'),
           sizes: '512x512',
           type: 'image/png',
           purpose: 'maskable',
         },
       ],
-      // Lets the OS offer DigiCompress in "Open with…" for image files.
+      // Lets the OS offer DigiShrink in "Open with…" for image files.
       file_handlers: [
         {
-          action: '/',
+          action: baseURL,
           accept: {
             'image/jpeg': ['.jpg', '.jpeg'],
             'image/png': ['.png'],
@@ -159,7 +179,7 @@ export default defineNuxtConfig({
       // The AVIF and oxipng WASM binaries are multiple megabytes each and must
       // be precached for the app to compress while offline.
       maximumFileSizeToCacheInBytes: 16 * 1024 * 1024,
-      navigateFallback: '/',
+      navigateFallback: baseURL,
       cleanupOutdatedCaches: true,
     },
     client: { installPrompt: true },

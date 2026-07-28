@@ -133,7 +133,7 @@ const STEPS = [
           </p>
 
           <h1 class="mt-5 text-4xl sm:text-5xl lg:text-6xl">
-            Squeeze images without
+            Shrink images without
             <span class="marker-underline [--mark-c:var(--color-berry)]">giving them away</span>
           </h1>
 

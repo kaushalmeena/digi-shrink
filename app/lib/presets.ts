@@ -87,7 +87,7 @@ export const PRESETS: Preset[] = [
   },
   {
     id: 'tiny',
-    label: 'Max squeeze',
+    label: 'Max shrink',
     blurb: 'AVIF, tuned hard. Smallest possible file, slowest to encode.',
     accent: 'berry',
     settings: {

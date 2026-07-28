@@ -3,7 +3,7 @@ import { useState } from '#imports'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
-export const THEME_STORAGE_KEY = 'digicompress:theme'
+export const THEME_STORAGE_KEY = 'digishrink:theme'
 
 /**
  * Light / dark / follow-the-OS.

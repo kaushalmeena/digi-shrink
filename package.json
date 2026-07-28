@@ -1,5 +1,5 @@
 {
-  "name": "digi-compress",
+  "name": "digi-shrink",
   "version": "1.0.0",
   "private": true,
   "type": "module",
@@ -34,6 +34,7 @@
     "@nuxt/eslint": "^1.16.0",
     "@nuxt/fonts": "^0.14.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.1.2",
     "@vite-pwa/nuxt": "^1.1.1",
     "@vueuse/nuxt": "^14.3.0",
     "eslint": "^9.0.0",
@@ -43,5 +44,6 @@
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.0",
     "vue-tsc": "^3.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.8.1"
 }

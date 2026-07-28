@@ -16,7 +16,7 @@ const { stats, savedBytes, savedPercent } = useLifetimeStats()
  * rather than reintroducing an icon set for one mark.
  */
 const LINKS = [
-  { href: 'https://github.com/kaushalmeena/digi-compress', label: 'Source', icon: Code2 },
+  { href: 'https://github.com/kaushalmeena/digi-shrink', label: 'Source', icon: Code2 },
   { href: 'https://github.com/jamsinclair/jSquash', label: 'jSquash codecs', icon: ExternalLink },
 ]
 
@@ -30,9 +30,9 @@ const since = computed(() => {
 </script>
 
 <template>
-  <footer class="relative mt-20 border-t-2 border-(--color-outline) bg-surface">
-    <DecorSquiggle tone="line" class="absolute -top-[9px] left-0 h-4" />
-
+  <!-- A straight 2px rule, not a squiggle: the wave sat directly on top of the
+       border and read as a rendering artefact rather than decoration. -->
+  <footer class="mt-20 border-t-2 border-(--color-outline) bg-surface">
     <div class="shell py-10">
       <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
         <div class="max-w-sm space-y-3">

@@ -14,11 +14,11 @@ import { useThemeMode } from '~/composables/useThemeMode'
 const { resolved } = useThemeMode()
 
 useHead({
-  titleTemplate: (title) => (title ? `${title} · DigiCompress` : 'DigiCompress'),
+  titleTemplate: (title) => (title ? `${title} · DigiShrink` : 'DigiShrink'),
   script: [
     {
       tagPosition: 'head',
-      innerHTML: `(function(){try{var s=localStorage.getItem('digicompress:theme');var m=s?JSON.parse(s):'system';var q=window.matchMedia('(prefers-color-scheme: dark)').matches;if(m==='dark'||(m!=='light'&&q)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
+      innerHTML: `(function(){try{var s=localStorage.getItem('digishrink:theme');var m=s?JSON.parse(s):'system';var q=window.matchMedia('(prefers-color-scheme: dark)').matches;if(m==='dark'||(m!=='light'&&q)){document.documentElement.classList.add('dark')}}catch(e){}})()`,
     },
   ],
 })
@@ -27,9 +27,9 @@ useSeoMeta({
   title: 'Compress images locally',
   description:
     'A fast, private image compressor that runs entirely in your browser. Batch compress JPEG, PNG, WebP and AVIF with no uploads, no accounts and full offline support.',
-  ogTitle: 'DigiCompress — local image compressor',
+  ogTitle: 'DigiShrink — local image compressor',
   ogDescription:
-    'Squeeze images down to size entirely on your own device. Nothing is ever uploaded.',
+    'Shrink images down to size entirely on your own device. Nothing is ever uploaded.',
   ogType: 'website',
   themeColor: '#8b5cf6',
 })
