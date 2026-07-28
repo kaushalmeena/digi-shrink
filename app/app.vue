@@ -57,8 +57,11 @@ useSeoMeta({
       close-button
       :toast-options="{
         classes: {
+          // No shadow here on purpose: the per-type classes below own it. Two
+          // competing `!shadow-*` utilities would be resolved by stylesheet
+          // order rather than by which one is more specific.
           toast:
-            '!rounded-xl !border-2 !border-(--color-outline) !bg-surface !text-ink !font-sans !shadow-[4px_4px_0_0_var(--color-shade-soft)] !gap-3',
+            '!rounded-xl !border-2 !border-(--color-outline) !bg-surface !text-ink !font-sans !gap-3',
           title: '!font-display !font-bold !text-xs !text-ink',
           description: '!text-2xs !text-ink-soft',
           icon: '!text-accent',

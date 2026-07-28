@@ -14,7 +14,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "build:icons": "node scripts/build-icons.mjs"
   },
   "dependencies": {
     "@jsquash/avif": "^2.1.1",

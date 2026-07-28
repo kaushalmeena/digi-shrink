@@ -89,8 +89,15 @@ function onKeydown(event: KeyboardEvent): void {
   <div
     ref="root"
     role="radiogroup"
-    class="relative rounded-full edge bg-surface-2 p-1"
-    :class="columns ? 'grid gap-1' : 'inline-flex'"
+    class="relative edge bg-surface-2 p-1"
+    :class="
+      columns
+        ? // A pill radius is half the container's height, so on a multi-row grid
+          // the bottom-row cells would sit outside the corner curve. A fixed
+          // radius keeps every cell inside the track.
+          'grid gap-1 rounded-2xl'
+        : 'inline-flex rounded-full'
+    "
     :style="columns ? { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` } : undefined"
     @keydown="onKeydown"
   >
