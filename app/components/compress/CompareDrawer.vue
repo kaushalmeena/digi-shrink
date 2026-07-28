@@ -100,7 +100,7 @@ async function download(): Promise<void> {
           :class="row.highlight ? 'bg-mint-wash' : 'bg-surface-2'"
         >
           <dt class="eyebrow text-ink-soft">{{ row.label }}</dt>
-          <dd class="mt-1 font-display text-lg leading-none font-extrabold" data-numeric>
+          <dd class="mt-1 font-display text-lg/none font-extrabold" data-numeric>
             {{ row.value }}
           </dd>
           <dd class="mt-1 text-2xs text-ink-soft" data-numeric>{{ row.note }}</dd>

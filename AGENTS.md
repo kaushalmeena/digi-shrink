@@ -67,6 +67,11 @@ auto-fixable with `pnpm lint:fix`. Two things to know about that setup:
 - `settings["better-tailwindcss"].entryPoint` points at `app/assets/css/main.css`.
   Without it the plugin only knows stock Tailwind and reports every custom
   `@utility` (`pop-2`, `sticker`, `edge`, `blob-leaf`, …) as unknown.
+- **It only lints template attributes, not `<script>` variables.** The class
+  lookup maps the design-system components use (`VARIANTS`, `TONES`, `SIZES`, …)
+  are invisible to it — the `variables` setting does not reach them inside a
+  `.vue` script block. Keep those strings canonical by hand: `size-9`, not
+  `h-9 w-9`.
 - A new shared class therefore has to be declared with `@utility`, not as a plain
   CSS class, or `no-unknown-classes` will flag every use of it.
 - `enforce-consistent-line-wrapping` is off: Prettier owns formatting, and two

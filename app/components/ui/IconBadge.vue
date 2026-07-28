@@ -33,9 +33,9 @@ const TONES: Record<Tone, string> = {
 }
 
 const SIZES = {
-  sm: 'h-7 w-7 [&_svg]:h-3.5 [&_svg]:w-3.5',
-  md: 'h-10 w-10 [&_svg]:h-5 [&_svg]:w-5',
-  lg: 'h-14 w-14 [&_svg]:h-7 [&_svg]:w-7',
+  sm: 'size-7 [&_svg]:size-3.5',
+  md: 'size-10 [&_svg]:size-5',
+  lg: 'size-14 [&_svg]:size-7',
 } as const
 
 const SHAPES: Record<Shape, string> = {

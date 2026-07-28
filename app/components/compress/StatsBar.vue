@@ -151,7 +151,7 @@ const TILES = computed(() => [
           </UiIconBadge>
 
           <p class="mt-3 eyebrow text-ink-soft">{{ tile.label }}</p>
-          <p class="mt-1 font-display text-xl leading-none font-extrabold" data-numeric>
+          <p class="mt-1 font-display text-xl/none font-extrabold" data-numeric>
             {{ tile.value }}
           </p>
           <p class="mt-1.5 text-2xs/snug text-ink-soft">{{ tile.note }}</p>

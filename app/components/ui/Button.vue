@@ -57,9 +57,9 @@ const SIZES: Record<Size, string> = {
 }
 
 const ICON_SIZES: Record<Size, string> = {
-  sm: 'h-9 w-9',
-  md: 'h-11 w-11',
-  lg: 'h-14 w-14',
+  sm: 'size-9',
+  md: 'size-11',
+  lg: 'size-14',
 }
 
 const isInert = computed(() => props.disabled || props.loading)
