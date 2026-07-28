@@ -92,34 +92,6 @@
   transform: translateY(101%);
 }
 
-/* ---- toast: slides up from the bottom edge -------------------------------- */
-
-.toast-enter-active {
-  transition:
-    opacity 0.25s ease-out,
-    transform 0.45s var(--ease-bounce);
-}
-.toast-leave-active {
-  transition:
-    opacity 0.2s ease-in,
-    transform 0.2s ease-in;
-  /* Taken out of flow on the way out so the survivors close the gap smoothly. */
-  position: absolute;
-  right: 0;
-  left: 0;
-}
-.toast-enter-from {
-  opacity: 0;
-  transform: translateY(24px) scale(0.9);
-}
-.toast-leave-to {
-  opacity: 0;
-  transform: translateX(28px) scale(0.95);
-}
-.toast-move {
-  transition: transform 0.35s var(--ease-bounce);
-}
-
 /* ---- queue: TransitionGroup for the image list ---------------------------- */
 /*
  * `queue-move` is what makes removing a row feel considered: the rows below it
