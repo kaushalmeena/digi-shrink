@@ -1,0 +1,13 @@
+{
+  // Nuxt generates one project per environment (app, server, shared, node).
+  // This root file just wires them together so editors and `nuxt typecheck`
+  // resolve the same way. Add compiler options to `nuxt.config.ts` under
+  // `typescript.tsConfig`, not here — this file is a router, not a config.
+  "files": [],
+  "references": [
+    { "path": "./.nuxt/tsconfig.app.json" },
+    { "path": "./.nuxt/tsconfig.server.json" },
+    { "path": "./.nuxt/tsconfig.shared.json" },
+    { "path": "./.nuxt/tsconfig.node.json" }
+  ]
+}

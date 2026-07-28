@@ -70,7 +70,12 @@ function toDosDateTime(date: Date): { time: number; date: number } {
 /** Little-endian writer over a fixed-size buffer. */
 class ByteWriter {
   private readonly view: DataView
-  private readonly bytes: Uint8Array
+  /**
+   * Explicitly `Uint8Array<ArrayBuffer>` rather than the default
+   * `Uint8Array<ArrayBufferLike>`: only the non-shared form is a valid
+   * `BlobPart`, and the `Blob` we ultimately hand back is built from these.
+   */
+  private readonly bytes: Uint8Array<ArrayBuffer>
   private offset = 0
 
   constructor(size: number) {
@@ -96,7 +101,7 @@ class ByteWriter {
     return this
   }
 
-  done(): Uint8Array {
+  done(): Uint8Array<ArrayBuffer> {
     return this.bytes
   }
 }
@@ -130,7 +135,7 @@ export async function createZip(
   /** Local header + payload, in archive order. */
   const parts: BlobPart[] = []
   /** Central directory records, written after all payloads. */
-  const centralRecords: Uint8Array[] = []
+  const centralRecords: Uint8Array<ArrayBuffer>[] = []
 
   let offset = 0
 

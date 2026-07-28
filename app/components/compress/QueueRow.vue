@@ -29,7 +29,8 @@ import type { QueueItem } from '~/lib/types'
 const props = defineProps<{ item: QueueItem; index: number }>()
 const emit = defineEmits<{ compare: [id: string] }>()
 
-const { removeItem, setDimensions, compressOne, outputBlob, outputNameFor } = useCompressor()
+const { removeItem, setDimensions, setQualityOverride, compressOne, outputBlob, outputNameFor } =
+  useCompressor()
 const { settings } = useSettings()
 const toasts = useToasts()
 
@@ -45,7 +46,7 @@ const savings = computed(() =>
 const savingsTone = computed(() => {
   if (!props.item.result) return 'neutral' as const
   if (props.item.result.usedOriginal) return 'sun' as const
-  return savings.value > 0 ? 'mint' as const : 'berry' as const
+  return savings.value > 0 ? ('mint' as const) : ('berry' as const)
 })
 
 const STATUS_TONE = {
@@ -56,12 +57,15 @@ const STATUS_TONE = {
   error: 'danger',
 } as const
 
-/** The effective quality for this row, whether overridden or inherited. */
+/**
+ * The effective quality for this row, whether overridden or inherited.
+ *
+ * Writes go through the composable rather than mutating the `item` prop, so the
+ * queue remains the only owner of item state.
+ */
 const effectiveQuality = computed({
   get: () => props.item.qualityOverride ?? settings.value.quality,
-  set: (value: number) => {
-    props.item.qualityOverride = value
-  },
+  set: (value: number) => setQualityOverride(props.item.id, value),
 })
 
 function onPreviewLoad(event: Event): void {
@@ -133,7 +137,10 @@ async function rerun(): Promise<void> {
           </template>
 
           <span v-if="item.width" data-numeric>
-            · {{ formatDimensions(item.result?.width ?? item.width, item.result?.height ?? item.height) }}
+            ·
+            {{
+              formatDimensions(item.result?.width ?? item.width, item.result?.height ?? item.height)
+            }}
           </span>
 
           <span v-if="item.result" class="font-semibold">· {{ item.result.encoder }}</span>
@@ -160,7 +167,13 @@ async function rerun(): Promise<void> {
       <!-- Result badge -->
       <div class="hidden shrink-0 sm:block">
         <Transition name="pop" mode="out-in">
-          <UiBadge v-if="item.result" :key="item.result.size" :tone="savingsTone" outlined size="md">
+          <UiBadge
+            v-if="item.result"
+            :key="item.result.size"
+            :tone="savingsTone"
+            outlined
+            size="md"
+          >
             <Check v-if="!item.result.usedOriginal && savings > 0" class="h-3 w-3 stroke-[3]" />
             <span data-numeric>
               <template v-if="item.result.usedOriginal">already optimal</template>
@@ -268,7 +281,7 @@ async function rerun(): Promise<void> {
                 v-if="item.qualityOverride !== null"
                 variant="ghost"
                 size="sm"
-                @click="item.qualityOverride = null"
+                @click="setQualityOverride(item.id, null)"
               >
                 Reset
               </UiButton>
@@ -285,10 +298,7 @@ async function rerun(): Promise<void> {
             </div>
           </div>
 
-          <p
-            v-if="settings.mode !== 'quality'"
-            class="mt-3 text-2xs font-semibold text-ink-soft"
-          >
+          <p v-if="settings.mode !== 'quality'" class="mt-3 text-2xs font-semibold text-ink-soft">
             Per-image quality is unavailable in
             {{ settings.mode === 'lossless' ? 'lossless' : 'target size' }} mode.
           </p>

@@ -25,7 +25,16 @@ const SHAPES: ConfettiShape[] = [
   { kind: 'ring', tone: 'berry', top: '-8%', left: '4%', size: 78, opacity: 0.55 },
   { kind: 'triangle', tone: 'sun', bottom: '6%', left: '9%', size: 34, rotate: 18, delay: 1.2 },
   { kind: 'squiggle', tone: 'mint', top: '14%', right: '6%', size: 62, delay: 0.5 },
-  { kind: 'square', tone: 'accent', bottom: '-6%', right: '12%', size: 44, rotate: -12, opacity: 0.5, delay: 1.8 },
+  {
+    kind: 'square',
+    tone: 'accent',
+    bottom: '-6%',
+    right: '12%',
+    size: 44,
+    rotate: -12,
+    opacity: 0.5,
+    delay: 1.8,
+  },
   { kind: 'plus', tone: 'berry', top: '52%', right: '3%', size: 26, delay: 2.4 },
 ]
 </script>
@@ -75,10 +84,7 @@ const SHAPES: ConfettiShape[] = [
         </template>
       </h2>
 
-      <p
-        v-if="!compact"
-        class="mt-3 max-w-md text-sm leading-relaxed text-ink-soft"
-      >
+      <p v-if="!compact" class="mt-3 max-w-md text-sm leading-relaxed text-ink-soft">
         JPEG, PNG, WebP, AVIF, GIF, BMP and HEIC. Drop a whole folder if you like — everything is
         processed right here in your browser.
       </p>

@@ -3,7 +3,7 @@
  * Footer. Doubles as the lifetime-savings display, which is the small reward
  * that makes the tool feel worth coming back to.
  */
-import { Github, HardDrive, Sparkles } from '@lucide/vue'
+import { ExternalLink, HardDrive, Sparkles } from '@lucide/vue'
 import { formatBytes } from '~/lib/format'
 
 const { stats, savedBytes, savedPercent } = useLifetimeStats()
@@ -48,7 +48,9 @@ const since = computed(() => {
             {{ formatBytes(savedBytes) }}
           </p>
           <p class="mt-1 text-xs text-ink-soft" data-numeric>
-            saved across {{ stats.images.toLocaleString() }} image{{ stats.images === 1 ? '' : 's' }}
+            saved across {{ stats.images.toLocaleString() }} image{{
+              stats.images === 1 ? '' : 's'
+            }}
             <template v-if="since"> since {{ since }}</template>
             · {{ savedPercent.toFixed(0) }}% smaller
           </p>
@@ -65,8 +67,8 @@ const since = computed(() => {
           rel="noopener noreferrer"
           class="inline-flex items-center gap-1.5 font-bold transition-colors hover:text-accent"
         >
-          <Github class="h-3.5 w-3.5 stroke-[2.5]" />
           jSquash codecs
+          <ExternalLink class="h-3.5 w-3.5 stroke-[2.5]" />
         </a>
       </div>
     </div>

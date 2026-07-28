@@ -25,7 +25,9 @@ export function emptyLifetimeStats(): LifetimeStats {
 export function useLifetimeStats() {
   const stats = useState<LifetimeStats>(LIFETIME_STATS_KEY, emptyLifetimeStats)
 
-  const savedBytes = computed(() => Math.max(0, stats.value.originalBytes - stats.value.outputBytes))
+  const savedBytes = computed(() =>
+    Math.max(0, stats.value.originalBytes - stats.value.outputBytes),
+  )
 
   const savedPercent = computed(() => {
     if (stats.value.originalBytes <= 0) return 0

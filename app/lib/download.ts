@@ -15,10 +15,7 @@ interface FileSystemFileHandleLike {
   createWritable: () => Promise<FileSystemWritable>
 }
 interface FileSystemDirectoryHandleLike {
-  getFileHandle: (
-    name: string,
-    options?: { create?: boolean },
-  ) => Promise<FileSystemFileHandleLike>
+  getFileHandle: (name: string, options?: { create?: boolean }) => Promise<FileSystemFileHandleLike>
 }
 
 type SaveFilePicker = (options: {

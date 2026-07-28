@@ -7,16 +7,7 @@
  * A ZIP is always offered too, since that's the only option in Safari and
  * Firefox.
  */
-import {
-  Download,
-  FolderDown,
-  Loader2,
-  Play,
-  RotateCcw,
-  Sparkles,
-  Trash2,
-  X,
-} from '@lucide/vue'
+import { Download, FolderDown, Loader2, Play, RotateCcw, Sparkles, Trash2, X } from '@lucide/vue'
 import { createZip } from '~/lib/zip'
 import { downloadBlob, saveAllToDirectory, supportsDirectorySave } from '~/lib/download'
 import { formatEta } from '~/lib/format'
@@ -101,12 +92,7 @@ async function saveToFolder(): Promise<void> {
       </Transition>
 
       <div class="flex flex-wrap items-center gap-2 p-3 sm:gap-3 sm:p-4">
-        <UiButton
-          v-if="!isRunning"
-          size="md"
-          :disabled="!canCompress"
-          @click="compressAll"
-        >
+        <UiButton v-if="!isRunning" size="md" :disabled="!canCompress" @click="compressAll">
           <Play class="h-4 w-4 stroke-[2.5]" />
           Compress
           <template v-if="pending.length > 0">

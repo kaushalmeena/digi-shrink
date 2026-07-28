@@ -27,8 +27,16 @@ const sort = ref<Sort>('added')
 
 const FILTERS = computed<SegmentOption<Filter>[]>(() => [
   { value: 'all', label: `All ${items.value.length}` },
-  { value: 'queued', label: `Queued ${pending.value.length}`, disabled: pending.value.length === 0 },
-  { value: 'done', label: `Done ${completed.value.length}`, disabled: completed.value.length === 0 },
+  {
+    value: 'queued',
+    label: `Queued ${pending.value.length}`,
+    disabled: pending.value.length === 0,
+  },
+  {
+    value: 'done',
+    label: `Done ${completed.value.length}`,
+    disabled: completed.value.length === 0,
+  },
   { value: 'error', label: `Failed ${failed.value.length}`, disabled: failed.value.length === 0 },
 ])
 

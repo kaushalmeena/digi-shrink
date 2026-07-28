@@ -113,7 +113,8 @@ export function useCompressor() {
   const overallProgress = computed(() => {
     if (items.value.length === 0) return 0
     const total = items.value.reduce((sum, item) => {
-      if (item.status === 'done' || item.status === 'skipped' || item.status === 'error') return sum + 1
+      if (item.status === 'done' || item.status === 'skipped' || item.status === 'error')
+        return sum + 1
       return sum + item.progress
     }, 0)
     return total / items.value.length
@@ -160,7 +161,9 @@ export function useCompressor() {
     items.value.push(...created)
 
     if (rejected > 0) {
-      toasts.warning(`Skipped ${rejected} file${rejected === 1 ? '' : 's'} that ${rejected === 1 ? 'is not an image' : 'are not images'}.`)
+      toasts.warning(
+        `Skipped ${rejected} file${rejected === 1 ? '' : 's'} that ${rejected === 1 ? 'is not an image' : 'are not images'}.`,
+      )
     }
     if (duplicates > 0) {
       toasts.info(`${duplicates} duplicate${duplicates === 1 ? '' : 's'} already in the queue.`)
@@ -202,6 +205,17 @@ export function useCompressor() {
     if (!item) return
     item.width = width
     item.height = height
+  }
+
+  /**
+   * Set (or clear, with `null`) a per-image quality override.
+   *
+   * Lives here rather than in the row component so the queue stays the single
+   * owner of item state — components read items, they never mutate them.
+   */
+  function setQualityOverride(id: string, quality: number | null): void {
+    const item = byId(id)
+    if (item) item.qualityOverride = quality
   }
 
   /** Queue an already-processed item to run again (e.g. after changing quality). */
@@ -413,6 +427,7 @@ export function useCompressor() {
     clear,
     clearCompleted,
     setDimensions,
+    setQualityOverride,
     requeue,
     requeueAll,
     compressAll,

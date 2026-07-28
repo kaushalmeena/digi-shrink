@@ -41,7 +41,8 @@ const VARIANTS: Record<Variant, string> = {
   // Transparent until hovered, when it floods with optimism-yellow.
   secondary: 'bg-surface text-ink edge pop-0 hover:bg-sun hover:pop-2',
   // No chrome at all — for tertiary actions inside dense rows.
-  ghost: 'bg-transparent text-ink-soft border-2 border-transparent hover:bg-surface-2 hover:text-ink',
+  ghost:
+    'bg-transparent text-ink-soft border-2 border-transparent hover:bg-surface-2 hover:text-ink',
   danger: 'bg-danger text-white edge pop-2',
   sun: 'bg-sun text-[#1e293b] edge pop-2',
 }
@@ -82,12 +83,10 @@ const classes = computed(() => [
   >
     <!-- The spinner replaces the label rather than sitting beside it, so the
          button never changes width mid-action. -->
-    <span
-      v-if="loading"
-      class="absolute inset-0 grid place-items-center"
-      aria-hidden="true"
-    >
-      <span class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+    <span v-if="loading" class="absolute inset-0 grid place-items-center" aria-hidden="true">
+      <span
+        class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"
+      />
     </span>
 
     <span

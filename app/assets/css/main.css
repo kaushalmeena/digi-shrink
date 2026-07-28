@@ -20,11 +20,9 @@
 @theme {
   /* ---- Typography -------------------------------------------------------- */
   /* Outfit: geometric with rounded letterforms — friendly, not corporate. */
-  --font-display:
-    'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   /* Plus Jakarta Sans: geometric but humanist, stays legible at 13px. */
-  --font-sans:
-    'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
 
   /* A 1.25 (major third) scale — melodic rather than mathematical. */

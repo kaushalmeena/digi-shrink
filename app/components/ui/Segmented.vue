@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts">
 /**
  * A segmented control — the primary way to pick between a handful of named
  * options in this app (format, resize mode, compression mode).
@@ -9,8 +9,12 @@
  * like a physical object being moved.
  *
  * Implemented as an ARIA radio group so arrow keys work as users expect.
+ *
+ * Callers label it by putting `aria-label` directly on the component; Vue's
+ * fallthrough attributes land it on the `role="radiogroup"` root, so there's no
+ * need for a prop that just forwards a string.
  */
-export interface SegmentOption<T extends string> {
+export interface SegmentOption<T extends string | number> {
   value: T
   label: string
   /** Optional tooltip / longer explanation. */
@@ -19,13 +23,12 @@ export interface SegmentOption<T extends string> {
 }
 </script>
 
-<script setup lang="ts" generic="T extends string">
+<script setup lang="ts" generic="T extends string | number">
 const model = defineModel<T>({ required: true })
 
 const props = withDefaults(
   defineProps<{
     options: SegmentOption<T>[]
-    ariaLabel: string
     size?: 'sm' | 'md'
     /** Wrap into a grid instead of one row — for 4+ options in a narrow panel. */
     columns?: number
@@ -33,7 +36,9 @@ const props = withDefaults(
   { size: 'md' },
 )
 
-const activeIndex = computed(() => props.options.findIndex((option) => option.value === model.value))
+const activeIndex = computed(() =>
+  props.options.findIndex((option) => option.value === model.value),
+)
 
 /** Arrow keys move to the next/previous enabled option, wrapping around. */
 function onKeydown(event: KeyboardEvent): void {
@@ -58,7 +63,6 @@ function onKeydown(event: KeyboardEvent): void {
 <template>
   <div
     role="radiogroup"
-    :aria-label="ariaLabel"
     class="relative rounded-full edge bg-surface-2 p-1"
     :class="columns ? 'grid gap-1' : 'inline-flex'"
     :style="columns ? { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` } : undefined"

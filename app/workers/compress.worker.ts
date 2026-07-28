@@ -39,7 +39,12 @@ import type {
   WorkerRequest,
   WorkerResponse,
 } from '~/lib/types'
-import { FORMAT_META, MAX_PIXELS, MAX_TARGET_SIZE_ATTEMPTS, TARGET_SIZE_TOLERANCE } from '~/lib/constants'
+import {
+  FORMAT_META,
+  MAX_PIXELS,
+  MAX_TARGET_SIZE_ATTEMPTS,
+  TARGET_SIZE_TOLERANCE,
+} from '~/lib/constants'
 import { computeTargetDimensions, resolveCandidateFormats } from '~/lib/image'
 
 /* -------------------------------------------------------------------------- */
@@ -104,7 +109,11 @@ async function decodeWithWasm(buffer: ArrayBuffer, mimeType: string): Promise<Im
     }
     case 'image/avif': {
       const { default: decode } = await import('@jsquash/avif/decode')
-      return decode(buffer)
+      // Unlike the others, the AVIF decoder returns null on a malformed file
+      // rather than throwing.
+      const decoded = await decode(buffer)
+      if (!decoded) throw new Error('That AVIF file could not be decoded.')
+      return decoded
     }
     default:
       throw new Error(`This browser can't decode ${mimeType || 'that file type'}.`)
@@ -414,9 +423,9 @@ async function handleCompress(
 
   const outputBuffer = keepOriginal ? buffer : winner.buffer
   const format = keepOriginal
-    ? (Object.keys(FORMAT_META) as OutputFormat[]).find(
+    ? ((Object.keys(FORMAT_META) as OutputFormat[]).find(
         (key) => FORMAT_META[key].mimeType === mimeType,
-      ) ?? winner.format
+      ) ?? winner.format)
     : winner.format
 
   const result: CompressionResult = {
@@ -477,13 +486,7 @@ self.addEventListener('message', (event: MessageEvent<WorkerRequest>) => {
   const run =
     request.kind === 'compress'
       ? handleCompress(request.id, request.buffer, request.mimeType, request.settings)
-      : handleProbe(
-          request.id,
-          request.buffer,
-          request.mimeType,
-          request.settings,
-          request.formats,
-        )
+      : handleProbe(request.id, request.buffer, request.mimeType, request.settings, request.formats)
 
   run.catch((error: unknown) => {
     post({

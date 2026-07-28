@@ -66,9 +66,21 @@ const TONE_CLASS: Record<Tone, string> = {
         stroke-linecap="round"
         stroke-linejoin="round"
       >
-        <circle v-if="shape.kind === 'circle'" cx="24" cy="24" r="20" fill="currentColor" stroke="none" />
+        <circle
+          v-if="shape.kind === 'circle'"
+          cx="24"
+          cy="24"
+          r="20"
+          fill="currentColor"
+          stroke="none"
+        />
         <circle v-else-if="shape.kind === 'ring'" cx="24" cy="24" r="19" />
-        <path v-else-if="shape.kind === 'triangle'" d="M24 5 44 41H4Z" fill="currentColor" stroke="none" />
+        <path
+          v-else-if="shape.kind === 'triangle'"
+          d="M24 5 44 41H4Z"
+          fill="currentColor"
+          stroke="none"
+        />
         <rect
           v-else-if="shape.kind === 'square'"
           x="5"

@@ -214,8 +214,4 @@ export interface ErrorMessage {
   message: string
 }
 
-export type WorkerResponse =
-  | ProgressMessage
-  | CompressDoneMessage
-  | ProbeDoneMessage
-  | ErrorMessage
+export type WorkerResponse = ProgressMessage | CompressDoneMessage | ProbeDoneMessage | ErrorMessage

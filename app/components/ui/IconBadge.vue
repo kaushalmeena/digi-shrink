@@ -48,7 +48,13 @@ const SHAPES: Record<Shape, string> = {
 <template>
   <span
     class="grid shrink-0 place-items-center [&_svg]:stroke-[2.5]"
-    :class="[TONES[tone], SIZES[size], SHAPES[shape], outlined && 'edge', wiggle && 'hover:animate-wiggle']"
+    :class="[
+      TONES[tone],
+      SIZES[size],
+      SHAPES[shape],
+      outlined && 'edge',
+      wiggle && 'hover:animate-wiggle',
+    ]"
   >
     <slot />
   </span>

@@ -101,9 +101,7 @@ const POSITION = {
   bottom: 'inset-x-0 bottom-0 max-h-[88vh] rounded-t-3xl border-t-2',
 } as const
 
-const SIZE = computed(() =>
-  props.side === 'bottom' ? 'w-full' : `w-full ${props.width}`,
-)
+const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${props.width}`))
 </script>
 
 <template>
