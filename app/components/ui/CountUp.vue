@@ -12,6 +12,7 @@
  *    readers and copy/paste both see a real number.
  */
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { useEventListener } from '@vueuse/core'
 
 const props = withDefaults(
   defineProps<{
@@ -36,7 +37,15 @@ function tweenTo(target: number): void {
   const prefersReduced =
     import.meta.client && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  if (prefersReduced || props.duration <= 0) {
+  /*
+   * Skip the animation when the document is hidden.
+   *
+   * Browsers pause `requestAnimationFrame` in background tabs, so a tween
+   * started there never advances and the element is left showing the *previous*
+   * value — a stat reading "0 B saved" after a batch that saved megabytes. The
+   * animation is decoration; the number is information, so the number wins.
+   */
+  if (prefersReduced || props.duration <= 0 || (import.meta.client && document.hidden)) {
     displayed.value = target
     return
   }
@@ -64,6 +73,18 @@ function tweenTo(target: number): void {
 }
 
 watch(() => props.value, tweenTo)
+
+/*
+ * A tween already in flight when the tab is backgrounded freezes partway,
+ * leaving a number that is neither the old value nor the new one. Snap to the
+ * target instead so the figure is correct the moment the user looks again.
+ */
+useEventListener(import.meta.client ? document : null, 'visibilitychange', () => {
+  if (!document.hidden) return
+  if (frame !== null) cancelAnimationFrame(frame)
+  frame = null
+  displayed.value = props.value
+})
 
 onBeforeUnmount(() => {
   if (frame !== null) cancelAnimationFrame(frame)
