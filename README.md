@@ -2,7 +2,7 @@
 
 <img src="public/favicon.svg" alt="DigiShrink logo" width="96" height="96" />
 
-# DigiShrink
+# Digi-Shrink
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-3DA639?logo=opensourceinitiative&logoColor=white)](LICENSE) [![Nuxt](https://img.shields.io/badge/Nuxt-4-00875A?logo=nuxt&logoColor=white)](https://nuxt.com) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-0E7490?logo=tailwindcss&logoColor=white)](https://tailwindcss.com) [![PWA](https://img.shields.io/badge/PWA-ready-5A0FC8?logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
 
