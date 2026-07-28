@@ -4,9 +4,15 @@
  * options in this app (format, resize mode, compression mode).
  *
  * The active segment is marked by a single sliding pill rendered *behind* the
- * labels. Animating one element's transform is both smoother and cheaper than
- * cross-fading backgrounds on every segment, and it makes the selection feel
- * like a physical object being moved.
+ * labels. Animating one element is both smoother and cheaper than cross-fading
+ * backgrounds on every segment, and it makes the selection feel like a physical
+ * object being moved.
+ *
+ * The pill's position and width are **measured** from the active button rather
+ * than computed as `100% / count`. Segments are content-sized ("Slider" is much
+ * narrower than "Side by side"), so an equal-split assumption makes the pill
+ * overlap its neighbours — and it would also drift as soon as a webfont swaps in
+ * and changes the label widths.
  *
  * Implemented as an ARIA radio group so arrow keys work as users expect.
  *
@@ -14,7 +20,8 @@
  * fallthrough attributes land it on the `role="radiogroup"` root, so there's no
  * need for a prop that just forwards a string.
  */
-import { computed } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import { useResizeObserver } from '@vueuse/core'
 
 import type { SegmentOption } from '~/lib/types'
 
@@ -30,9 +37,33 @@ const props = withDefaults(
   { size: 'md' },
 )
 
+const root = ref<HTMLElement | null>(null)
+const segments = ref<HTMLButtonElement[]>([])
+
 const activeIndex = computed(() =>
   props.options.findIndex((option) => option.value === model.value),
 )
+
+/** Geometry of the sliding pill, in pixels relative to the container. */
+const pill = ref({ left: 0, width: 0, ready: false })
+
+function measure(): void {
+  const button = segments.value[activeIndex.value]
+  if (!button || props.columns) {
+    pill.value = { ...pill.value, ready: false }
+    return
+  }
+  // `offsetParent` is the `relative` container, so these already account for its
+  // 4px padding — no need to add it back.
+  pill.value = { left: button.offsetLeft, width: button.offsetWidth, ready: true }
+}
+
+onMounted(measure)
+watch([activeIndex, () => props.options, () => props.size, () => props.columns], measure, {
+  flush: 'post',
+})
+// Catches container resizes and, importantly, the reflow when a webfont loads.
+useResizeObserver(root, measure)
 
 /** Arrow keys move to the next/previous enabled option, wrapping around. */
 function onKeydown(event: KeyboardEvent): void {
@@ -56,26 +87,25 @@ function onKeydown(event: KeyboardEvent): void {
 
 <template>
   <div
+    ref="root"
     role="radiogroup"
     class="relative rounded-full edge bg-surface-2 p-1"
     :class="columns ? 'grid gap-1' : 'inline-flex'"
     :style="columns ? { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` } : undefined"
     @keydown="onKeydown"
   >
-    <!-- The sliding indicator. Only rendered in row mode, where a single
-         translate can track the selection; the grid layout uses per-cell fills. -->
+    <!-- The sliding pill. Row mode only; the grid layout fills the active cell
+         directly, because a pill can't travel sensibly across wrapped rows. -->
     <span
-      v-if="!columns && activeIndex >= 0"
-      class="absolute top-1 bottom-1 left-1 rounded-full bg-accent transition-transform duration-300 ease-(--ease-bounce)"
-      :style="{
-        width: `calc((100% - 0.5rem) / ${options.length})`,
-        transform: `translateX(${activeIndex * 100}%)`,
-      }"
+      v-if="pill.ready"
+      class="absolute top-1 bottom-1 left-0 rounded-full bg-accent transition-[translate,width] duration-300 ease-(--ease-bounce)"
+      :style="{ translate: `${pill.left}px 0`, width: `${pill.width}px` }"
       aria-hidden="true"
     />
 
     <button
       v-for="option in options"
+      ref="segments"
       :key="option.value"
       type="button"
       role="radio"

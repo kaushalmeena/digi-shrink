@@ -5,11 +5,20 @@
  */
 import { computed } from 'vue'
 
-import { ExternalLink, HardDrive, Sparkles } from '@lucide/vue'
+import { Code2, ExternalLink, HardDrive, Sparkles } from '@lucide/vue'
 import { formatBytes } from '~/lib/format'
 import { useLifetimeStats } from '~/composables/useLifetimeStats'
 
 const { stats, savedBytes, savedPercent } = useLifetimeStats()
+
+/**
+ * Lucide dropped its brand icons, so the repo link uses a generic code glyph
+ * rather than reintroducing an icon set for one mark.
+ */
+const LINKS = [
+  { href: 'https://github.com/kaushalmeena/digi-compress', label: 'Source', icon: Code2 },
+  { href: 'https://github.com/jamsinclair/jSquash', label: 'jSquash codecs', icon: ExternalLink },
+]
 
 const since = computed(() => {
   if (!stats.value.since) return ''
@@ -64,15 +73,20 @@ const since = computed(() => {
         class="mt-8 flex flex-col gap-3 border-t-2 border-(--color-line) pt-6 text-2xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
       >
         <p>Built with Nuxt, Tailwind and WebAssembly codecs from the Squoosh project.</p>
-        <a
-          href="https://github.com/jamsinclair/jSquash"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-1.5 font-bold transition-colors hover:text-accent"
-        >
-          jSquash codecs
-          <ExternalLink class="h-3.5 w-3.5" />
-        </a>
+
+        <nav class="flex items-center gap-4" aria-label="Project links">
+          <a
+            v-for="link in LINKS"
+            :key="link.href"
+            :href="link.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 font-bold transition-colors hover:text-accent"
+          >
+            <component :is="link.icon" class="h-3.5 w-3.5" />
+            {{ link.label }}
+          </a>
+        </nav>
       </div>
     </div>
   </footer>
