@@ -1,0 +1,9 @@
+.nuxt
+.output
+dist
+node_modules
+pnpm-lock.yaml
+public/icons
+public/sw.js
+public/workbox-*.js
+*.wasm
