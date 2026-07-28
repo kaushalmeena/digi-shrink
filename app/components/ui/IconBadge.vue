@@ -47,7 +47,7 @@ const SHAPES: Record<Shape, string> = {
 
 <template>
   <span
-    class="grid shrink-0 place-items-center [&_svg]:"
+    class="grid shrink-0 place-items-center"
     :class="[
       TONES[tone],
       SIZES[size],

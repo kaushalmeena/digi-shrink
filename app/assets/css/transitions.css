@@ -159,11 +159,16 @@
 /*
  * Set `--stagger-index` on each child (usually from a v-for index) and they
  * cascade in instead of arriving as one block.
+ *
+ * Declared with `@utility` rather than as a plain `.stagger` class so Tailwind
+ * knows about it — otherwise `no-unknown-classes` reports every use as a typo.
  */
 
-.stagger > * {
-  animation: pop-in 0.45s var(--ease-bounce) both;
-  animation-delay: calc(var(--stagger-index, 0) * 55ms);
+@utility stagger {
+  & > * {
+    animation: pop-in 0.45s var(--ease-bounce) both;
+    animation-delay: calc(var(--stagger-index, 0) * 55ms);
+  }
 }
 
 /* ---- number-roll: for figures that change in place ----------------------- */

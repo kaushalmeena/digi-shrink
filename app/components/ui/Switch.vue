@@ -23,18 +23,18 @@ defineProps<{
     <input v-model="model" type="checkbox" :disabled="disabled" class="peer sr-only" />
 
     <span
-      class="relative mt-0.5 h-6 w-11 shrink-0 rounded-full edge bg-surface-2 transition-colors duration-200 peer-checked:bg-accent peer-focus-visible:outline peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent"
+      class="relative mt-0.5 h-6 w-11 shrink-0 rounded-full bg-surface-2 transition-colors duration-200 edge peer-checked:bg-accent peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent"
       aria-hidden="true"
     >
       <span
-        class="absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-surface shadow-[1px_1px_0_0_var(--color-shade)] transition-transform duration-300 ease-(--ease-bounce) peer-checked:translate-x-5 group-hover:scale-110"
+        class="absolute top-0.5 left-0.5 size-4 rounded-full bg-surface shadow-[1px_1px_0_0_var(--color-shade)] transition-transform duration-300 ease-bounce group-hover:scale-110 peer-checked:translate-x-5"
         :class="model && 'translate-x-5'"
       />
     </span>
 
     <span class="min-w-0 flex-1">
       <span class="block text-sm font-semibold text-ink">{{ label }}</span>
-      <span v-if="hint" class="mt-0.5 block text-xs leading-snug text-ink-soft">{{ hint }}</span>
+      <span v-if="hint" class="mt-0.5 block text-xs/snug text-ink-soft">{{ hint }}</span>
     </span>
   </label>
 </template>
