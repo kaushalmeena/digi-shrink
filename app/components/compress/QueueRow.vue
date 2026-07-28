@@ -151,8 +151,9 @@ async function rerun(): Promise<void> {
           <span v-if="item.result" class="font-semibold">· {{ item.result.encoder }}</span>
         </div>
 
-        <!-- Live stage label while working, error text when failed. -->
-        <Transition name="collapse">
+        <!-- Live stage label while working, error text when failed.
+             Text-only targets, so this fades rather than collapses. -->
+        <Transition name="fade">
           <p
             v-if="item.status === 'working' && item.stage"
             class="mt-1.5 text-2xs font-semibold text-accent"
@@ -248,9 +249,15 @@ async function rerun(): Promise<void> {
       </div>
     </div>
 
-    <!-- Per-image overrides -->
-    <Transition name="collapse">
-      <div v-if="isExpanded" class="grid">
+    <!--
+      Per-image overrides.
+
+      Always mounted and toggled by `data-open` so the height animation is
+      symmetrical — see the `disclose` utility. `inert` keeps the collapsed
+      panel's slider and buttons out of the tab order and the accessibility tree.
+    -->
+    <div class="disclose" :data-open="isExpanded" :inert="!isExpanded">
+      <div>
         <div class="border-t-2 border-line bg-surface-2 p-4">
           <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
             <div class="flex-1">
@@ -333,6 +340,6 @@ async function rerun(): Promise<void> {
           </dl>
         </div>
       </div>
-    </Transition>
+    </div>
   </UiCard>
 </template>

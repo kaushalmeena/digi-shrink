@@ -123,8 +123,10 @@ const TILES = computed(() => [
           </div>
         </div>
 
-        <!-- Honesty note: already-optimal images are reported, not hidden. -->
-        <Transition name="collapse">
+        <!-- Honesty note: already-optimal images are reported, not hidden.
+             Fades rather than collapses: the target is a flex row, not a
+             grid wrapper, so a height animation cannot apply. -->
+        <Transition name="fade">
           <p
             v-if="stats.unchanged > 0"
             class="relative z-10 mt-4 flex items-start gap-2 rounded-lg bg-sun-wash p-2.5 text-2xs/snug font-semibold text-ink"

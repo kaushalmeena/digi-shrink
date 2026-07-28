@@ -28,7 +28,7 @@ withDefaults(defineProps<{ size?: 'sm' | 'md' }>(), { size: 'md' })
       class="font-display font-extrabold tracking-tight"
       :class="size === 'sm' ? 'text-base' : 'text-lg'"
     >
-      Digi<span class="text-accent">Shrink</span>
+      Digi-<span class="text-accent">Shrink</span>
     </span>
   </span>
 </template>

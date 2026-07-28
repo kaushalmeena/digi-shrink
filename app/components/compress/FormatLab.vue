@@ -69,8 +69,8 @@ async function run(): Promise<void> {
       Run the comparison
     </UiButton>
 
-    <Transition name="collapse">
-      <div v-if="ranked.length > 0" class="grid">
+    <div class="disclose" :data-open="ranked.length > 0" :inert="!(ranked.length > 0)">
+      <div>
         <div class="overflow-x-auto rounded-xl edge-soft">
           <table class="w-full min-w-104 border-collapse text-left text-xs">
             <thead>
@@ -126,7 +126,7 @@ async function run(): Promise<void> {
           </table>
         </div>
       </div>
-    </Transition>
+    </div>
 
     <div v-if="ranked.length > 0" class="flex items-center gap-2">
       <p v-if="winner" class="flex-1 text-2xs/snug text-ink-soft">

@@ -84,8 +84,8 @@ async function saveToFolder(): Promise<void> {
   <div class="sticky bottom-4 z-30">
     <UiCard tone="ink" :depth="3" flush class="overflow-hidden">
       <!-- Progress rail sits flush against the card's top edge while running. -->
-      <Transition name="collapse">
-        <div v-if="isRunning" class="border-b-2 border-(--color-outline)">
+      <div class="disclose" :data-open="isRunning">
+        <div class="border-b-2 border-(--color-outline)">
           <UiProgressBar
             :value="overallProgress"
             size="sm"
@@ -93,7 +93,7 @@ async function saveToFolder(): Promise<void> {
             class="rounded-none! border-0!"
           />
         </div>
-      </Transition>
+      </div>
 
       <div class="flex flex-wrap items-center gap-2 p-3 sm:gap-3 sm:p-4">
         <UiButton v-if="!isRunning" size="md" :disabled="!canCompress" @click="compressAll">

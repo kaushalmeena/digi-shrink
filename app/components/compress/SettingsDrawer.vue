@@ -112,8 +112,12 @@ function applyToFinished(): void {
         </p>
 
         <!-- Auto mode: pick which formats get raced against each other. -->
-        <Transition name="collapse">
-          <div v-if="settings.format === 'auto'" class="grid">
+        <div
+          class="disclose"
+          :data-open="settings.format === 'auto'"
+          :inert="!(settings.format === 'auto')"
+        >
+          <div>
             <div class="rounded-xl bg-surface-2 p-4 edge-soft">
               <p class="mb-3 text-xs/snug text-ink-soft">
                 Each image is encoded to every ticked format and the smallest result wins. More
@@ -132,7 +136,7 @@ function applyToFinished(): void {
               </div>
             </div>
           </div>
-        </Transition>
+        </div>
       </section>
 
       <!-- ------------------------------------------------------------ Mode -->
@@ -207,8 +211,12 @@ function applyToFinished(): void {
           hint="Nothing shrinks a file like sending fewer pixels."
         />
 
-        <Transition name="collapse">
-          <div v-if="settings.resize.enabled" class="grid">
+        <div
+          class="disclose"
+          :data-open="settings.resize.enabled"
+          :inert="!settings.resize.enabled"
+        >
+          <div>
             <div class="space-y-4 rounded-xl bg-surface-2 p-4 edge-soft">
               <UiSegmented
                 v-model="settings.resize.mode"
@@ -305,7 +313,7 @@ function applyToFinished(): void {
               />
             </div>
           </div>
-        </Transition>
+        </div>
       </section>
 
       <!-- --------------------------------------------------- Codec options -->

@@ -48,48 +48,54 @@
   opacity: 0;
 }
 
-/* ---- backdrop: the offcanvas scrim --------------------------------------- */
+/* ---- offcanvas: scrim + sliding panel ------------------------------------ */
+/*
+ * One transition on the dialog root drives both children.
+ *
+ * The scrim and the panel used to own separate `<Transition>`s, but they were
+ * nested inside a root element that was itself `v-if`-ed. Flipping `open` to
+ * false unmounted that root immediately and took the children with it, so the
+ * panel animated in and then vanished on close. Transitioning the root and
+ * targeting the children with descendant selectors keeps the whole dialog alive
+ * for the duration of the exit.
+ *
+ * The root has no transition of its own, so `<Transition>` cannot infer a
+ * duration from it — the component passes an explicit `:duration`.
+ *
+ * Panels slide out by 101% rather than 100% so the hard shadow clears the
+ * viewport edge instead of leaving a bar along it. `translate` is used in place
+ * of `transform` so it composes with any transform the panel already carries.
+ */
 
-.backdrop-enter-active {
+.offcanvas-enter-active [data-offcanvas='scrim'] {
   transition: opacity 0.3s var(--ease-out-soft);
 }
-.backdrop-leave-active {
-  transition: opacity 0.22s ease-in;
+.offcanvas-leave-active [data-offcanvas='scrim'] {
+  transition: opacity 0.26s ease-in;
 }
-.backdrop-enter-from,
-.backdrop-leave-to {
+.offcanvas-enter-from [data-offcanvas='scrim'],
+.offcanvas-leave-to [data-offcanvas='scrim'] {
   opacity: 0;
 }
 
-/* ---- drawer: offcanvas panels -------------------------------------------- */
-/*
- * Panels slide in on a soft-overshoot curve and slide out on a plain ease.
- * Translating by 101% rather than 100% hides the hard shadow, which would
- * otherwise stay visible as a bar along the screen edge.
- */
-
-.drawer-right-enter-active,
-.drawer-left-enter-active,
-.drawer-bottom-enter-active {
-  transition: transform 0.42s var(--ease-out-soft);
+.offcanvas-enter-active [data-offcanvas='panel'] {
+  transition: translate 0.42s var(--ease-out-soft);
 }
-.drawer-right-leave-active,
-.drawer-left-leave-active,
-.drawer-bottom-leave-active {
-  transition: transform 0.28s cubic-bezier(0.4, 0, 1, 1);
+.offcanvas-leave-active [data-offcanvas='panel'] {
+  transition: translate 0.28s cubic-bezier(0.4, 0, 1, 1);
 }
 
-.drawer-right-enter-from,
-.drawer-right-leave-to {
-  transform: translateX(101%);
+.offcanvas-enter-from [data-offcanvas='panel'][data-side='right'],
+.offcanvas-leave-to [data-offcanvas='panel'][data-side='right'] {
+  translate: 101% 0;
 }
-.drawer-left-enter-from,
-.drawer-left-leave-to {
-  transform: translateX(-101%);
+.offcanvas-enter-from [data-offcanvas='panel'][data-side='left'],
+.offcanvas-leave-to [data-offcanvas='panel'][data-side='left'] {
+  translate: -101% 0;
 }
-.drawer-bottom-enter-from,
-.drawer-bottom-leave-to {
-  transform: translateY(101%);
+.offcanvas-enter-from [data-offcanvas='panel'][data-side='bottom'],
+.offcanvas-leave-to [data-offcanvas='panel'][data-side='bottom'] {
+  translate: 0 101%;
 }
 
 /* ---- queue: TransitionGroup for the image list ---------------------------- */
@@ -123,36 +129,43 @@
   transition: transform 0.4s var(--ease-bounce);
 }
 
-/* ---- collapse: height-animated disclosure -------------------------------- */
+/* ---- disclose: height-animated disclosure -------------------------------- */
 /*
- * Driven by `grid-template-rows: 0fr → 1fr`, which animates to *content* height
- * without JavaScript measuring anything. The inner wrapper needs
- * `min-height: 0` and `overflow: hidden` for the row to actually collapse.
+ * Driven by `grid-template-rows: 1fr → 0fr`, which animates to *content* height
+ * with no JavaScript measurement.
+ *
+ * Toggled by a `data-open` attribute on an element that is always mounted,
+ * rather than by a `<Transition>` around a `v-if`. Mount/unmount made the exit
+ * unreliable: the element has to already be in the document, with a resolved
+ * row track, for the browser to have a value to animate *from*. Toggling an
+ * attribute on a stable element has no such timing dependency, so open and
+ * close are exactly symmetrical.
+ *
+ * Requires a single element child to wrap the content — `min-height: 0` and
+ * `overflow: hidden` on that child are what let the track shrink below the
+ * content's intrinsic height. A bare text node becomes an anonymous grid item
+ * these rules cannot reach; use the `fade` transition for those.
+ *
+ * Named `disclose`, not `collapse`, because Tailwind already ships a `collapse`
+ * utility for `visibility: collapse`.
  */
 
-.collapse {
+@utility disclose {
   display: grid;
   grid-template-rows: 1fr;
-  transition: grid-template-rows 0.35s var(--ease-out-soft);
-}
-.collapse > * {
-  min-height: 0;
-  overflow: hidden;
-}
-.collapse[data-open='false'] {
-  grid-template-rows: 0fr;
-}
-
-.collapse-enter-active,
-.collapse-leave-active {
   transition:
     grid-template-rows 0.35s var(--ease-out-soft),
     opacity 0.25s ease;
-}
-.collapse-enter-from,
-.collapse-leave-to {
-  grid-template-rows: 0fr;
-  opacity: 0;
+
+  & > * {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &[data-open='false'] {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
 }
 
 /* ---- stagger: children enter in sequence --------------------------------- */

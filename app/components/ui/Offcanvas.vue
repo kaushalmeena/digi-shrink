@@ -110,25 +110,33 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
 <template>
   <ClientOnly>
     <Teleport to="body">
-      <div
-        v-if="open"
-        class="fixed inset-0 z-50"
-        role="dialog"
-        aria-modal="true"
-        :aria-labelledby="titleId"
-      >
-        <Transition name="backdrop" appear>
+      <!--
+        A single transition on the dialog root. The scrim and panel are animated
+        by descendant selectors rather than owning `<Transition>`s of their own —
+        nested inside a `v-if`-ed root, they were unmounted instantly on close
+        and never played their exit.
+
+        `:duration` is required because the root itself has no transition for Vue
+        to measure; it must cover the longest child animation.
+      -->
+      <Transition name="offcanvas" appear :duration="{ enter: 430, leave: 300 }">
+        <div
+          v-if="open"
+          class="fixed inset-0 z-50"
+          role="dialog"
+          aria-modal="true"
+          :aria-labelledby="titleId"
+        >
           <div
-            v-if="open"
+            data-offcanvas="scrim"
             class="absolute inset-0 bg-ink/45 backdrop-blur-[3px]"
             @click="open = false"
           />
-        </Transition>
 
-        <Transition :name="`drawer-${side}`" appear>
           <div
-            v-if="open"
             ref="panel"
+            data-offcanvas="panel"
+            :data-side="side"
             tabindex="-1"
             class="absolute flex flex-col border-(--color-outline) bg-canvas shadow-[-8px_0_0_0_var(--color-shade-soft)] outline-none"
             :class="[POSITION[side], SIZE]"
@@ -164,8 +172,8 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
               <slot name="footer" />
             </footer>
           </div>
-        </Transition>
-      </div>
+        </div>
+      </Transition>
     </Teleport>
   </ClientOnly>
 </template>
