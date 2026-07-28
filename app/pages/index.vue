@@ -177,7 +177,14 @@ const STEPS = [
               </p>
             </div>
 
-            <div class="stagger mt-8 grid gap-5 md:grid-cols-3">
+            <!--
+              The row gap has to clear the icon badge, which deliberately hangs
+              20px above each card's top edge. At `gap-5` the badge lands on top
+              of the previous card's shadow once the grid stacks to one column.
+              Columns only ever form a single row, so the wide gap costs nothing
+              there.
+            -->
+            <div class="stagger mt-8 grid gap-x-5 gap-y-10 md:grid-cols-3 md:gap-y-5">
               <UiCard
                 v-for="(point, index) in TRUST_POINTS"
                 :key="point.title"

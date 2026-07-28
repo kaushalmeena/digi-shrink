@@ -32,15 +32,23 @@ const TONE_RING = {
         :key="preset.id"
         type="button"
         :aria-pressed="activePresetId === preset.id"
-        class="group relative flex flex-col items-start gap-1 rounded-xl edge bg-surface p-3 text-left sticker"
+        class="group relative flex flex-col items-start gap-1 rounded-xl edge p-3 text-left sticker"
         :class="[
           TONE_RING[preset.accent],
-          activePresetId === preset.id ? 'bg-accent-wash pop-2' : 'pop-1',
+          // Both background states live here. Leaving a `bg-surface` in the
+          // static class list would make this a coin-flip: competing Tailwind
+          // utilities are resolved by stylesheet order, not attribute order.
+          activePresetId === preset.id ? 'bg-accent-wash pop-2' : 'bg-surface pop-1',
         ]"
         :style="{ '--stagger-index': index }"
         @click="usePreset(preset.id)"
       >
-        <span class="flex w-full items-center gap-1.5">
+        <!--
+          Fixed to the badge's own height (h-7). Without it the row grows when the
+          check appears and the whole card jumps, which reads as a glitch on what
+          should be a calm toggle.
+        -->
+        <span class="flex h-7 w-full items-center gap-1.5">
           <span class="flex-1 font-display text-sm font-bold text-ink">{{ preset.label }}</span>
 
           <!-- Selection is marked by an icon as well as a colour shift, so it
