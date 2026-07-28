@@ -21,10 +21,10 @@ withDefaults(
 const TONES: Record<Tone, string> = {
   neutral: 'bg-surface-2 text-ink-soft',
   accent: 'bg-accent-wash text-accent',
-  berry: 'bg-berry-wash text-berry',
+  berry: 'bg-berry-wash text-berry-strong',
   sun: 'bg-sun-wash text-ink',
-  mint: 'bg-mint-wash text-mint',
-  danger: 'bg-danger-wash text-danger',
+  mint: 'bg-mint-wash text-mint-strong',
+  danger: 'bg-danger-wash text-danger-strong',
 }
 </script>
 

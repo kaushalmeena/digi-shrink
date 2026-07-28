@@ -49,7 +49,10 @@ value** — that is exactly what lets a single `.dark` class re-skin the whole a
 | `--color-berry`         | `#f472b6` | Decorative pink                                            |
 | `--color-sun`           | `#fbbf24` | Decorative amber                                           |
 | `--color-mint`          | `#34d399` | Decorative / success green                                 |
-| `--color-danger`        | `#e11d48` | Errors                                                     |
+| `--color-berry-strong`  | `#be185d` | Berry as **text** on `berry-wash`                          |
+| `--color-mint-strong`   | `#047857` | Mint as **text** on `mint-wash`                            |
+| `--color-danger`        | `#e11d48` | Error fills                                                |
+| `--color-danger-strong` | `#be123c` | Error **text**                                             |
 
 `outline` and `shade` are separate tokens even though they share a value in
 light mode, because dark mode moves them independently.
@@ -84,6 +87,16 @@ Dark mode is **not an inversion**. Three deliberate moves:
 **Usage rule:** `accent` is for primary actions. `berry`, `sun` and `mint` are
 rotated through decoratively — for shapes, icon badges and card shadows — to get
 a confetti effect. They are never load-bearing on their own.
+
+**Paint versus ink.** The plain decorative values are tuned to be bright, which
+is right for fills, shadows and SVG shapes and wrong for small text: on their own
+pale washes, light-mode mint measured 1.7:1 and berry 2.3:1, against the 4.5:1
+small bold text needs. Anything that renders decorative colour as _text_ uses the
+`-strong` variant instead, which clears 4.9:1 at the same hue. In dark mode the
+bright values already clear 8:1, so `-strong` collapses back onto them.
+
+The same split exists for violet, where it is spelled `accent` (ink, safe for
+white text) and `accent-bright` (paint).
 
 ### Typography
 

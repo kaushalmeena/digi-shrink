@@ -95,7 +95,7 @@ async function run(): Promise<void> {
                   <span class="flex items-center gap-1.5">
                     <Trophy
                       v-if="candidate === winner"
-                      class="size-3.5 shrink-0 text-mint"
+                      class="size-3.5 shrink-0 text-mint-strong"
                       aria-label="Smallest"
                     />
                     {{ FORMAT_META[candidate.format].label }}
@@ -108,8 +108,8 @@ async function run(): Promise<void> {
                   <span
                     :class="
                       savingsPercent(item.originalSize, candidate.size) > 0
-                        ? 'font-bold text-mint'
-                        : 'text-danger'
+                        ? 'font-bold text-mint-strong'
+                        : 'text-danger-strong'
                     "
                   >
                     {{ savingsPercent(item.originalSize, candidate.size) > 0 ? '−' : '+'

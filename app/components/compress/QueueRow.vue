@@ -162,7 +162,7 @@ async function rerun(): Promise<void> {
           </p>
           <p
             v-else-if="item.status === 'error'"
-            class="mt-1.5 flex items-start gap-1 text-2xs/snug font-semibold text-danger"
+            class="mt-1.5 flex items-start gap-1 text-2xs/snug font-semibold text-danger-strong"
           >
             <AlertTriangle class="mt-px size-3 shrink-0 stroke-3" />
             {{ item.error }}

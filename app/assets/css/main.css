@@ -88,8 +88,23 @@
   --color-sun-wash: #fdf3d8;
   --color-mint-wash: #e2f8ef;
 
+  /*
+   * Text-safe counterparts, for a label sitting on the matching `-wash`.
+   *
+   * The plain decorative values are tuned to be *bright* — as fills, shadows and
+   * shapes they are meant to pop off the page. As small text on a pale wash they
+   * are close to invisible: mint managed 1.7:1 and berry 2.3:1, against the 4.5:1
+   * that small bold text needs. These darkened versions clear 4.9:1 while keeping
+   * the same hue, so the palette still reads as one family.
+   *
+   * Same idea as `accent` vs `accent-bright`: one value for ink, one for paint.
+   */
+  --color-berry-strong: #be185d;
+  --color-mint-strong: #047857;
+
   --color-danger: #e11d48;
   --color-danger-wash: #ffe8ec;
+  --color-danger-strong: #be123c;
 }
 
 /*
@@ -122,8 +137,14 @@
   --color-sun-wash: #3a2f16;
   --color-mint-wash: #16342b;
 
+  /* On dark washes the bright values are already the readable ones — they clear
+     8:1 — so `-strong` collapses back onto them rather than darkening further. */
+  --color-berry-strong: #f9a8d4;
+  --color-mint-strong: #6ee7b7;
+
   --color-danger: #fb7185;
   --color-danger-wash: #3b1620;
+  --color-danger-strong: #fb7185;
 }
 
 @layer base {
