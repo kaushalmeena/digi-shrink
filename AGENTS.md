@@ -54,9 +54,23 @@ expression:
 ```
 
 **Prefer canonical Tailwind class forms.** `border-(--color-outline)` not
-`border-[var(--color-outline)]`; `stroke-3` not `stroke-[3]`; `z-55` not
-`z-[55]`. Note that `stroke-<number>` only accepts integers — the system-wide
-2.5px icon stroke is set once as a base rule on `svg.lucide`, not per-icon.
+`border-[var(--color-outline)]`; `size-4` not `h-4 w-4`; `text-xs/snug` not
+`text-xs leading-snug`; `ease-bounce` not `ease-(--ease-bounce)`. Note that
+`stroke-<number>` only accepts integers — the system-wide 2.5px icon stroke is
+set once as a base rule on `svg.lucide`, not per-icon.
+
+Both of the rules above are now enforced by
+[`eslint-plugin-better-tailwindcss`](https://github.com/schoero/eslint-plugin-better-tailwindcss)
+(`no-conflicting-classes` and `enforce-canonical-classes`), and most of it is
+auto-fixable with `pnpm lint:fix`. Two things to know about that setup:
+
+- `settings["better-tailwindcss"].entryPoint` points at `app/assets/css/main.css`.
+  Without it the plugin only knows stock Tailwind and reports every custom
+  `@utility` (`pop-2`, `sticker`, `edge`, `blob-leaf`, …) as unknown.
+- A new shared class therefore has to be declared with `@utility`, not as a plain
+  CSS class, or `no-unknown-classes` will flag every use of it.
+- `enforce-consistent-line-wrapping` is off: Prettier owns formatting, and two
+  tools rewriting the same bytes fight each other.
 
 ## Architecture
 
