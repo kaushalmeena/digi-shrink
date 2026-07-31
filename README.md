@@ -107,17 +107,11 @@ Your app should now be running on [localhost:3000](http://localhost:3000/).
 
 ### Testing
 
-There is no unit-test suite yet. To run the same checks CI runs, lint the
-project:
+There is no unit-test suite yet. To run the same checks CI runs — lint,
+formatting and a typecheck across every Nuxt environment:
 
 ```bash
-pnpm lint
-```
-
-And typecheck it across every Nuxt environment:
-
-```bash
-pnpm typecheck
+pnpm check
 ```
 
 ### Building
@@ -154,12 +148,26 @@ PNG are just slower than on a self-hosted deployment.
 
 ## Documentation
 
-- **[Architecture](docs/architecture.md)** — the compression pipeline, why the
-  worker pool is deliberately smaller than your core count, how the hand-rolled
-  ZIP writer keeps memory flat, and the gotchas that cost real debugging time.
-- **[Design](docs/design.md)** — the Playful Geometric system: colour tokens for
-  both themes, typography, the pop-shadow and pattern primitives, the shared
-  motion vocabulary, and the accessibility commitments.
+Full documentation is available in the [`/docs`](./docs) directory.
+
+**Core Concepts:**
+
+- [Overview](./docs/overview.md) — the two constraints that shape every decision, and the directory layout.
+- [The Compression Pipeline](./docs/pipeline.md) — how an image becomes a smaller image, and how the worker pool is sized.
+- [State and Image I/O](./docs/state.md) — who owns what state, and how images get in and back out.
+
+**Design System:**
+
+- [Foundations](./docs/foundations.md) — the Playful Geometric philosophy, and the colour, type and spacing tokens.
+- [Visual Primitives](./docs/primitives.md) — the shapes, dot grids and hard offset shadows the style is built from.
+- [Transitions and Iconography](./docs/motion.md) — what animates, and the icon set.
+- [Accessibility](./docs/accessibility.md) — the commitments, and how they are wired.
+
+**Advanced:**
+
+- [Offline and Cross-Origin Isolation](./docs/offline.md) — the PWA setup, and the headers the codecs require.
+- [Deployment and Browser Support](./docs/deployment.md) — how it ships, and where it works.
+- [Gotchas](./docs/gotchas.md) — what to know before editing.
 
 ## Contributing
 
