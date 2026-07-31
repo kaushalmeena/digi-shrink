@@ -15,7 +15,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "nuxt typecheck",
-    "build:icons": "node scripts/build-icons.mjs"
+    "build:icons": "node scripts/build-icons.mjs",
+    "check": "pnpm lint && pnpm format:check && pnpm typecheck"
   },
   "dependencies": {
     "@jsquash/avif": "^2.1.1",
