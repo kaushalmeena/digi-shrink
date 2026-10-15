@@ -55,15 +55,15 @@ A batch image compressor that runs **entirely on your own device** — no upload
 
 ## Tech Stack
 
-| Area          | Tools                                                                                                  |
-| ------------- | ------------------------------------------------------------------------------------------------------ |
-| **Framework** | [Nuxt 4](https://nuxt.com) · [Vue 3](https://vuejs.org) · [TypeScript](https://www.typescriptlang.org) |
-| **Styling**   | [Tailwind CSS 4](https://tailwindcss.com) · [Lucide](https://lucide.dev)                               |
-| **Codecs**    | [jSquash](https://github.com/jamsinclair/jSquash) — MozJPEG · OxiPNG · libwebp · libavif               |
-| **Offline**   | [Vite PWA](https://vite-pwa-org.netlify.app) · [Workbox](https://developer.chrome.com/docs/workbox)    |
-| **Utilities** | [VueUse](https://vueuse.org) · [vue-sonner](https://vue-sonner.vercel.app)                             |
-| **Tooling**   | [pnpm](https://pnpm.io) · [ESLint](https://eslint.org) · [Prettier](https://prettier.io)               |
-| **Hosting**   | [GitHub Pages](https://pages.github.com)                                                               |
+| Area          | Tools                                                                                                                           |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Framework** | [Nuxt 4](https://nuxt.com) · [Vue 3](https://vuejs.org) · [TypeScript](https://www.typescriptlang.org)                          |
+| **Styling**   | [Tailwind CSS 4](https://tailwindcss.com) · [Lucide](https://lucide.dev)                                                        |
+| **Codecs**    | [jSquash](https://github.com/jamsinclair/jSquash) — MozJPEG · OxiPNG · libwebp · libavif                                        |
+| **Offline**   | [Vite PWA](https://vite-pwa-org.netlify.app) · [Workbox](https://developer.chrome.com/docs/workbox)                             |
+| **Utilities** | [VueUse](https://vueuse.org) · [vue-sonner](https://vue-sonner.vercel.app)                                                      |
+| **Tooling**   | [pnpm](https://pnpm.io) · [Oxlint](https://oxc.rs/docs/guide/usage/linter) · [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) |
+| **Hosting**   | [GitHub Pages](https://pages.github.com)                                                                                        |
 
 ## Getting Started
 

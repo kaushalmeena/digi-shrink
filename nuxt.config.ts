@@ -31,7 +31,7 @@ const withBase = (path: string) => `${baseURL}${path.replace(/^\//, '')}`
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
 
-  modules: ['@nuxt/eslint', '@nuxt/fonts', '@vueuse/nuxt', '@vite-pwa/nuxt', 'vue-sonner/nuxt'],
+  modules: ['@nuxt/fonts', '@vueuse/nuxt', '@vite-pwa/nuxt', 'vue-sonner/nuxt'],
 
   css: ['~/assets/css/main.css'],
 
@@ -79,11 +79,6 @@ export default defineNuxtConfig({
    * unambiguous, since the name maps directly to a path.
    */
   imports: { autoImport: false },
-
-  eslint: {
-    // Prettier owns formatting; ESLint only owns correctness.
-    config: { stylistic: false },
-  },
 
   vite: {
     plugins: [tailwindcss()],

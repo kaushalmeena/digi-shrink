@@ -4,9 +4,9 @@
 
 Not an afterthought here:
 
-- **Real form controls behind custom looks.** The sliders are `<input
-type="range">`, the switches are `<input type="checkbox">`. Keyboard support,
-  arrow-key stepping, screen-reader announcements and touch behaviour all come
+- **Real form controls behind custom looks.** The sliders are
+  `<input type="range">`, the switches are `<input type="checkbox">`. Keyboard
+  support, arrow-key stepping, screen-reader announcements and touch behaviour all come
   for free — none of which a div-based control gives without significant work.
   The compare slider keeps a range input as its keyboard path even though the
   divider is also draggable.

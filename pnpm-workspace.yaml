@@ -13,4 +13,3 @@ strictPeerDependencies: false
 # default; anything not listed here stays unbuilt and prints a warning on install.
 onlyBuiltDependencies:
   - esbuild # bundler used by Vite
-  - unrs-resolver # native module resolution for ESLint's import plugin

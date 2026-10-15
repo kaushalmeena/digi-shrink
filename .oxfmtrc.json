@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "semi": false,
+  "singleQuote": true,
+  "printWidth": 100,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "singleAttributePerLine": false,
+  "vueIndentScriptAndStyle": false,
+  "htmlWhitespaceSensitivity": "css",
+  "sortPackageJson": false,
+  "sortTailwindcss": {
+    "stylesheet": "./app/assets/css/main.css"
+  },
+  "ignorePatterns": [
+    ".nuxt",
+    ".output",
+    "dist",
+    "node_modules",
+    "pnpm-lock.yaml",
+    "public/icons",
+    "public/sw.js",
+    "public/workbox-*.js",
+    "*.wasm"
+  ]
+}
