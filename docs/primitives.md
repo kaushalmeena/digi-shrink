@@ -1,7 +1,5 @@
 # Visual primitives
 
-## Visual primitives
-
 Defined as Tailwind utilities in `app/assets/css/patterns.css`, so components stay
 declarative and nothing hand-rolls a shadow.
 

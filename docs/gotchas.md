@@ -1,7 +1,5 @@
 # Gotchas worth knowing before editing
 
-## Gotchas worth knowing before editing
-
 - **The worker import must be a relative path**
   (`../workers/compress.worker?worker`). With the `~/` alias, Vite emits a
   malformed `@fs/app/...` URL and the worker fails to load with an empty error

@@ -1,7 +1,5 @@
 # The compression pipeline
 
-## The compression pipeline
-
 Everything happens inside `app/workers/compress.worker.ts`:
 
 ```

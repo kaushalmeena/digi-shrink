@@ -1,7 +1,5 @@
 # Accessibility
 
-## Accessibility
-
 Not an afterthought here:
 
 - **Real form controls behind custom looks.** The sliders are
