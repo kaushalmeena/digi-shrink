@@ -107,7 +107,7 @@ function onFrameClick(event: MouseEvent): void {
       <!-- ------------------------------------------------------ Split view -->
       <div v-if="view === 'split'" key="split" class="space-y-3">
         <div
-          class="relative overflow-auto overscroll-contain rounded-xl bg-surface-2 pop-2 edge pop-soft"
+          class="relative overflow-auto overscroll-contain rounded-lg border checker"
           :class="scale === 0 && 'overflow-hidden'"
         >
           <div
@@ -121,7 +121,6 @@ function onFrameClick(event: MouseEvent): void {
             @click="onFrameClick"
           >
             <!-- Checkerboard so transparency is visible rather than guessed at. -->
-            <div class="absolute inset-0 pattern-grid opacity-40" aria-hidden="true" />
 
             <!-- After (compressed) sits underneath and is always fully visible. -->
             <img
@@ -142,32 +141,32 @@ function onFrameClick(event: MouseEvent): void {
 
             <!-- Corner labels, each pinned to its own side. -->
             <span
-              class="pointer-events-none absolute top-2 left-2 rounded-full bg-surface px-2.5 py-1 font-display text-2xs font-bold pop-1 edge"
+              class="pointer-events-none absolute top-2 left-2 rounded-sm bg-black/60 px-1.5 py-0.5 text-2xs font-medium text-white"
             >
               {{ beforeLabel }}
             </span>
             <span
-              class="pointer-events-none absolute top-2 right-2 rounded-full bg-accent px-2.5 py-1 font-display text-2xs font-bold text-on-accent pop-1 edge"
+              class="pointer-events-none absolute top-2 right-2 rounded-sm bg-black/60 px-1.5 py-0.5 text-2xs font-medium text-white"
             >
               {{ afterLabel }}
             </span>
 
             <!-- Divider + grab handle -->
             <div
-              class="pointer-events-none absolute inset-y-0 w-0.5 bg-(--color-outline)"
+              class="pointer-events-none absolute inset-y-0 w-px -translate-x-1/2 bg-white shadow-[0_0_0_1px_rgb(0_0_0/0.25)]"
               :style="{ left: `${position}%` }"
               aria-hidden="true"
             />
             <button
               type="button"
-              class="absolute top-1/2 grid size-11 -translate-1/2 cursor-ew-resize touch-none place-items-center rounded-full bg-surface pop-2 transition-transform duration-200 ease-bounce edge hover:scale-110 active:scale-95"
+              class="absolute top-1/2 grid size-8 -translate-1/2 cursor-ew-resize touch-none place-items-center rounded-full border bg-surface shadow-md"
               :style="{ left: `${position}%` }"
               aria-label="Drag to move the comparison divider"
               @pointerdown="onHandleDown"
               @pointermove="onHandleMove"
               @click.stop
             >
-              <SplitSquareHorizontal class="size-5 text-ink" />
+              <SplitSquareHorizontal class="size-4 text-ink" />
             </button>
           </div>
         </div>
@@ -188,14 +187,14 @@ function onFrameClick(event: MouseEvent): void {
       <div v-else key="side" class="grid grid-cols-2 gap-3">
         <figure
           v-for="pane in [
-            { src: beforeSrc, label: beforeLabel, tone: 'bg-surface' },
-            { src: afterSrc, label: afterLabel, tone: 'bg-accent text-on-accent' },
+            { src: beforeSrc, label: beforeLabel },
+            { src: afterSrc, label: afterLabel },
           ]"
           :key="pane.label"
           class="space-y-2"
         >
           <div
-            class="overflow-auto rounded-xl bg-surface-2 pop-2 edge pop-soft"
+            class="overflow-auto rounded-lg border checker"
             :class="scale === 0 && 'overflow-hidden'"
           >
             <div
@@ -206,7 +205,6 @@ function onFrameClick(event: MouseEvent): void {
                   : { aspectRatio: aspect, width: '100%' }
               "
             >
-              <div class="absolute inset-0 pattern-grid opacity-40" aria-hidden="true" />
               <img
                 :src="pane.src"
                 :alt="`${alt} — ${pane.label}`"
@@ -217,12 +215,7 @@ function onFrameClick(event: MouseEvent): void {
           </div>
 
           <figcaption class="text-center">
-            <span
-              class="inline-block rounded-full px-2.5 py-1 font-display text-2xs font-bold pop-1 edge"
-              :class="pane.tone"
-            >
-              {{ pane.label }}
-            </span>
+            <span class="text-xs text-ink-soft">{{ pane.label }}</span>
           </figcaption>
         </figure>
       </div>

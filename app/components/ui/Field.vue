@@ -1,20 +1,13 @@
 <script setup lang="ts">
 /**
- * Label + control + hint wrapper.
- *
- * Labels in this system are bold, uppercase and wide-tracked. Centralising that
- * here keeps every form row identical and guarantees the `for`/`id` pairing that
- * screen readers need.
+ * Label + control + hint, with an optional live value on the right of the label.
  */
 import { computed } from 'vue'
 
 const props = defineProps<{
   label: string
-  /** Explanatory text under the control. Wired up via `aria-describedby`. */
   hint?: string
-  /** Right-aligned live value, e.g. the current quality number. */
   value?: string | number
-  /** Pass the control's `id` so the label points at it. */
   for?: string
 }>()
 
@@ -22,14 +15,10 @@ const hintId = computed(() => (props.hint && props.for ? `${props.for}-hint` : u
 </script>
 
 <template>
-  <div class="space-y-2">
+  <div class="space-y-1.5">
     <div class="flex items-baseline justify-between gap-3">
-      <label :for="props.for" class="eyebrow text-ink-soft">{{ label }}</label>
-      <span
-        v-if="value !== undefined"
-        data-numeric
-        class="font-display text-sm font-bold text-accent"
-      >
+      <label :for="props.for" class="text-xs font-medium text-ink">{{ label }}</label>
+      <span v-if="value !== undefined" data-numeric class="text-xs text-ink-soft">
         {{ value }}
       </span>
     </div>

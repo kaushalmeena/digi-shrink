@@ -93,14 +93,13 @@ async function download(): Promise<void> {
     <div v-if="item?.result" class="space-y-7">
       <!-- Numbers first: it's the question people actually opened this to answer. -->
       <dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div
-          v-for="row in STAT_ROWS"
-          :key="row.label"
-          class="rounded-xl p-3 edge-soft"
-          :class="row.highlight ? 'bg-mint-wash' : 'bg-surface-2'"
-        >
-          <dt class="eyebrow text-ink-soft">{{ row.label }}</dt>
-          <dd class="mt-1 font-display text-lg/none font-extrabold" data-numeric>
+        <div v-for="row in STAT_ROWS" :key="row.label" class="rounded-lg border p-3">
+          <dt class="text-xs text-ink-soft">{{ row.label }}</dt>
+          <dd
+            class="mt-1 text-base/none font-semibold"
+            :class="row.highlight ? 'text-success' : 'text-ink'"
+            data-numeric
+          >
             {{ row.value }}
           </dd>
           <dd class="mt-1 text-2xs text-ink-soft" data-numeric>{{ row.note }}</dd>
@@ -119,7 +118,7 @@ async function download(): Promise<void> {
       />
 
       <!-- Honest fallback rather than a broken image frame. -->
-      <div v-else class="flex items-start gap-3 rounded-xl bg-sun-wash p-4 text-xs/snug edge-soft">
+      <div v-else class="flex items-start gap-3 rounded-lg bg-warning-wash p-4 text-xs/snug">
         <ImageOff class="mt-0.5 size-4 shrink-0" />
         <p>
           This browser can't display the original
@@ -129,7 +128,7 @@ async function download(): Promise<void> {
         </p>
       </div>
 
-      <div class="border-t-2 border-line pt-6">
+      <div class="border-t pt-6">
         <CompressFormatLab :item="item" />
       </div>
     </div>
@@ -145,7 +144,7 @@ async function download(): Promise<void> {
         </p>
 
         <UiButton v-if="item?.result" size="sm" @click="download">
-          <Download class="size-4" />
+          <Download class="size-3.5" />
           Download
         </UiButton>
       </div>

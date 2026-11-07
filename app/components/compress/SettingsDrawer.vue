@@ -12,9 +12,8 @@
  */
 import { computed } from 'vue'
 
-import { RotateCcw, Wand2 } from '@lucide/vue'
+import { RotateCcw } from '@lucide/vue'
 import { FORMAT_META } from '~/lib/constants'
-import { useCompressor } from '~/composables/useCompressor'
 import { useSettings } from '~/composables/useSettings'
 import type {
   CompressionMode,
@@ -29,7 +28,6 @@ const open = defineModel<boolean>('open', { required: true })
 
 const { settings, summary, focusedFormat, losslessAvailable, reset, toggleAutoFormat } =
   useSettings()
-const { requeueAll, completed } = useCompressor()
 
 const FORMATS: SegmentOption<TargetFormat>[] = [
   { value: 'auto', label: 'Auto', title: 'Encode several formats and keep the smallest' },
@@ -84,18 +82,17 @@ const qualityHint = computed(() => {
   return 'Aggressive. Expect visible blocking and banding.'
 })
 
-function applyToFinished(): void {
-  requeueAll()
+function close(): void {
   open.value = false
 }
 </script>
 
 <template>
   <UiOffcanvas v-model:open="open" title="Advanced settings" :subtitle="summary" width="max-w-lg">
-    <div class="space-y-8">
+    <div class="space-y-7">
       <!-- ---------------------------------------------------------- Format -->
       <section class="space-y-3">
-        <h3 class="font-display text-base font-bold">Output format</h3>
+        <h3 class="text-sm">Output format</h3>
 
         <UiSegmented
           v-model="settings.format"
@@ -118,7 +115,7 @@ function applyToFinished(): void {
           :inert="!(settings.format === 'auto')"
         >
           <div>
-            <div class="rounded-xl bg-surface-2 p-4 edge-soft">
+            <div class="rounded-lg border p-4">
               <p class="mb-3 text-xs/snug text-ink-soft">
                 Each image is encoded to every ticked format and the smallest result wins. More
                 formats means better results and a slower run.
@@ -141,7 +138,7 @@ function applyToFinished(): void {
 
       <!-- ------------------------------------------------------------ Mode -->
       <section class="space-y-3">
-        <h3 class="font-display text-base font-bold">How hard to compress</h3>
+        <h3 class="text-sm">How hard to compress</h3>
 
         <UiSegmented
           v-model="settings.mode"
@@ -194,7 +191,7 @@ function applyToFinished(): void {
           </div>
 
           <!-- Lossless -->
-          <p v-else key="lossless" class="rounded-lg bg-mint-wash p-3 text-xs/snug text-ink">
+          <p v-else key="lossless" class="rounded-lg bg-success-wash p-3 text-xs/snug text-ink">
             Not a single pixel changes. Savings come from better compression alone, so they're
             modest on photos and large on screenshots, logos and flat colour.
           </p>
@@ -203,7 +200,7 @@ function applyToFinished(): void {
 
       <!-- ---------------------------------------------------------- Resize -->
       <section class="space-y-3">
-        <h3 class="font-display text-base font-bold">Resize</h3>
+        <h3 class="text-sm">Resize</h3>
 
         <UiSwitch
           v-model="settings.resize.enabled"
@@ -217,7 +214,7 @@ function applyToFinished(): void {
           :inert="!settings.resize.enabled"
         >
           <div>
-            <div class="space-y-4 rounded-xl bg-surface-2 p-4 edge-soft">
+            <div class="space-y-4 rounded-lg border p-4">
               <UiSegmented
                 v-model="settings.resize.mode"
                 :options="RESIZE_MODES"
@@ -318,14 +315,12 @@ function applyToFinished(): void {
 
       <!-- --------------------------------------------------- Codec options -->
       <section class="space-y-3">
-        <h3 class="font-display text-base font-bold">
-          {{ FORMAT_META[focusedFormat].label }} options
-        </h3>
+        <h3 class="text-sm">{{ FORMAT_META[focusedFormat].label }} options</h3>
         <p class="text-xs text-ink-soft">
           Encoder settings for {{ FORMAT_META[focusedFormat].encoder }}.
         </p>
 
-        <div class="space-y-4 rounded-xl bg-surface-2 p-4 edge-soft">
+        <div class="space-y-4 rounded-lg border p-4">
           <!-- JPEG -->
           <template v-if="focusedFormat === 'jpeg'">
             <UiField
@@ -492,16 +487,16 @@ function applyToFinished(): void {
 
       <!-- ------------------------------------------------------- Behaviour -->
       <section class="space-y-3">
-        <h3 class="font-display text-base font-bold">Behaviour</h3>
+        <h3 class="text-sm">Behaviour</h3>
 
-        <div class="space-y-3 rounded-xl bg-surface-2 p-4 edge-soft">
+        <div class="space-y-3 rounded-lg border p-4">
           <UiSwitch
             v-model="settings.keepIfLarger"
             label="Keep the original if it's already smaller"
             hint="Re-encoding a well-optimised image can make it bigger. With this on, we hand back the original and tell you."
           />
 
-          <p class="border-t-2 border-line pt-3 text-2xs/relaxed text-ink-soft">
+          <p class="border-t pt-3 text-2xs/relaxed text-ink-soft">
             <strong class="text-ink">Metadata is always removed.</strong>
             Re-encoding goes through raw pixels, so EXIF, GPS coordinates and camera details cannot
             survive the round trip. That's deliberate.
@@ -513,22 +508,12 @@ function applyToFinished(): void {
     <template #footer>
       <div class="flex items-center gap-2">
         <UiButton variant="ghost" size="sm" @click="reset">
-          <RotateCcw class="size-4" />
+          <RotateCcw class="size-3.5" />
           Reset
         </UiButton>
 
         <div class="ml-auto flex gap-2">
-          <UiButton
-            v-if="completed.length > 0"
-            variant="secondary"
-            size="sm"
-            @click="applyToFinished"
-          >
-            <Wand2 class="size-4" />
-            Re-run all
-          </UiButton>
-
-          <UiButton size="sm" @click="open = false">Done</UiButton>
+          <UiButton size="sm" @click="close">Done</UiButton>
         </div>
       </div>
     </template>

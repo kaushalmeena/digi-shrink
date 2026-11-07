@@ -141,9 +141,7 @@ PNG are just slower than on a self-hosted deployment.
 
 - Image codecs by **jSquash** / the Squoosh project, licensed under
   [Apache-2.0](https://github.com/jamsinclair/jSquash/blob/main/LICENSE).
-- [Outfit](https://fonts.google.com/specimen/Outfit) and
-  [Plus Jakarta Sans](https://fonts.google.com/specimen/Plus+Jakarta+Sans)
-  typefaces, licensed under the
+- [Inter](https://fonts.google.com/specimen/Inter) typeface, licensed under the
   [SIL Open Font License](https://openfontlicense.org/).
 
 ## Documentation
@@ -158,8 +156,8 @@ Full documentation is available in the [`/docs`](./docs) directory.
 
 **Design System:**
 
-- [Foundations](./docs/foundations.md) — the Playful Geometric philosophy, and the colour, type and spacing tokens.
-- [Visual Primitives](./docs/primitives.md) — the shapes, dot grids and hard offset shadows the style is built from.
+- [Foundations](./docs/foundations.md) — the Quiet Utility principles, and the colour, type and motion tokens.
+- [Visual Primitives](./docs/primitives.md) — the UI components and shared CSS utilities.
 - [Transitions and Iconography](./docs/motion.md) — what animates, and the icon set.
 - [Accessibility](./docs/accessibility.md) — the commitments, and how they are wired.
 

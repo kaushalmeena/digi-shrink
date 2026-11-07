@@ -31,7 +31,7 @@ useSeoMeta({
   ogDescription:
     'Shrink images down to size entirely on your own device. Nothing is ever uploaded.',
   ogType: 'website',
-  themeColor: '#8b5cf6',
+  themeColor: '#18181b',
 })
 </script>
 
@@ -39,38 +39,19 @@ useSeoMeta({
   <div class="min-h-dvh">
     <NuxtPage />
 
-    <!--
-      Toasts, via vue-sonner. It brings the parts that are tedious to get right —
-      stacking, swipe-to-dismiss, hover-to-pause, an `aria-live` region and focus
-      management — and we override only the visuals so they read as stickers
-      rather than the default rounded cards.
-
-      `theme` is bound to the resolved mode so sonner's own light/dark tokens
-      follow the app instead of the OS.
-    -->
+    <!-- Toasts via vue-sonner, which brings stacking, swipe-to-dismiss and an
+         `aria-live` region. `theme` follows the app, not the OS. -->
     <Toaster
       :theme="resolved"
       position="bottom-right"
       :offset="16"
-      :gap="10"
-      :visible-toasts="4"
-      close-button
+      :gap="8"
+      :visible-toasts="3"
       :toast-options="{
         classes: {
-          // No shadow here on purpose: the per-type classes below own it. Two
-          // competing `!shadow-*` utilities would be resolved by stylesheet
-          // order rather than by which one is more specific.
-          toast:
-            '!rounded-xl !border-2 !border-(--color-outline) !bg-surface !text-ink !font-sans !gap-3',
-          title: '!font-display !font-bold !text-xs !text-ink',
-          description: '!text-2xs !text-ink-soft',
-          icon: '!text-accent',
-          closeButton:
-            '!rounded-full !border-2 !border-(--color-outline) !bg-surface !text-ink hover:!bg-sun',
-          success: '!shadow-[4px_4px_0_0_var(--color-mint)]',
-          error: '!shadow-[4px_4px_0_0_var(--color-berry)]',
-          warning: '!shadow-[4px_4px_0_0_var(--color-sun)]',
-          info: '!shadow-[4px_4px_0_0_var(--color-accent)]',
+          toast: '!rounded-lg !border !border-line !bg-surface !text-ink !font-sans !shadow-lg',
+          title: '!font-medium !text-sm !text-ink',
+          description: '!text-xs !text-ink-soft',
         },
       }"
     />

@@ -114,12 +114,19 @@ export interface SegmentOption<T extends string | number> {
   disabled?: boolean
 }
 
+export interface SelectOption<T extends string | number> {
+  value: T
+  label: string
+  /** Secondary line shown under the label in the open list. */
+  description?: string
+  disabled?: boolean
+}
+
 /** A named bundle of settings, surfaced as one-click chips in the UI. */
 export interface Preset {
   id: string
   label: string
   blurb: string
-  accent: 'accent' | 'berry' | 'sun' | 'mint'
   settings: Partial<CompressionSettings>
 }
 
@@ -175,6 +182,8 @@ export interface QueueItem {
   /** Per-image quality escape hatch; `null` means "follow global settings". */
   qualityOverride: number | null
   candidates: FormatCandidate[]
+  /** Serialised settings the current `result` was produced with, for staleness. */
+  settingsKey: string
 }
 
 /* -------------------------------------------------------------------------- */

@@ -65,7 +65,6 @@ export const PRESETS: Preset[] = [
     id: 'balanced',
     label: 'Balanced',
     blurb: 'WebP at q78. Looks identical, roughly half the bytes.',
-    accent: 'accent',
     settings: {
       format: 'webp',
       mode: 'quality',
@@ -77,7 +76,6 @@ export const PRESETS: Preset[] = [
     id: 'web',
     label: 'Web ready',
     blurb: 'Caps the long edge at 1920px — right for any page or post.',
-    accent: 'mint',
     settings: {
       format: 'webp',
       mode: 'quality',
@@ -89,7 +87,6 @@ export const PRESETS: Preset[] = [
     id: 'tiny',
     label: 'Max shrink',
     blurb: 'AVIF, tuned hard. Smallest possible file, slowest to encode.',
-    accent: 'berry',
     settings: {
       format: 'avif',
       mode: 'quality',
@@ -101,7 +98,6 @@ export const PRESETS: Preset[] = [
     id: 'lossless',
     label: 'Lossless',
     blurb: 'Not a single pixel changes. Shrinks PNGs and screenshots.',
-    accent: 'sun',
     settings: {
       format: 'png',
       mode: 'lossless',
@@ -112,7 +108,6 @@ export const PRESETS: Preset[] = [
     id: 'auto',
     label: 'Pick for me',
     blurb: 'Encodes WebP, AVIF and JPEG, then keeps whichever won.',
-    accent: 'accent',
     settings: {
       format: 'auto',
       mode: 'quality',
@@ -124,7 +119,6 @@ export const PRESETS: Preset[] = [
     id: 'thumbnail',
     label: 'Thumbnail',
     blurb: '512px square-fit WebP for avatars, cards and previews.',
-    accent: 'mint',
     settings: {
       format: 'webp',
       mode: 'quality',
@@ -136,7 +130,6 @@ export const PRESETS: Preset[] = [
     id: 'email',
     label: 'Under 200 KB',
     blurb: 'Hits a hard byte budget by hunting for the right quality.',
-    accent: 'sun',
     settings: {
       format: 'webp',
       mode: 'target-size',

@@ -60,10 +60,7 @@ export default defineNuxtConfig({
   // Downloaded at build time and served from our own origin so the PWA keeps
   // its typography when offline.
   fonts: {
-    families: [
-      { name: 'Outfit', provider: 'google', weights: [600, 700, 800] },
-      { name: 'Plus Jakarta Sans', provider: 'google', weights: [400, 500, 600, 700] },
-    ],
+    families: [{ name: 'Inter', provider: 'google', weights: [400, 500, 600] }],
   },
 
   /**
@@ -141,8 +138,8 @@ export default defineNuxtConfig({
       scope: baseURL,
       display: 'standalone',
       orientation: 'any',
-      background_color: '#fffdf5',
-      theme_color: '#8b5cf6',
+      background_color: '#fafafa',
+      theme_color: '#18181b',
       categories: ['utilities', 'photo', 'productivity'],
       icons: [
         { src: withBase('icons/icon-192.png'), sizes: '192x192', type: 'image/png' },

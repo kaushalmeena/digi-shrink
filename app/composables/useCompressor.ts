@@ -3,7 +3,7 @@ import { computed, markRaw } from 'vue'
 import { CompressionPool } from '~/lib/workerPool'
 import { MAX_QUEUE_SIZE } from '~/lib/constants'
 import { isAcceptedImage, outputFileName } from '~/lib/image'
-import { sanitizeFileName, uniqueFileName } from '~/lib/format'
+import { describeFailure, sanitizeFileName, uniqueFileName } from '~/lib/format'
 import { useState } from '#imports'
 import { useLifetimeStats } from '~/composables/useLifetimeStats'
 import { useSettings } from '~/composables/useSettings'
@@ -65,6 +65,7 @@ function createQueueItem(file: File): QueueItem {
     result: null,
     qualityOverride: null,
     candidates: [],
+    settingsKey: '',
   }
 }
 
@@ -179,10 +180,12 @@ export function useCompressor() {
       )
     }
     if (duplicates > 0) {
-      toasts.info(`${duplicates} duplicate${duplicates === 1 ? '' : 's'} already in the queue.`)
+      toasts.info(`Skipped ${duplicates} image${duplicates === 1 ? '' : 's'} already in the list.`)
     }
     if (overflow > 0) {
-      toasts.warning(`Queue is capped at ${MAX_QUEUE_SIZE} images — ${overflow} didn't fit.`)
+      toasts.warning(
+        `Only ${MAX_QUEUE_SIZE} images fit at once — ${overflow} weren't added. Download or remove some, then add the rest.`,
+      )
     }
 
     return created.length
@@ -195,11 +198,35 @@ export function useCompressor() {
     items.value.splice(index, 1)
   }
 
+  /**
+   * Remove everything, with Undo. The removed items are kept (object URLs and
+   * all) until the undo window closes, and only then released.
+   */
   function clear(): void {
+    const removed = items.value
+    if (removed.length === 0) return
+
     pool?.cancelAll('Queue cleared.')
-    for (const item of items.value) releaseItem(item)
-    items.value = []
     isRunning.value = false
+    items.value = []
+
+    toasts.undoable(
+      `Removed ${removed.length} image${removed.length === 1 ? '' : 's'}.`,
+      () => {
+        // Anything that was mid-encode was cancelled; put it back as waiting.
+        for (const item of removed) {
+          if (item.status === 'working') {
+            item.status = 'queued'
+            item.progress = 0
+            item.stage = ''
+          }
+        }
+        items.value = [...removed, ...items.value]
+      },
+      () => {
+        for (const item of removed) releaseItem(item)
+      },
+    )
   }
 
   /** Drop finished rows but keep anything still queued or failed. */
@@ -242,6 +269,7 @@ export function useCompressor() {
     outputBlobs.delete(id)
     item.result = null
     item.candidates = []
+    item.settingsKey = ''
     item.error = ''
     item.progress = 0
     item.stage = ''
@@ -282,6 +310,7 @@ export function useCompressor() {
       const activePool = await ensurePool()
       const buffer = await item.file.arrayBuffer()
 
+      const itemSettings = settingsFor(item)
       const response = await activePool.run(
         {
           kind: 'compress',
@@ -289,7 +318,7 @@ export function useCompressor() {
           buffer,
           mimeType: item.originalType,
           fileName: item.name,
-          settings: settingsFor(item),
+          settings: itemSettings,
         },
         [buffer],
         (progress, stage) => {
@@ -306,6 +335,7 @@ export function useCompressor() {
       if (item.outputUrl) URL.revokeObjectURL(item.outputUrl)
       item.outputUrl = URL.createObjectURL(blob)
       item.result = response.result
+      item.settingsKey = JSON.stringify(itemSettings)
       item.progress = 1
       item.stage = ''
       item.status = 'done'
@@ -325,7 +355,7 @@ export function useCompressor() {
         item.stage = ''
       } else {
         item.status = 'error'
-        item.error = message
+        item.error = describeFailure(message)
         item.progress = 0
       }
     }
@@ -338,22 +368,43 @@ export function useCompressor() {
    * parallel, so this stays a single `await` rather than a hand-rolled scheduler.
    */
   async function compressAll(): Promise<void> {
-    if (isRunning.value) return
-    const queue = pending.value.slice()
-    if (queue.length === 0) return
+    if (isRunning.value || pending.value.length === 0) return
 
     isRunning.value = true
     try {
-      await Promise.allSettled(queue.map((item) => runItem(item)))
+      // Loop rather than run once: files dropped mid-batch join the queue as
+      // `queued` and are picked up by the next pass. `cancel()` clears
+      // `isRunning`, which is what ends the loop.
+      while (isRunning.value && pending.value.length > 0) {
+        const queue = pending.value.slice()
+        await Promise.allSettled(queue.map((item) => runItem(item)))
+      }
     } finally {
       isRunning.value = false
     }
 
     const errors = failed.value.length
     if (errors > 0) {
-      toasts.error(`${errors} image${errors === 1 ? '' : 's'} couldn't be compressed.`)
+      toasts.error(
+        `${errors} image${errors === 1 ? '' : 's'} couldn't be compressed. Use Retry in the list, or remove ${errors === 1 ? 'it' : 'them'}.`,
+      )
     }
   }
+
+  /**
+   * Finished items whose result was made with different settings from the
+   * current ones — i.e. the settings were changed after compressing.
+   */
+  const stale = computed(() => {
+    // Serialise the shared settings once per change, not once per item: this
+    // re-runs on every step of a slider drag, across up to 250 items. Only
+    // items with their own quality override need a key of their own.
+    const sharedKey = JSON.stringify(settings.value)
+    return completed.value.filter((item) => {
+      const key = item.qualityOverride === null ? sharedKey : JSON.stringify(settingsFor(item))
+      return item.settingsKey !== key
+    })
+  })
 
   async function compressOne(id: string): Promise<void> {
     const item = byId(id)
@@ -399,8 +450,8 @@ export function useCompressor() {
       if (response.kind !== 'probed') return []
       item.candidates = response.candidates
       return response.candidates
-    } catch (error) {
-      toasts.error(error instanceof Error ? error.message : 'Format comparison failed.')
+    } catch {
+      toasts.error("Couldn't compare formats for this image. Try Re-measure.")
       return []
     } finally {
       item.stage = ''
@@ -442,6 +493,7 @@ export function useCompressor() {
     failed,
     hasItems,
     canCompress,
+    stale,
     stats,
     overallProgress,
     byId,

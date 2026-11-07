@@ -42,13 +42,9 @@ async function run(): Promise<void> {
 
 <template>
   <section class="space-y-3">
-    <div class="flex items-start gap-3">
-      <UiIconBadge tone="berry" size="sm" shape="squircle">
-        <FlaskConical />
-      </UiIconBadge>
-
-      <div class="min-w-0 flex-1">
-        <h3 class="font-display text-base font-bold">Format lab</h3>
+    <div>
+      <div class="min-w-0">
+        <h3 class="text-sm">Compare formats</h3>
         <p class="mt-0.5 text-xs/snug text-ink-soft">
           Encode this image to all four formats at
           {{ settings.mode === 'lossless' ? 'lossless' : `quality ${settings.quality}` }} and
@@ -65,22 +61,22 @@ async function run(): Promise<void> {
       block
       @click="run"
     >
-      <FlaskConical class="size-4" />
+      <FlaskConical class="size-3.5" />
       Run the comparison
     </UiButton>
 
     <div class="disclose" :data-open="ranked.length > 0" :inert="!(ranked.length > 0)">
       <div>
-        <div class="overflow-x-auto rounded-xl edge-soft">
+        <div class="overflow-x-auto rounded-lg border">
           <table class="w-full min-w-104 border-collapse text-left text-xs">
             <thead>
               <tr class="bg-surface-2">
-                <th scope="col" class="px-3 py-2.5 eyebrow text-ink-soft">Format</th>
-                <th scope="col" class="px-3 py-2.5 text-right eyebrow text-ink-soft">Size</th>
-                <th scope="col" class="px-3 py-2.5 text-right eyebrow text-ink-soft">
+                <th scope="col" class="px-3 py-2.5 font-medium text-ink-soft">Format</th>
+                <th scope="col" class="px-3 py-2.5 text-right font-medium text-ink-soft">Size</th>
+                <th scope="col" class="px-3 py-2.5 text-right font-medium text-ink-soft">
                   vs original
                 </th>
-                <th scope="col" class="px-3 py-2.5 text-right eyebrow text-ink-soft">Time</th>
+                <th scope="col" class="px-3 py-2.5 text-right font-medium text-ink-soft">Time</th>
               </tr>
             </thead>
 
@@ -88,28 +84,28 @@ async function run(): Promise<void> {
               <tr
                 v-for="candidate in ranked"
                 :key="candidate.format"
-                class="border-t-2 border-line transition-colors"
-                :class="candidate === winner ? 'bg-mint-wash' : 'bg-surface'"
+                class="border-t"
+                :class="candidate === winner && 'bg-success-wash'"
               >
-                <th scope="row" class="px-3 py-2.5 font-bold text-ink">
+                <th scope="row" class="px-3 py-2.5 font-medium text-ink">
                   <span class="flex items-center gap-1.5">
                     <Trophy
                       v-if="candidate === winner"
-                      class="size-3.5 shrink-0 text-mint-strong"
+                      class="size-3.5 shrink-0 text-success"
                       aria-label="Smallest"
                     />
                     {{ FORMAT_META[candidate.format].label }}
                   </span>
                 </th>
-                <td class="px-3 py-2.5 text-right font-bold text-ink" data-numeric>
+                <td class="px-3 py-2.5 text-right text-ink" data-numeric>
                   {{ formatBytes(candidate.size) }}
                 </td>
                 <td class="px-3 py-2.5 text-right" data-numeric>
                   <span
                     :class="
                       savingsPercent(item.originalSize, candidate.size) > 0
-                        ? 'font-bold text-mint-strong'
-                        : 'text-danger-strong'
+                        ? 'text-success'
+                        : 'text-danger'
                     "
                   >
                     {{ savingsPercent(item.originalSize, candidate.size) > 0 ? '−' : '+'

@@ -2,8 +2,7 @@
 /**
  * Light / dark / system, as a single cycling button.
  *
- * The icon swap is animated with the shared `roll` transition so the change
- * registers as a deliberate flip rather than a jump cut. `aria-label` always
+ * The icon cross-fades between modes. `aria-label` always
  * spells out what pressing it will do next, since the icon alone can't.
  *
  * The button is wrapped in `<ClientOnly>` because the stored theme only exists in
@@ -28,22 +27,22 @@ const NEXT_LABEL = {
 <template>
   <ClientOnly>
     <UiButton
-      variant="secondary"
-      size="sm"
+      variant="ghost"
+      size="md"
       icon-only
       :aria-label="NEXT_LABEL[mode]"
       :title="`Theme: ${mode}`"
       @click="cycle"
     >
       <span class="relative grid size-4 place-items-center overflow-hidden">
-        <Transition name="roll" mode="out-in">
-          <component :is="ICONS[mode]" :key="mode" class="size-4 stroke-2" />
+        <Transition name="fade" mode="out-in">
+          <component :is="ICONS[mode]" :key="mode" class="size-4" />
         </Transition>
       </span>
     </UiButton>
 
     <template #fallback>
-      <span class="size-9 shrink-0 rounded-full bg-surface-2 edge-soft" aria-hidden="true" />
+      <span class="size-8 shrink-0" aria-hidden="true" />
     </template>
   </ClientOnly>
 </template>

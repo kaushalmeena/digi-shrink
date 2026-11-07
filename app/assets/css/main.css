@@ -1,14 +1,14 @@
 @import 'tailwindcss';
-@import './patterns.css';
+@import './utilities.css';
 @import './transitions.css';
 
 /*
  * ============================================================================
- *  DigiShrink — "Playful Geometric" design system
+ *  DigiShrink — "Quiet Utility" design system
  * ============================================================================
- *  Core idea: **stable grid, wild decoration**. Content sits in calm, readable
- *  blocks; the space around it is alive with primitive shapes, dot grids and
- *  hard offset shadows that make elements feel like stickers cut from paper.
+ *  Core idea: **the images are the content, the interface gets out of the way.**
+ *  Neutral surfaces, hairline borders, one accent colour, and status colours
+ *  that only appear when they carry meaning (saved, grew, failed).
  *
  *  Everything below is a *semantic* token. Components never hardcode a hex
  *  value, which is what lets a single `.dark` class re-skin the whole app.
@@ -19,137 +19,97 @@
 
 @theme {
   /* ---- Typography -------------------------------------------------------- */
-  /* Outfit: geometric with rounded letterforms — friendly, not corporate. */
-  --font-display: 'Outfit', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  /* Plus Jakarta Sans: geometric but humanist, stays legible at 13px. */
-  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Inter: neutral, dense, and built for UI at small sizes. Self-hosted by
+     @nuxt/fonts so the offline PWA keeps it. */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
 
-  /* A 1.25 (major third) scale — melodic rather than mathematical. */
-  --text-2xs: 0.6875rem;
+  /* A fixed rem scale, ~1.125–1.2 between steps. 16px is the body floor;
+     `sm`/`xs` are the dense UI roles (file rows, metadata). */
+  --text-2xs: 0.75rem;
   --text-2xs--line-height: 1rem;
-  --text-xs: 0.75rem;
-  --text-sm: 0.8125rem;
-  --text-base: 0.9375rem;
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
   --text-lg: 1.125rem;
-  --text-xl: 1.4rem;
-  --text-2xl: 1.75rem;
-  --text-3xl: 2.1875rem;
-  --text-4xl: 2.75rem;
-  --text-5xl: 3.4375rem;
-  --text-6xl: 4.25rem;
+  --text-lg--line-height: 1.5rem;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl: 1.625rem;
+  --text-2xl--line-height: 2rem;
 
-  /* ---- Radii: chunky, and deliberately mixed ---------------------------- */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
-  --radius-3xl: 32px;
+  /* ---- Radii: small and consistent -------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
 
-  /* ---- Motion: bouncy, elastic, overshooting ---------------------------- */
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* ---- Motion: short, eased, never bouncy -------------------------------- */
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --animate-pop-in: pop-in 0.42s var(--ease-bounce) both;
-  --animate-wiggle: wiggle 0.5s ease-in-out;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-spin-slow: spin 14s linear infinite;
-  --animate-marquee: marquee 26s linear infinite;
-  --animate-shimmer: shimmer 1.4s linear infinite;
-
   /* ---- Light mode palette ----------------------------------------------- */
-  /* Warm cream rather than white — the whole surface reads as paper. */
-  --color-canvas: #fffdf5;
+  --color-canvas: #fafafa;
   --color-surface: #ffffff;
-  --color-surface-2: #f5f4ee;
-  --color-ink: #1e293b; /* Slate 800 — softer and warmer than pure black */
-  --color-ink-soft: #5c6b83;
-  --color-line: #e2e8f0;
+  --color-surface-2: #f4f4f5;
+  --color-surface-3: #e9e9ec;
+  --color-ink: #18181b;
+  --color-ink-soft: #63636b; /* 5.9:1 on white */
+  --color-ink-faint: #8e8e96; /* decorative / disabled only */
+  --color-line: #e4e4e7;
+  --color-line-strong: #d4d4d8;
 
-  /* `outline` draws the chunky 2px sticker border; `shade` is the hard,
-     blur-free drop shadow. They are separate tokens because dark mode moves
-     them independently. */
-  --color-outline: #1e293b;
-  --color-shade: #1e293b;
-  --color-shade-soft: #dfe4ec;
-
-  /* Violet is the brand. The -deep variant is the one safe for white text. */
-  --color-accent: #7c3aed;
-  --color-accent-bright: #8b5cf6;
-  --color-accent-wash: #f1eaff;
+  /* One accent. Used for focus, selection and the one primary action. */
+  --color-accent: #2563eb;
+  --color-accent-wash: #eef3fe;
   --color-on-accent: #ffffff;
 
-  /* Rotated through decoratively for a confetti effect — never load-bearing. */
-  --color-berry: #f472b6;
-  --color-sun: #fbbf24;
-  --color-mint: #34d399;
-  --color-berry-wash: #fde9f3;
-  --color-sun-wash: #fdf3d8;
-  --color-mint-wash: #e2f8ef;
-
-  /*
-   * Text-safe counterparts, for a label sitting on the matching `-wash`.
-   *
-   * The plain decorative values are tuned to be *bright* — as fills, shadows and
-   * shapes they are meant to pop off the page. As small text on a pale wash they
-   * are close to invisible: mint managed 1.7:1 and berry 2.3:1, against the 4.5:1
-   * that small bold text needs. These darkened versions clear 4.9:1 while keeping
-   * the same hue, so the palette still reads as one family.
-   *
-   * Same idea as `accent` vs `accent-bright`: one value for ink, one for paint.
-   */
-  --color-berry-strong: #be185d;
-  --color-mint-strong: #047857;
-
-  --color-danger: #e11d48;
-  --color-danger-wash: #ffe8ec;
-  --color-danger-strong: #be123c;
+  /* Status. Each has a text-safe value and a pale wash to sit it on. */
+  --color-success: #15803d;
+  --color-success-wash: #ecfaf0;
+  --color-warning: #a16207;
+  --color-warning-wash: #fdf8e7;
+  --color-danger: #dc2626;
+  --color-danger-wash: #fef1f1;
 }
 
 /*
- * Dark mode is not an inversion. The paper becomes deep ink-violet, surfaces
- * sit *above* the canvas in lightness, and the hard shadow goes near-black so
- * the sticker/cut-out effect survives. Accents brighten and swap to dark text
- * so contrast ratios stay comfortable.
+ * Dark mode is not an inversion: surfaces get *lighter* as they rise, and the
+ * accent and status colours brighten so they keep their contrast.
  */
 .dark {
-  --color-canvas: #14121c;
-  --color-surface: #1e1a2b;
-  --color-surface-2: #272138;
-  --color-ink: #f4f1ff;
-  --color-ink-soft: #a79fc2;
-  --color-line: #362e4d;
+  --color-canvas: #0c0c0d;
+  --color-surface: #151517;
+  --color-surface-2: #1d1d20;
+  --color-surface-3: #27272b;
+  --color-ink: #f4f4f5;
+  --color-ink-soft: #a1a1aa;
+  --color-ink-faint: #71717a;
+  --color-line: #26262a;
+  --color-line-strong: #34343a;
 
-  --color-outline: #0b0812;
-  --color-shade: #0b0812;
-  --color-shade-soft: #302847;
+  --color-accent: #60a5fa;
+  --color-accent-wash: #16223a;
+  --color-on-accent: #0c0c0d;
 
-  --color-accent: #a78bfa;
-  --color-accent-bright: #c4b5fd;
-  --color-accent-wash: #2a2141;
-  --color-on-accent: #14121c;
-
-  --color-berry: #f9a8d4;
-  --color-sun: #fcd34d;
-  --color-mint: #6ee7b7;
-  --color-berry-wash: #3a2036;
-  --color-sun-wash: #3a2f16;
-  --color-mint-wash: #16342b;
-
-  /* On dark washes the bright values are already the readable ones — they clear
-     8:1 — so `-strong` collapses back onto them rather than darkening further. */
-  --color-berry-strong: #f9a8d4;
-  --color-mint-strong: #6ee7b7;
-
-  --color-danger: #fb7185;
-  --color-danger-wash: #3b1620;
-  --color-danger-strong: #fb7185;
+  --color-success: #4ade80;
+  --color-success-wash: #10251a;
+  --color-warning: #facc15;
+  --color-warning-wash: #2a2410;
+  --color-danger: #f87171;
+  --color-danger-wash: #2c1414;
 }
 
 @layer base {
   :root {
     color-scheme: light;
+    /* Theme the browser's own UI from the palette, not its defaults. */
+    accent-color: var(--color-accent);
+    caret-color: var(--color-accent);
+    scrollbar-color: var(--color-line-strong) transparent;
   }
 
   .dark {
@@ -162,19 +122,16 @@
 
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-behavior: smooth;
   }
 
   body {
     background-color: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-weight: 450;
+    font-size: var(--text-base);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    /* Prevents the sticker shadows on off-screen decoration from creating a
-       horizontal scrollbar on narrow viewports. */
-    overflow-x: hidden;
+    font-feature-settings: 'cv11', 'ss01';
   }
 
   h1,
@@ -183,10 +140,9 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.08;
+    font-weight: 600;
+    letter-spacing: -0.011em;
+    line-height: 1.2;
     text-wrap: balance;
   }
 
@@ -194,31 +150,24 @@
     text-wrap: pretty;
   }
 
-  /* The focus state is a signature of this system: thick, high-contrast, and
-     paired with a hard shadow rather than a soft glow. */
+  a {
+    text-underline-offset: 3px;
+  }
+
   :focus-visible {
-    outline: 3px solid var(--color-accent);
+    outline: 2px solid var(--color-accent);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
   }
 
   ::selection {
-    background-color: var(--color-sun);
-    color: #1e293b;
+    background-color: var(--color-accent-wash);
+    color: var(--color-ink);
   }
 
-  /*
-   * Iconography, straight from the design system: chunky 2.5px strokes with
-   * round caps and joins.
-   *
-   * Set once here rather than repeated as a utility on every icon, for two
-   * reasons: it's a system-wide rule, not a per-instance decision, and Tailwind's
-   * `stroke-<number>` utility only accepts integers — a fractional one silently
-   * does nothing, and the arbitrary-value form would need spelling out 30+ times.
-   * Individual icons can still override with `stroke-2` / `stroke-3`.
-   */
+  /* Thin, even icon strokes to match the hairline borders. */
   svg.lucide {
-    stroke-width: 2.5;
+    stroke-width: 1.75;
     stroke-linecap: round;
     stroke-linejoin: round;
   }
@@ -226,7 +175,6 @@
   /* Tabular figures everywhere numbers change in place, so stats don't jitter. */
   [data-numeric] {
     font-variant-numeric: tabular-nums;
-    font-feature-settings: 'tnum';
   }
 
   input[type='range'] {
@@ -236,72 +184,14 @@
   }
 }
 
-/* ---- Keyframes ---------------------------------------------------------- */
-
-@keyframes pop-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.82) translateY(10px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes wiggle {
-  0%,
-  100% {
-    transform: rotate(0deg);
-  }
-  25% {
-    transform: rotate(4deg);
-  }
-  75% {
-    transform: rotate(-4deg);
-  }
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-14px) rotate(6deg);
-  }
-}
-
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes shimmer {
-  from {
-    background-position: -150% 0;
-  }
-  to {
-    background-position: 250% 0;
-  }
-}
-
 /*
- * Honour `prefers-reduced-motion`. The bounce and wiggle are the personality of
- * this design system, but they are decoration — never information — so they can
- * be removed wholesale without losing meaning.
+ * `prefers-reduced-motion` means fewer, gentler animations — not none. Spatial
+ * movement goes (see `transitions.css`, which swaps slides for fades); opacity
+ * and colour changes stay, because they carry state. Only the non-essential
+ * smooth scroll is switched off here.
  */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  html {
+    scroll-behavior: auto;
   }
 }

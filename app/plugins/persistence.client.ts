@@ -53,7 +53,9 @@ export default defineNuxtPlugin(() => {
   /* ---- Hydrate ---------------------------------------------------------- */
 
   // `hydrateSettings` reconciles the stored object against the current schema,
-  // so preferences saved by an older build can never break this one.
+  // so preferences saved by an older build can never break this one. Safe to
+  // apply before hydration because everything that shows settings renders
+  // client-only (the settings bar is wrapped in `<ClientOnly>`).
   settings.value = read(SETTINGS_STORAGE_KEY, settings.value, hydrateSettings)
   stats.value = read<LifetimeStats>(LIFETIME_STATS_KEY, emptyLifetimeStats(), (raw) => ({
     ...emptyLifetimeStats(),
@@ -79,7 +81,7 @@ export default defineNuxtPlugin(() => {
       // Keeps the mobile browser chrome in step with the app's background.
       document
         .querySelector('meta[name="theme-color"]')
-        ?.setAttribute('content', theme === 'dark' ? '#14121c' : '#fffdf5')
+        ?.setAttribute('content', theme === 'dark' ? '#0c0c0d' : '#fafafa')
     },
     { immediate: true },
   )

@@ -12,10 +12,9 @@
  */
 import { computed, ref, watch } from 'vue'
 
-import { ArrowDownWideNarrow } from '@lucide/vue'
 import { savingsPercent } from '~/lib/format'
 import { useCompressor } from '~/composables/useCompressor'
-import type { ItemStatus, SegmentOption } from '~/lib/types'
+import type { ItemStatus, SegmentOption, SelectOption } from '~/lib/types'
 
 const emit = defineEmits<{ compare: [id: string] }>()
 
@@ -31,7 +30,7 @@ const FILTERS = computed<SegmentOption<Filter>[]>(() => [
   { value: 'all', label: `All ${items.value.length}` },
   {
     value: 'queued',
-    label: `Queued ${pending.value.length}`,
+    label: `Waiting ${pending.value.length}`,
     disabled: pending.value.length === 0,
   },
   {
@@ -42,10 +41,10 @@ const FILTERS = computed<SegmentOption<Filter>[]>(() => [
   { value: 'error', label: `Failed ${failed.value.length}`, disabled: failed.value.length === 0 },
 ])
 
-const SORTS: SegmentOption<Sort>[] = [
-  { value: 'added', label: 'Added', title: 'Keep the order images were added' },
-  { value: 'savings', label: 'Savings', title: 'Biggest reduction first' },
-  { value: 'size', label: 'Size', title: 'Largest original first' },
+const SORTS: SelectOption<Sort>[] = [
+  { value: 'added', label: 'Order added' },
+  { value: 'savings', label: 'Most saved' },
+  { value: 'size', label: 'Largest' },
 ]
 
 const MATCHES: Record<Filter, (status: ItemStatus) => boolean> = {
@@ -78,9 +77,9 @@ watch(visible, (rows) => {
 </script>
 
 <template>
-  <section aria-labelledby="queue-heading" class="space-y-4">
-    <div class="flex flex-wrap items-center gap-3">
-      <h2 id="queue-heading" class="eyebrow text-ink-soft">Your images</h2>
+  <section aria-labelledby="queue-heading" class="overflow-hidden rounded-xl border bg-surface">
+    <div class="flex flex-wrap items-center gap-3 border-b px-4 py-2">
+      <h2 id="queue-heading" class="sr-only">Images</h2>
 
       <UiSegmented
         v-model="filter"
@@ -89,18 +88,23 @@ watch(visible, (rows) => {
         size="sm"
       />
 
-      <div class="ml-auto flex items-center gap-2">
-        <ArrowDownWideNarrow class="size-3.5 text-ink-soft" aria-hidden="true" />
-        <UiSegmented v-model="sort" :options="SORTS" aria-label="Sort images" size="sm" />
+      <div class="-mr-1.5 ml-auto">
+        <UiSelect
+          v-model="sort"
+          :options="SORTS"
+          aria-label="Sort by"
+          variant="ghost"
+          align="end"
+        />
       </div>
     </div>
 
-    <TransitionGroup name="queue" tag="div" class="relative space-y-3">
+    <TransitionGroup name="queue" tag="ul" class="relative divide-y" appear>
       <CompressQueueRow
         v-for="(item, index) in visible"
         :key="item.id"
         :item="item"
-        :index="index"
+        :style="{ '--stagger': Math.min(index, 8) }"
         @compare="emit('compare', $event)"
       />
     </TransitionGroup>

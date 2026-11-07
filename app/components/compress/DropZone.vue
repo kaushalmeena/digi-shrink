@@ -1,114 +1,55 @@
 <script setup lang="ts">
 /**
- * The primary drop target.
+ * The empty-state drop target.
  *
- * Drag events are bound at the *window* level (see `useFileIntake`), not here —
- * dropping anywhere on the page works, which is what people actually try. This
- * component is the visible affordance for that, and it also handles the two
- * other paths in: the file picker and a paste hint.
+ * Drag events are bound at the *window* level (see `useFileIntake`), so this is
+ * only the visible affordance — the whole box is also a button that opens the
+ * file picker, which is the path people take when they don't have files to drag.
  */
 import { onMounted, ref } from 'vue'
 
-import { ClipboardPaste, FolderOpen, ImagePlus, Layers } from '@lucide/vue'
+import { ImageUp } from '@lucide/vue'
 import { ACCEPT_ATTRIBUTE } from '~/lib/constants'
 import { useFileIntake } from '~/composables/useFileIntake'
-import type { ConfettiShape } from '~/components/decor/Confetti.vue'
-
-defineProps<{ compact: boolean }>()
 
 const { isDraggingOver, pickFiles } = useFileIntake()
 
 /** ⌘ on Apple platforms, Ctrl everywhere else. */
-const pasteKey = ref('Ctrl')
+const pasteKey = ref('Ctrl+')
 onMounted(() => {
   if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) pasteKey.value = '⌘'
 })
 
-const SHAPES: ConfettiShape[] = [
-  { kind: 'ring', tone: 'berry', top: '-8%', left: '4%', size: 78, opacity: 0.55 },
-  { kind: 'triangle', tone: 'sun', bottom: '6%', left: '9%', size: 34, rotate: 18, delay: 1.2 },
-  { kind: 'squiggle', tone: 'mint', top: '14%', right: '6%', size: 62, delay: 0.5 },
-  {
-    kind: 'square',
-    tone: 'accent',
-    bottom: '-6%',
-    right: '12%',
-    size: 44,
-    rotate: -12,
-    opacity: 0.5,
-    delay: 1.8,
-  },
-  { kind: 'plus', tone: 'berry', top: '52%', right: '3%', size: 26, delay: 2.4 },
-]
+function choose(): void {
+  pickFiles(ACCEPT_ATTRIBUTE)
+}
 </script>
 
 <template>
-  <div
-    class="relative overflow-hidden rounded-3xl bg-surface transition-[background-color,box-shadow,transform] duration-300 ease-bounce edge"
+  <button
+    type="button"
+    class="group flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-16 text-center transition-colors duration-150 sm:py-24"
     :class="
       isDraggingOver
-        ? 'scale-101 bg-accent-wash pop-4 pop-accent'
-        : 'pop-4 pop-soft hover:pop-berry'
+        ? 'border-accent bg-accent-wash'
+        : 'border-line-strong bg-surface hover:border-ink-faint hover:bg-surface-2/50'
     "
+    @click="choose"
   >
-    <!-- Dot grid, per the design system's "spacious but filled with pattern". -->
-    <div class="decor-layer pattern-dots opacity-70" aria-hidden="true" />
-    <DecorConfetti :shapes="SHAPES" />
+    <ImageUp class="size-7 text-ink-faint transition-colors group-hover:text-ink-soft" />
 
-    <!-- Dashed inner rule reads as "put something here" without a second border. -->
-    <div
-      class="pointer-events-none absolute inset-3 rounded-2xl border-2 border-dashed transition-colors duration-300"
-      :class="isDraggingOver ? 'border-accent' : 'border-line'"
-      aria-hidden="true"
-    />
+    <span class="mt-4 text-base font-medium text-ink"> Drop images or a folder here </span>
 
-    <div
-      class="relative z-10 flex flex-col items-center text-center transition-[padding] duration-300"
-      :class="compact ? 'px-6 py-8' : 'px-6 py-14 sm:py-20'"
-    >
-      <UiIconBadge
-        :tone="isDraggingOver ? 'accent' : 'sun'"
-        :size="compact ? 'md' : 'lg'"
-        shape="squircle"
-        outlined
-        wiggle
-        class="transition-transform duration-300 ease-bounce"
-        :class="isDraggingOver && 'scale-110 -rotate-6'"
+    <span class="mt-1 text-sm text-ink-soft">
+      or <span class="text-accent underline-offset-2 group-hover:underline">browse files</span>
+      · paste with
+      <kbd class="rounded-sm border bg-surface-2 px-1 font-sans text-xs text-ink"
+        >{{ pasteKey }}V</kbd
       >
-        <Layers v-if="isDraggingOver" />
-        <ImagePlus v-else />
-      </UiIconBadge>
+    </span>
 
-      <h2 class="mt-5" :class="compact ? 'text-xl' : 'text-2xl sm:text-4xl'">
-        <template v-if="isDraggingOver">Let go — we've got it</template>
-        <template v-else>
-          Drop images to
-          <span class="marker-underline">shrink</span>
-        </template>
-      </h2>
-
-      <p v-if="!compact" class="mt-3 max-w-md text-sm/relaxed text-ink-soft">
-        JPEG, PNG, WebP, AVIF, GIF, BMP and HEIC. Drop a whole folder if you like — everything is
-        processed right here in your browser.
-      </p>
-
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <UiButton :size="compact ? 'md' : 'lg'" @click="pickFiles(ACCEPT_ATTRIBUTE)">
-          <FolderOpen class="size-4" />
-          Choose images
-        </UiButton>
-
-        <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-soft">
-          <ClipboardPaste class="size-3.5" />
-          or press
-          <kbd
-            class="rounded-md border-2 border-line bg-surface-2 px-1.5 py-0.5 font-mono text-2xs font-bold text-ink"
-          >
-            {{ pasteKey }}V
-          </kbd>
-          to paste
-        </span>
-      </div>
-    </div>
-  </div>
+    <span class="mt-6 text-xs text-ink-faint">
+      JPEG · PNG · WebP · AVIF · GIF · BMP · HEIC — up to 250 at once
+    </span>
+  </button>
 </template>

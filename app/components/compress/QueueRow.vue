@@ -11,33 +11,20 @@
  */
 import { computed, ref } from 'vue'
 
-import {
-  AlertTriangle,
-  Check,
-  ChevronDown,
-  Columns2,
-  Download,
-  ImageOff,
-  Loader2,
-  RotateCw,
-  Sliders,
-  X,
-} from '@lucide/vue'
+import { ChevronDown, Columns2, Download, ImageOff, RotateCw, X } from '@lucide/vue'
 import { formatBytes, formatDimensions, formatPercent, savingsPercent } from '~/lib/format'
 import { FORMAT_META } from '~/lib/constants'
 import { saveBlob } from '~/lib/download'
 import { useCompressor } from '~/composables/useCompressor'
 import { useSettings } from '~/composables/useSettings'
-import { useToasts } from '~/composables/useToasts'
 import type { QueueItem } from '~/lib/types'
 
-const props = defineProps<{ item: QueueItem; index: number }>()
+const props = defineProps<{ item: QueueItem }>()
 const emit = defineEmits<{ compare: [id: string] }>()
 
 const { removeItem, setDimensions, setQualityOverride, compressOne, outputBlob, outputNameFor } =
   useCompressor()
 const { settings } = useSettings()
-const toasts = useToasts()
 
 const isExpanded = ref(false)
 /** Set when the preview `<img>` fails — e.g. HEIC in a browser that can't show it. */
@@ -47,20 +34,20 @@ const savings = computed(() =>
   props.item.result ? savingsPercent(props.item.originalSize, props.item.result.size) : 0,
 )
 
-/** Positive savings are the happy path; a grown file is worth flagging in berry. */
+/** Positive savings are the happy path; a grown file is flagged. */
 const savingsTone = computed(() => {
-  if (!props.item.result) return 'neutral' as const
-  if (props.item.result.usedOriginal) return 'sun' as const
-  return savings.value > 0 ? ('mint' as const) : ('berry' as const)
+  if (!props.item.result || props.item.result.usedOriginal) return 'text-ink-soft'
+  return savings.value > 0 ? 'text-success' : 'text-danger'
 })
 
-const STATUS_TONE = {
-  queued: 'neutral',
-  working: 'accent',
-  done: 'mint',
-  skipped: 'sun',
-  error: 'danger',
-} as const
+const savingsLabel = computed(() => {
+  const result = props.item.result
+  if (!result) return ''
+  if (result.usedOriginal) return 'Kept original'
+  return savings.value > 0
+    ? `−${formatPercent(savings.value, 0)}`
+    : `+${formatPercent(-savings.value, 0)}`
+})
 
 /**
  * The effective quality for this row, whether overridden or inherited.
@@ -84,24 +71,40 @@ async function download(): Promise<void> {
   await saveBlob(blob, outputNameFor(props.item), props.item.result.mimeType)
 }
 
+function toggleExpanded(): void {
+  isExpanded.value = !isExpanded.value
+}
+
+function compare(): void {
+  emit('compare', props.item.id)
+}
+
+function remove(): void {
+  removeItem(props.item.id)
+}
+
+function resetQuality(): void {
+  setQualityOverride(props.item.id, null)
+}
+
+function onPreviewError(): void {
+  previewFailed.value = true
+}
+
 async function rerun(): Promise<void> {
   await compressOne(props.item.id)
-  if (props.item.status === 'done') toasts.success(`Re-compressed ${props.item.name}.`)
 }
 </script>
 
 <template>
-  <UiCard
-    :depth="2"
-    :tone="item.status === 'error' ? 'berry' : 'soft'"
-    flush
-    class="overflow-hidden"
-  >
-    <div class="flex items-center gap-3 p-3">
-      <!-- Thumbnail. Doubles as the source of the intrinsic dimensions, so the
-           preview we already render pays for the metadata too. -->
+  <!-- `content-visibility` lets the browser skip layout and paint for rows
+       scrolled out of view — a 250-image batch is a long list. `auto` in the
+       intrinsic size remembers each row's real height once it has rendered. -->
+  <li class="group relative [contain-intrinsic-size:auto_61px] [content-visibility:auto]">
+    <div class="flex items-center gap-3 py-2.5 pr-2 pl-4 sm:pr-4">
+      <!-- Thumbnail. Doubles as the source of the intrinsic dimensions. -->
       <div
-        class="relative grid size-14 shrink-0 place-items-center overflow-hidden rounded-lg bg-surface-2 pattern-dots-dense edge sm:size-16"
+        class="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md checker"
       >
         <img
           v-if="item.previewUrl && !previewFailed"
@@ -111,167 +114,161 @@ async function rerun(): Promise<void> {
           decoding="async"
           class="size-full object-cover"
           @load="onPreviewLoad"
-          @error="previewFailed = true"
+          @error="onPreviewError"
         />
-        <ImageOff v-else class="size-5 text-ink-soft" />
-
-        <!-- Working overlay: the bar lives on the thumbnail so the row height
-             doesn't change when a batch starts. -->
-        <Transition name="fade">
-          <div
-            v-if="item.status === 'working'"
-            class="absolute inset-0 grid place-items-center bg-accent/80 backdrop-blur-[2px]"
-          >
-            <Loader2 class="size-5 animate-spin stroke-3 text-on-accent" />
-          </div>
-        </Transition>
+        <ImageOff v-else class="size-4 text-ink-faint" />
       </div>
 
-      <!-- Identity + numbers -->
+      <!-- Name + numbers -->
       <div class="min-w-0 flex-1">
-        <p class="truncate text-sm font-bold text-ink" :title="item.name">{{ item.name }}</p>
+        <p class="truncate text-sm text-ink" :title="item.name">{{ item.name }}</p>
 
-        <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-ink-soft">
-          <span data-numeric>{{ formatBytes(item.originalSize) }}</span>
-
-          <template v-if="item.result">
-            <span aria-hidden="true">→</span>
-            <span class="font-bold text-ink" data-numeric>
-              {{ formatBytes(item.result.size) }}
-            </span>
+        <!-- Errors wrap to two lines: they're the one line that must be read. -->
+        <p
+          class="mt-0.5 text-xs text-ink-soft"
+          :class="item.status === 'error' ? 'line-clamp-2' : 'truncate'"
+          data-numeric
+        >
+          <template v-if="item.status === 'error'">
+            <span class="text-danger">{{ item.error }}</span>
           </template>
+          <template v-else>
+            {{ formatBytes(item.originalSize) }}
+            <template v-if="item.result">
+              → <span class="text-ink">{{ formatBytes(item.result.size) }}</span> ·
+              {{ FORMAT_META[item.result.format].label }}
+            </template>
+            <template v-if="item.width">
+              ·
+              {{
+                formatDimensions(
+                  item.result?.width ?? item.width,
+                  item.result?.height ?? item.height,
+                )
+              }}
+            </template>
+          </template>
+        </p>
+      </div>
 
-          <span v-if="item.width" data-numeric>
-            ·
-            {{
-              formatDimensions(item.result?.width ?? item.width, item.result?.height ?? item.height)
-            }}
+      <!-- Status -->
+      <div class="shrink-0 text-right text-sm sm:w-24" data-numeric>
+        <span v-if="item.result" :class="savingsTone">{{ savingsLabel }}</span>
+        <!-- Determinate: the worker reports real progress, so show it rather
+             than an open-ended spinner. -->
+        <span v-else-if="item.status === 'working'" class="text-xs text-ink-soft">
+          {{ item.stage || 'Working' }} {{ Math.round(item.progress * 100) }}%
+        </span>
+        <!-- On narrow screens the red message and Retry already say it. -->
+        <span v-else-if="item.status === 'error'" class="text-xs text-danger max-sm:hidden">
+          Failed
+        </span>
+        <span v-else class="text-xs text-ink-faint">Waiting</span>
+      </div>
+
+      <!-- A failed row's one useful action, always visible: try again. -->
+      <UiButton
+        v-if="item.status === 'error'"
+        variant="secondary"
+        size="sm"
+        :aria-label="`Retry ${item.name}`"
+        @click="rerun"
+      >
+        <RotateCw class="size-3.5" />
+        Retry
+      </UiButton>
+
+      <!-- Actions. Quiet until the row is hovered or focused; always shown on
+           touch, where there is no hover. -->
+      <div
+        class="flex shrink-0 items-center transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100 sm:opacity-0 [@media(hover:none)]:opacity-100"
+      >
+        <!-- Nothing to compare or download on a failed row; Retry stands in. -->
+        <template v-if="item.status !== 'error'">
+          <span class="hidden sm:flex">
+            <UiButton
+              variant="ghost"
+              size="sm"
+              icon-only
+              :disabled="!item.result"
+              :aria-label="`Compare before and after for ${item.name}`"
+              title="Compare"
+              @click="compare"
+            >
+              <Columns2 class="size-4" />
+            </UiButton>
           </span>
 
-          <span v-if="item.result" class="font-semibold">· {{ item.result.encoder }}</span>
-        </div>
-
-        <!-- Live stage label while working, error text when failed.
-             Text-only targets, so this fades rather than collapses. -->
-        <Transition name="fade">
-          <p
-            v-if="item.status === 'working' && item.stage"
-            class="mt-1.5 text-2xs font-semibold text-accent"
+          <UiButton
+            variant="ghost"
+            size="sm"
+            icon-only
+            :disabled="!item.result"
+            :aria-label="`Download compressed ${item.name}`"
+            title="Download"
+            @click="download"
           >
-            {{ item.stage }}…
-          </p>
-          <p
-            v-else-if="item.status === 'error'"
-            class="mt-1.5 flex items-start gap-1 text-2xs/snug font-semibold text-danger-strong"
+            <Download class="size-4" />
+          </UiButton>
+        </template>
+
+        <span class="hidden sm:flex">
+          <UiButton
+            variant="ghost"
+            size="sm"
+            icon-only
+            :aria-label="`${isExpanded ? 'Hide' : 'Show'} options for ${item.name}`"
+            :aria-expanded="isExpanded"
+            title="Options"
+            @click="toggleExpanded"
           >
-            <AlertTriangle class="mt-px size-3 shrink-0 stroke-3" />
-            {{ item.error }}
-          </p>
-        </Transition>
-      </div>
-
-      <!-- Result badge -->
-      <div class="hidden shrink-0 sm:block">
-        <Transition name="pop" mode="out-in">
-          <UiBadge
-            v-if="item.result"
-            :key="item.result.size"
-            :tone="savingsTone"
-            outlined
-            size="md"
-          >
-            <Check v-if="!item.result.usedOriginal && savings > 0" class="size-3 stroke-3" />
-            <span data-numeric>
-              <template v-if="item.result.usedOriginal">already optimal</template>
-              <template v-else-if="savings > 0">−{{ formatPercent(savings, 1) }}</template>
-              <template v-else>+{{ formatPercent(-savings, 1) }}</template>
-            </span>
-          </UiBadge>
-
-          <UiBadge v-else :tone="STATUS_TONE[item.status]" size="md">
-            {{ item.status === 'working' ? 'compressing' : item.status }}
-          </UiBadge>
-        </Transition>
-      </div>
-
-      <!-- Actions -->
-      <div class="flex shrink-0 items-center gap-1">
-        <UiButton
-          v-if="item.result"
-          variant="ghost"
-          size="sm"
-          icon-only
-          :aria-label="`Compare before and after for ${item.name}`"
-          title="Before / after"
-          @click="emit('compare', item.id)"
-        >
-          <Columns2 class="size-4" />
-        </UiButton>
-
-        <UiButton
-          v-if="item.result"
-          variant="ghost"
-          size="sm"
-          icon-only
-          :aria-label="`Download compressed ${item.name}`"
-          title="Download"
-          @click="download"
-        >
-          <Download class="size-4" />
-        </UiButton>
+            <ChevronDown
+              class="size-4 transition-transform duration-200"
+              :class="isExpanded && 'rotate-180'"
+            />
+          </UiButton>
+        </span>
 
         <UiButton
           variant="ghost"
           size="sm"
           icon-only
-          :aria-label="`${isExpanded ? 'Hide' : 'Show'} options for ${item.name}`"
-          :aria-expanded="isExpanded"
-          title="Per-image options"
-          @click="isExpanded = !isExpanded"
-        >
-          <component
-            :is="item.status === 'queued' ? Sliders : ChevronDown"
-            class="size-4 transition-transform duration-300"
-            :class="isExpanded && item.status !== 'queued' && 'rotate-180'"
-          />
-        </UiButton>
-
-        <UiButton
-          variant="ghost"
-          size="sm"
-          icon-only
-          :aria-label="`Remove ${item.name} from the queue`"
+          :aria-label="`Remove ${item.name}`"
           title="Remove"
-          @click="removeItem(item.id)"
+          @click="remove"
         >
           <X class="size-4" />
         </UiButton>
       </div>
     </div>
 
-    <!--
-      Per-image overrides.
+    <!-- Row-level progress rail, flush with the divider below. -->
+    <div
+      v-if="item.status === 'working'"
+      class="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-accent transition-transform duration-200 ease-out"
+      :style="{ transform: `scaleX(${item.progress})` }"
+      aria-hidden="true"
+    />
 
-      Always mounted and toggled by `data-open` so the height animation is
-      symmetrical — see the `disclose` utility. `inert` keeps the collapsed
-      panel's slider and buttons out of the tab order and the accessibility tree.
+    <!--
+      Per-image overrides. Always mounted and toggled by `data-open` so the
+      height animation is symmetrical; `inert` keeps the collapsed controls out
+      of the tab order.
     -->
     <div class="disclose" :data-open="isExpanded" :inert="!isExpanded">
       <div>
-        <div class="border-t-2 border-line bg-surface-2 p-4">
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
+        <div class="bg-surface-2/60 px-4 py-3 sm:pl-17">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
             <div class="flex-1">
               <UiField
                 label="Quality for this image"
                 :value="
-                  item.qualityOverride === null
-                    ? `${effectiveQuality} (inherited)`
-                    : effectiveQuality
+                  item.qualityOverride === null ? `${effectiveQuality} (global)` : effectiveQuality
                 "
                 :hint="
-                  item.qualityOverride === null
-                    ? 'Following the global setting. Move the slider to override it.'
-                    : 'Overriding the global setting for this image only.'
+                  settings.mode !== 'quality'
+                    ? `Not used in ${settings.mode === 'lossless' ? 'lossless' : 'target size'} mode.`
+                    : undefined
                 "
                 :for="`quality-${item.id}`"
               >
@@ -288,12 +285,12 @@ async function rerun(): Promise<void> {
               </UiField>
             </div>
 
-            <div class="flex shrink-0 gap-2">
+            <div class="flex shrink-0 gap-1.5">
               <UiButton
                 v-if="item.qualityOverride !== null"
                 variant="ghost"
                 size="sm"
-                @click="setQualityOverride(item.id, null)"
+                @click="resetQuality"
               >
                 Reset
               </UiButton>
@@ -304,42 +301,20 @@ async function rerun(): Promise<void> {
                 :loading="item.status === 'working'"
                 @click="rerun"
               >
-                <RotateCw class="size-4" />
+                <RotateCw class="size-3.5" />
                 {{ item.result ? 'Re-compress' : 'Compress' }}
               </UiButton>
             </div>
           </div>
 
-          <p v-if="settings.mode !== 'quality'" class="mt-3 text-2xs font-semibold text-ink-soft">
-            Per-image quality is unavailable in
-            {{ settings.mode === 'lossless' ? 'lossless' : 'target size' }} mode.
+          <p v-if="item.result" class="mt-3 text-xs text-ink-soft" data-numeric>
+            {{ item.result.encoder }} · {{ item.result.attempts }} pass{{
+              item.result.attempts === 1 ? '' : 'es'
+            }}
+            · {{ Math.round(item.result.durationMs) }} ms
           </p>
-
-          <dl
-            v-if="item.result"
-            class="mt-4 grid grid-cols-2 gap-3 border-t-2 border-line pt-3 text-2xs sm:grid-cols-4"
-          >
-            <div>
-              <dt class="eyebrow text-ink-soft">Format</dt>
-              <dd class="mt-0.5 font-bold text-ink">{{ FORMAT_META[item.result.format].label }}</dd>
-            </div>
-            <div>
-              <dt class="eyebrow text-ink-soft">Encoder</dt>
-              <dd class="mt-0.5 font-bold text-ink">{{ item.result.encoder }}</dd>
-            </div>
-            <div>
-              <dt class="eyebrow text-ink-soft">Passes</dt>
-              <dd class="mt-0.5 font-bold text-ink" data-numeric>{{ item.result.attempts }}</dd>
-            </div>
-            <div>
-              <dt class="eyebrow text-ink-soft">Took</dt>
-              <dd class="mt-0.5 font-bold text-ink" data-numeric>
-                {{ Math.round(item.result.durationMs) }}ms
-              </dd>
-            </div>
-          </dl>
         </div>
       </div>
     </div>
-  </UiCard>
+  </li>
 </template>

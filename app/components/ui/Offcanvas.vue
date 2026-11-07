@@ -99,9 +99,9 @@ onBeforeUnmount(() => {
 const titleId = useId()
 
 const POSITION = {
-  right: 'inset-y-0 right-0 h-full border-l-2',
-  left: 'inset-y-0 left-0 h-full border-r-2',
-  bottom: 'inset-x-0 bottom-0 max-h-[88vh] rounded-t-3xl border-t-2',
+  right: 'inset-y-0 right-0 h-full border-l',
+  left: 'inset-y-0 left-0 h-full border-r',
+  bottom: 'inset-x-0 bottom-0 max-h-[88vh] rounded-t-2xl border-t',
 } as const
 
 const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${props.width}`))
@@ -119,7 +119,7 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
         `:duration` is required because the root itself has no transition for Vue
         to measure; it must cover the longest child animation.
       -->
-      <Transition name="offcanvas" appear :duration="{ enter: 430, leave: 300 }">
+      <Transition name="offcanvas" appear :duration="{ enter: 260, leave: 190 }">
         <div
           v-if="open"
           class="fixed inset-0 z-50"
@@ -127,37 +127,31 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
           aria-modal="true"
           :aria-labelledby="titleId"
         >
-          <div
-            data-offcanvas="scrim"
-            class="absolute inset-0 bg-ink/45 backdrop-blur-[3px]"
-            @click="open = false"
-          />
+          <div data-offcanvas="scrim" class="absolute inset-0 bg-black/30" @click="open = false" />
 
           <div
             ref="panel"
             data-offcanvas="panel"
             :data-side="side"
             tabindex="-1"
-            class="absolute flex flex-col border-(--color-outline) bg-canvas shadow-[-8px_0_0_0_var(--color-shade-soft)] outline-none"
+            class="absolute flex flex-col bg-surface shadow-2xl outline-none"
             :class="[POSITION[side], SIZE]"
           >
             <!-- Header: stays put while the body scrolls. -->
-            <header
-              class="relative flex shrink-0 items-start gap-3 border-b-2 border-(--color-outline) bg-surface px-5 py-4"
-            >
+            <header class="relative flex shrink-0 items-start gap-3 border-b px-5 py-3.5">
               <div class="min-w-0 flex-1">
-                <h2 :id="titleId" class="text-xl">{{ title }}</h2>
-                <p v-if="subtitle" class="mt-1 text-xs text-ink-soft">{{ subtitle }}</p>
+                <h2 :id="titleId" class="truncate text-base">{{ title }}</h2>
+                <p v-if="subtitle" class="mt-0.5 text-xs text-ink-soft">{{ subtitle }}</p>
               </div>
 
               <UiButton
-                variant="secondary"
+                variant="ghost"
                 size="sm"
                 icon-only
                 aria-label="Close panel"
                 @click="open = false"
               >
-                <X class="size-4 stroke-3" />
+                <X class="size-4" />
               </UiButton>
             </header>
 
@@ -165,10 +159,7 @@ const SIZE = computed(() => (props.side === 'bottom' ? 'w-full' : `w-full ${prop
               <slot />
             </div>
 
-            <footer
-              v-if="$slots.footer"
-              class="shrink-0 border-t-2 border-(--color-outline) bg-surface px-5 py-4"
-            >
+            <footer v-if="$slots.footer" class="shrink-0 border-t px-5 py-3">
               <slot name="footer" />
             </footer>
           </div>
