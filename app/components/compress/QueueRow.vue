@@ -123,7 +123,12 @@ async function rerun(): Promise<void> {
       <div class="min-w-0 flex-1">
         <p class="truncate text-sm text-ink" :title="item.name">{{ item.name }}</p>
 
-        <p class="mt-0.5 truncate text-xs text-ink-soft" data-numeric>
+        <!-- Errors wrap to two lines: they're the one line that must be read. -->
+        <p
+          class="mt-0.5 text-xs text-ink-soft"
+          :class="item.status === 'error' ? 'line-clamp-2' : 'truncate'"
+          data-numeric
+        >
           <template v-if="item.status === 'error'">
             <span class="text-danger">{{ item.error }}</span>
           </template>
@@ -154,7 +159,10 @@ async function rerun(): Promise<void> {
         <span v-else-if="item.status === 'working'" class="text-xs text-ink-soft">
           {{ item.stage || 'Working' }} {{ Math.round(item.progress * 100) }}%
         </span>
-        <span v-else-if="item.status === 'error'" class="text-xs text-danger">Failed</span>
+        <!-- On narrow screens the red message and Retry already say it. -->
+        <span v-else-if="item.status === 'error'" class="text-xs text-danger max-sm:hidden">
+          Failed
+        </span>
         <span v-else class="text-xs text-ink-faint">Waiting</span>
       </div>
 
@@ -175,31 +183,34 @@ async function rerun(): Promise<void> {
       <div
         class="flex shrink-0 items-center transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100 sm:opacity-0 [@media(hover:none)]:opacity-100"
       >
-        <span class="hidden sm:flex">
+        <!-- Nothing to compare or download on a failed row; Retry stands in. -->
+        <template v-if="item.status !== 'error'">
+          <span class="hidden sm:flex">
+            <UiButton
+              variant="ghost"
+              size="sm"
+              icon-only
+              :disabled="!item.result"
+              :aria-label="`Compare before and after for ${item.name}`"
+              title="Compare"
+              @click="compare"
+            >
+              <Columns2 class="size-4" />
+            </UiButton>
+          </span>
+
           <UiButton
             variant="ghost"
             size="sm"
             icon-only
             :disabled="!item.result"
-            :aria-label="`Compare before and after for ${item.name}`"
-            title="Compare"
-            @click="compare"
+            :aria-label="`Download compressed ${item.name}`"
+            title="Download"
+            @click="download"
           >
-            <Columns2 class="size-4" />
+            <Download class="size-4" />
           </UiButton>
-        </span>
-
-        <UiButton
-          variant="ghost"
-          size="sm"
-          icon-only
-          :disabled="!item.result"
-          :aria-label="`Download compressed ${item.name}`"
-          title="Download"
-          @click="download"
-        >
-          <Download class="size-4" />
-        </UiButton>
+        </template>
 
         <span class="hidden sm:flex">
           <UiButton
