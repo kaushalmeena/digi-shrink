@@ -185,16 +185,13 @@
 }
 
 /*
- * Honour `prefers-reduced-motion`. Motion here is only ever a short fade or
- * slide that confirms a change; removing it loses no information.
+ * `prefers-reduced-motion` means fewer, gentler animations — not none. Spatial
+ * movement goes (see `transitions.css`, which swaps slides for fades); opacity
+ * and colour changes stay, because they carry state. Only the non-essential
+ * smooth scroll is switched off here.
  */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  html {
+    scroll-behavior: auto;
   }
 }

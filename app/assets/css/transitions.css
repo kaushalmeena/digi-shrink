@@ -3,8 +3,9 @@
  *  Shared <Transition> vocabulary
  * ============================================================================
  *  Every appear/disappear uses one of these names. Motion is short and eased —
- *  it confirms that something changed, it doesn't perform. All of it collapses
- *  under `prefers-reduced-motion` (see `main.css`).
+ *  it confirms that something changed, it doesn't perform. Under
+ *  `prefers-reduced-motion` the block at the end removes all movement and
+ *  keeps the fades, which still carry the state change.
  * ============================================================================
  */
 
@@ -118,5 +119,34 @@
   &[data-open='false'] {
     grid-template-rows: 0fr;
     opacity: 0;
+  }
+}
+
+/* ---- reduced motion: keep the fades, drop the travel --------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .rise-enter-from,
+  .rise-leave-to {
+    transform: none;
+  }
+
+  /* Drawers fade in place instead of sliding. */
+  .offcanvas-enter-active [data-offcanvas='panel'],
+  .offcanvas-leave-active [data-offcanvas='panel'] {
+    transition: opacity 0.18s ease;
+  }
+  .offcanvas-enter-from [data-offcanvas='panel'],
+  .offcanvas-leave-to [data-offcanvas='panel'] {
+    translate: 0 0 !important;
+    opacity: 0;
+  }
+
+  .queue-move {
+    transition: none;
+  }
+
+  /* Disclosure snaps open; its content still fades. */
+  .disclose {
+    transition: opacity 0.18s ease;
   }
 }

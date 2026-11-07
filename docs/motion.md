@@ -14,8 +14,11 @@ rather than one-off animations:
 | `disclose`  | A **utility**, not a transition: height disclosure via `data-open` |
 
 Everything is ≤ 260ms with `ease-out-soft` on the way in and a quicker ease-in
-on the way out. Nothing bounces. All of it collapses under
-`prefers-reduced-motion`.
+on the way out. Nothing bounces.
+
+Under `prefers-reduced-motion`, movement is removed but fades stay: drawers fade
+in place, rows stop sliding, disclosures snap open. Reduced motion means fewer
+and gentler animations, not none — the fades still say that something changed.
 
 ## Iconography
 

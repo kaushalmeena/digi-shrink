@@ -18,6 +18,6 @@ Not an afterthought here:
   focusable element, never removed.
 - **Row actions stay reachable.** They fade in on hover, but also on
   `focus-within`, and are always shown on touch devices.
-- **`prefers-reduced-motion` is honoured globally**, collapsing every animation
-  and transition to ~0ms. Motion only confirms a change, so removing it loses
-  nothing.
+- **`prefers-reduced-motion` removes movement, not feedback.** Slides, row
+  moves and height animations are dropped; opacity fades remain so state
+  changes are still perceptible.
