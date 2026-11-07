@@ -12,7 +12,6 @@ import { ref } from 'vue'
 import { useEventListener } from '@vueuse/core'
 import { useState } from '#imports'
 import { useCompressor } from '~/composables/useCompressor'
-import { useToasts } from '~/composables/useToasts'
 
 /** Minimal shape of the PWA launch-queue API, which TS's DOM lib omits. */
 interface LaunchParams {
@@ -74,8 +73,7 @@ async function filesFromDrop(transfer: DataTransfer): Promise<File[]> {
 }
 
 export function useFileIntake() {
-  const { addFiles } = useCompressor()
-  const toasts = useToasts()
+  const { addFiles, compressAll } = useCompressor()
 
   /** True while a drag carrying files is over the window. */
   const isDraggingOver = useState<boolean>('intake:dragging', () => false)
@@ -88,9 +86,9 @@ export function useFileIntake() {
     if (list.length === 0) return 0
 
     const added = addFiles(list)
-    if (added > 0) {
-      toasts.success(`Added ${added} image${added === 1 ? '' : 's'}.`)
-    }
+    // Start straight away: the settings are already on screen, so there's no
+    // decision left to wait for. A running batch picks new items up itself.
+    if (added > 0) void compressAll()
     return added
   }
 

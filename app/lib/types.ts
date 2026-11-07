@@ -119,7 +119,6 @@ export interface Preset {
   id: string
   label: string
   blurb: string
-  accent: 'accent' | 'berry' | 'sun' | 'mint'
   settings: Partial<CompressionSettings>
 }
 
@@ -175,6 +174,8 @@ export interface QueueItem {
   /** Per-image quality escape hatch; `null` means "follow global settings". */
   qualityOverride: number | null
   candidates: FormatCandidate[]
+  /** Serialised settings the current `result` was produced with, for staleness. */
+  settingsKey: string
 }
 
 /* -------------------------------------------------------------------------- */

@@ -65,6 +65,7 @@ function createQueueItem(file: File): QueueItem {
     result: null,
     qualityOverride: null,
     candidates: [],
+    settingsKey: '',
   }
 }
 
@@ -242,6 +243,7 @@ export function useCompressor() {
     outputBlobs.delete(id)
     item.result = null
     item.candidates = []
+    item.settingsKey = ''
     item.error = ''
     item.progress = 0
     item.stage = ''
@@ -282,6 +284,7 @@ export function useCompressor() {
       const activePool = await ensurePool()
       const buffer = await item.file.arrayBuffer()
 
+      const itemSettings = settingsFor(item)
       const response = await activePool.run(
         {
           kind: 'compress',
@@ -289,7 +292,7 @@ export function useCompressor() {
           buffer,
           mimeType: item.originalType,
           fileName: item.name,
-          settings: settingsFor(item),
+          settings: itemSettings,
         },
         [buffer],
         (progress, stage) => {
@@ -306,6 +309,7 @@ export function useCompressor() {
       if (item.outputUrl) URL.revokeObjectURL(item.outputUrl)
       item.outputUrl = URL.createObjectURL(blob)
       item.result = response.result
+      item.settingsKey = JSON.stringify(itemSettings)
       item.progress = 1
       item.stage = ''
       item.status = 'done'
@@ -338,13 +342,17 @@ export function useCompressor() {
    * parallel, so this stays a single `await` rather than a hand-rolled scheduler.
    */
   async function compressAll(): Promise<void> {
-    if (isRunning.value) return
-    const queue = pending.value.slice()
-    if (queue.length === 0) return
+    if (isRunning.value || pending.value.length === 0) return
 
     isRunning.value = true
     try {
-      await Promise.allSettled(queue.map((item) => runItem(item)))
+      // Loop rather than run once: files dropped mid-batch join the queue as
+      // `queued` and are picked up by the next pass. `cancel()` clears
+      // `isRunning`, which is what ends the loop.
+      while (isRunning.value && pending.value.length > 0) {
+        const queue = pending.value.slice()
+        await Promise.allSettled(queue.map((item) => runItem(item)))
+      }
     } finally {
       isRunning.value = false
     }
@@ -354,6 +362,14 @@ export function useCompressor() {
       toasts.error(`${errors} image${errors === 1 ? '' : 's'} couldn't be compressed.`)
     }
   }
+
+  /**
+   * Finished items whose result was made with different settings from the
+   * current ones — i.e. the settings were changed after compressing.
+   */
+  const stale = computed(() =>
+    completed.value.filter((item) => item.settingsKey !== JSON.stringify(settingsFor(item))),
+  )
 
   async function compressOne(id: string): Promise<void> {
     const item = byId(id)
@@ -442,6 +458,7 @@ export function useCompressor() {
     failed,
     hasItems,
     canCompress,
+    stale,
     stats,
     overallProgress,
     byId,
