@@ -77,11 +77,8 @@ function encodePng(width, height, rgba) {
 /* -------------------------------------------------------------------------- */
 
 const PALETTE = {
-  cream: [255, 253, 245, 255],
-  ink: [30, 41, 59, 255],
-  violet: [124, 58, 237, 255],
-  sun: [251, 191, 36, 255],
-  berry: [244, 114, 182, 255],
+  ink: [24, 24, 27, 255],
+  paper: [250, 250, 250, 255],
 }
 
 /** Source-over alpha composite of `rgba` onto the buffer at `index`. */
@@ -101,11 +98,11 @@ function blend(buffer, index, [r, g, b, a]) {
 }
 
 /**
- * Draw the icon.
+ * Draw the icon: Lucide's `Minimize` glyph in paper on an ink square.
  *
  * Anti-aliasing is done by supersampling: every output pixel is probed on a 4×4
- * subgrid and the coverage fraction becomes the alpha. That's why the shape
- * helpers below are simple boolean "is this point inside?" predicates.
+ * subgrid and the coverage fraction becomes the alpha, so the glyph is a
+ * boolean "is this point on a stroke?" test.
  *
  * @param size    Output edge length in pixels.
  * @param padding Fraction of the edge kept clear, for maskable safe-area.
@@ -113,84 +110,56 @@ function blend(buffer, index, [r, g, b, a]) {
 function drawIcon(size, padding) {
   const buffer = Buffer.alloc(size * size * 4)
 
-  // Maskable icons are cropped to a circle by the OS, so the background must
-  // bleed to the very edge.
+  // Maskable icons are cropped by the OS, so the background bleeds to the edge.
   for (let i = 0; i < size * size; i += 1) {
-    blend(buffer, i * 4, PALETTE.cream)
+    blend(buffer, i * 4, PALETTE.ink)
   }
 
-  const inset = size * padding
-  const box = size - inset * 2
-  const cx = size / 2
-  const cy = size / 2
+  const box = size - size * padding * 2
+  /** Glyph units (Lucide's 24-unit grid) → pixels. The glyph spans 18 units. */
+  const unit = (box * 0.56) / 18
+  const half = 1.1 // stroke half-width in glyph units (Lucide's 2, a touch bolder)
 
-  /* The mark: a tilted rounded square, a violet disc inside it, and two ink
-     bars closing in on the disc — the app squeezing an image. */
-  const tilt = (-8 * Math.PI) / 180
-  const half = box * 0.42
-  const radius = box * 0.12
-
-  const rotate = (x, y) => {
-    const dx = x - cx
-    const dy = y - cy
-    return [
-      dx * Math.cos(-tilt) - dy * Math.sin(-tilt),
-      dx * Math.sin(-tilt) + dy * Math.cos(-tilt),
-    ]
+  /** Distance from point to segment, in glyph units. */
+  const toSegment = (x, y, x1, y1, x2, y2) => {
+    const dx = x2 - x1
+    const dy = y2 - y1
+    const t = Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy)))
+    return Math.hypot(x - (x1 + t * dx), y - (y1 + t * dy))
   }
 
-  /** Rounded-square test in the rotated frame. */
-  const inSquare = (x, y, shrink = 0) => {
-    const [rx, ry] = rotate(x, y)
-    const limit = half - shrink
-    const ax = Math.abs(rx)
-    const ay = Math.abs(ry)
-    if (ax > limit || ay > limit) return false
-    const corner = limit - radius
-    if (ax <= corner || ay <= corner) return true
-    return (ax - corner) ** 2 + (ay - corner) ** 2 <= radius ** 2
-  }
+  /*
+   * The glyph is four identical corners mirrored about the centre (12, 12), so
+   * fold every point into the top-left quadrant and test that corner only:
+   * `M8 3v3a2 2 0 0 1-2 2H3`.
+   */
+  const onStroke = (px, py) => {
+    let gx = 12 + (px - size / 2) / unit
+    let gy = 12 + (py - size / 2) / unit
+    if (gx > 12) gx = 24 - gx
+    if (gy > 12) gy = 24 - gy
 
-  const inDisc = (x, y) => (x - cx) ** 2 + (y - cy) ** 2 <= (box * 0.23) ** 2
-
-  const inBar = (x, y) => {
-    const [rx, ry] = rotate(x, y)
-    const thickness = box * 0.055
-    const reach = half * 0.62
-    if (Math.abs(rx) > reach) return false
-    return Math.abs(Math.abs(ry) - half * 0.5) <= thickness / 2
+    if (toSegment(gx, gy, 8, 3, 8, 6) <= half) return true
+    if (toSegment(gx, gy, 6, 8, 3, 8) <= half) return true
+    if (gx >= 6 && gy >= 6) return Math.abs(Math.hypot(gx - 6, gy - 6) - 2) <= half
+    return false
   }
 
   const SUB = 4
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
-      let border = 0
-      let fill = 0
-      let disc = 0
-      let bar = 0
-
+      let hits = 0
       for (let sy = 0; sy < SUB; sy += 1) {
         for (let sx = 0; sx < SUB; sx += 1) {
-          const px = x + (sx + 0.5) / SUB
-          const py = y + (sy + 0.5) / SUB
-
-          if (inSquare(px, py)) {
-            border += 1
-            if (inSquare(px, py, box * 0.045)) fill += 1
-          }
-          if (inDisc(px, py)) disc += 1
-          if (inBar(px, py)) bar += 1
+          if (onStroke(x + (sx + 0.5) / SUB, y + (sy + 0.5) / SUB)) hits += 1
         }
       }
-
-      const total = SUB * SUB
-      const index = (y * size + x) * 4
-
-      // Painted back-to-front: ink border, amber face, violet disc, ink bars.
-      if (border > 0) blend(buffer, index, [...PALETTE.ink.slice(0, 3), (border / total) * 255])
-      if (fill > 0) blend(buffer, index, [...PALETTE.sun.slice(0, 3), (fill / total) * 255])
-      if (disc > 0) blend(buffer, index, [...PALETTE.violet.slice(0, 3), (disc / total) * 255])
-      if (bar > 0) blend(buffer, index, [...PALETTE.ink.slice(0, 3), (bar / total) * 255])
+      if (hits > 0) {
+        blend(buffer, (y * size + x) * 4, [
+          ...PALETTE.paper.slice(0, 3),
+          (hits / (SUB * SUB)) * 255,
+        ])
+      }
     }
   }
 
@@ -200,11 +169,12 @@ function drawIcon(size, padding) {
 /* -------------------------------------------------------------------------- */
 
 const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-  <rect width="48" height="48" rx="10" fill="${'#fffdf5'}"/>
-  <g transform="rotate(-8 24 24)">
-    <rect x="7" y="7" width="34" height="34" rx="8" fill="#fbbf24" stroke="#1e293b" stroke-width="3"/>
-    <circle cx="24" cy="24" r="8" fill="#7c3aed"/>
-    <path d="M13 15h22M13 33h22" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+  <rect width="48" height="48" rx="10" fill="#18181b"/>
+  <g transform="translate(9 9) scale(1.25)" fill="none" stroke="#fafafa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 3v3a2 2 0 0 1-2 2H3"/>
+    <path d="M21 8h-3a2 2 0 0 1-2-2V3"/>
+    <path d="M3 16h3a2 2 0 0 1 2 2v3"/>
+    <path d="M16 21v-3a2 2 0 0 1 2-2h3"/>
   </g>
 </svg>
 `

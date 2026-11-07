@@ -56,7 +56,7 @@ expression:
 **Prefer canonical Tailwind class forms.** `border-(--color-outline)` not
 `border-[var(--color-outline)]`; `size-4` not `h-4 w-4`; `text-xs/snug` not
 `text-xs leading-snug`; `ease-bounce` not `ease-(--ease-bounce)`. Note that
-`stroke-<number>` only accepts integers — the system-wide 2.5px icon stroke is
+`stroke-<number>` only accepts integers — the system-wide 1.75px icon stroke is
 set once as a base rule on `svg.lucide`, not per-icon.
 
 Both of the rules above are now enforced by
