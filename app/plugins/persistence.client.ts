@@ -45,7 +45,7 @@ function write(key: string, value: unknown): void {
   }
 }
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp) => {
   const { settings } = useSettings()
   const { stats } = useLifetimeStats()
   const { mode, systemPrefersDark } = useThemeMode()
@@ -54,7 +54,13 @@ export default defineNuxtPlugin(() => {
 
   // `hydrateSettings` reconciles the stored object against the current schema,
   // so preferences saved by an older build can never break this one.
-  settings.value = read(SETTINGS_STORAGE_KEY, settings.value, hydrateSettings)
+  //
+  // Applied after mount, not here: the settings bar renders them on the page,
+  // and the prerendered HTML only knows the defaults. Swapping them in before
+  // hydration makes Vue report (and in production, not repair) a mismatch.
+  nuxtApp.hook('app:mounted', () => {
+    settings.value = read(SETTINGS_STORAGE_KEY, settings.value, hydrateSettings)
+  })
   stats.value = read<LifetimeStats>(LIFETIME_STATS_KEY, emptyLifetimeStats(), (raw) => ({
     ...emptyLifetimeStats(),
     ...(raw as Partial<LifetimeStats>),
@@ -79,7 +85,7 @@ export default defineNuxtPlugin(() => {
       // Keeps the mobile browser chrome in step with the app's background.
       document
         .querySelector('meta[name="theme-color"]')
-        ?.setAttribute('content', theme === 'dark' ? '#14121c' : '#fffdf5')
+        ?.setAttribute('content', theme === 'dark' ? '#0c0c0d' : '#fafafa')
     },
     { immediate: true },
   )

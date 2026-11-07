@@ -131,7 +131,7 @@ async function saveToFolder(): Promise<void> {
     class="sticky top-14 z-30 overflow-hidden rounded-xl border bg-surface/95 backdrop-blur-md"
   >
     <div class="flex flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3">
-      <div class="min-w-0 flex-1" aria-live="polite">
+      <div class="min-w-56 flex-1" aria-live="polite">
         <h2
           id="summary-heading"
           class="text-lg"

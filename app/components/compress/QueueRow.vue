@@ -98,7 +98,7 @@ async function rerun(): Promise<void> {
 
 <template>
   <li class="group">
-    <div class="flex items-center gap-3 px-4 py-2.5">
+    <div class="flex items-center gap-3 py-2.5 pr-2 pl-4 sm:pr-4">
       <!-- Thumbnail. Doubles as the source of the intrinsic dimensions. -->
       <div
         class="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-md checker"
@@ -144,7 +144,7 @@ async function rerun(): Promise<void> {
       </div>
 
       <!-- Status -->
-      <div class="w-24 shrink-0 text-right text-sm" data-numeric>
+      <div class="shrink-0 text-right text-sm sm:w-24" data-numeric>
         <span v-if="item.result" :class="savingsTone">{{ savingsLabel }}</span>
         <span
           v-else-if="item.status === 'working'"
@@ -162,17 +162,19 @@ async function rerun(): Promise<void> {
       <div
         class="flex shrink-0 items-center transition-opacity duration-150 group-focus-within:opacity-100 group-hover:opacity-100 sm:opacity-0 [@media(hover:none)]:opacity-100"
       >
-        <UiButton
-          variant="ghost"
-          size="sm"
-          icon-only
-          :disabled="!item.result"
-          :aria-label="`Compare before and after for ${item.name}`"
-          title="Compare"
-          @click="compare"
-        >
-          <Columns2 class="size-4" />
-        </UiButton>
+        <span class="hidden sm:flex">
+          <UiButton
+            variant="ghost"
+            size="sm"
+            icon-only
+            :disabled="!item.result"
+            :aria-label="`Compare before and after for ${item.name}`"
+            title="Compare"
+            @click="compare"
+          >
+            <Columns2 class="size-4" />
+          </UiButton>
+        </span>
 
         <UiButton
           variant="ghost"
@@ -186,20 +188,22 @@ async function rerun(): Promise<void> {
           <Download class="size-4" />
         </UiButton>
 
-        <UiButton
-          variant="ghost"
-          size="sm"
-          icon-only
-          :aria-label="`${isExpanded ? 'Hide' : 'Show'} options for ${item.name}`"
-          :aria-expanded="isExpanded"
-          title="Options"
-          @click="toggleExpanded"
-        >
-          <ChevronDown
-            class="size-4 transition-transform duration-200"
-            :class="isExpanded && 'rotate-180'"
-          />
-        </UiButton>
+        <span class="hidden sm:flex">
+          <UiButton
+            variant="ghost"
+            size="sm"
+            icon-only
+            :aria-label="`${isExpanded ? 'Hide' : 'Show'} options for ${item.name}`"
+            :aria-expanded="isExpanded"
+            title="Options"
+            @click="toggleExpanded"
+          >
+            <ChevronDown
+              class="size-4 transition-transform duration-200"
+              :class="isExpanded && 'rotate-180'"
+            />
+          </UiButton>
+        </span>
 
         <UiButton
           variant="ghost"

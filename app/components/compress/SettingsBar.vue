@@ -81,7 +81,7 @@ function openAdvanced(): void {
     <!-- Row 2: the two knobs people actually turn. -->
     <div class="flex flex-wrap items-center gap-x-6 gap-y-3 px-4 py-2.5">
       <div class="flex items-center gap-2">
-        <span id="format-label" class="label-caps">Format</span>
+        <span id="format-label" class="label-caps max-sm:sr-only">Format</span>
         <UiSegmented
           v-model="settings.format"
           :options="FORMATS"
@@ -90,7 +90,7 @@ function openAdvanced(): void {
         />
       </div>
 
-      <div class="flex min-w-48 flex-1 items-center gap-2">
+      <div class="flex min-w-56 flex-1 items-center gap-2">
         <template v-if="!modeNote">
           <label for="quick-quality" class="label-caps">Quality</label>
           <UiSlider id="quick-quality" v-model="settings.quality" :min="1" :max="100" />
