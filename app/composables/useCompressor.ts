@@ -367,9 +367,17 @@ export function useCompressor() {
    * Finished items whose result was made with different settings from the
    * current ones — i.e. the settings were changed after compressing.
    */
-  const stale = computed(() =>
-    completed.value.filter((item) => item.settingsKey !== JSON.stringify(settingsFor(item))),
-  )
+  const stale = computed(() => {
+    // Serialise the shared settings once per change, not once per item: this
+    // re-runs on every step of a slider drag, across up to 250 items. Only
+    // items with their own quality override need a key of their own.
+    const sharedKey = JSON.stringify(settings.value)
+    return completed.value.filter((item) => {
+      const key =
+        item.qualityOverride === null ? sharedKey : JSON.stringify(settingsFor(item))
+      return item.settingsKey !== key
+    })
+  })
 
   async function compressOne(id: string): Promise<void> {
     const item = byId(id)
