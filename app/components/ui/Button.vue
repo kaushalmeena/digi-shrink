@@ -38,16 +38,17 @@ const VARIANTS: Record<Variant, string> = {
   danger: 'text-danger hover:bg-danger-wash',
 }
 
+// Coarse pointers (touch) get taller targets; the visual weight stays the same.
 const SIZES: Record<Size, string> = {
-  sm: 'h-7 px-2.5 text-xs gap-1.5',
-  md: 'h-8 px-3 text-sm gap-1.5',
-  lg: 'h-10 px-4 text-sm gap-2',
+  sm: 'h-7 px-2.5 text-xs gap-1.5 pointer-coarse:h-9',
+  md: 'h-8 px-3 text-sm gap-1.5 pointer-coarse:h-10',
+  lg: 'h-10 px-4 text-sm gap-2 pointer-coarse:h-11',
 }
 
 const ICON_SIZES: Record<Size, string> = {
-  sm: 'size-7',
-  md: 'size-8',
-  lg: 'size-10',
+  sm: 'size-7 pointer-coarse:size-10',
+  md: 'size-8 pointer-coarse:size-10',
+  lg: 'size-10 pointer-coarse:size-11',
 }
 
 const isInert = computed(() => props.disabled || props.loading)

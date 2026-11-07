@@ -31,7 +31,7 @@ const FILTERS = computed<SegmentOption<Filter>[]>(() => [
   { value: 'all', label: `All ${items.value.length}` },
   {
     value: 'queued',
-    label: `Queued ${pending.value.length}`,
+    label: `Waiting ${pending.value.length}`,
     disabled: pending.value.length === 0,
   },
   {

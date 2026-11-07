@@ -48,7 +48,7 @@ const eta = computed(() =>
 )
 
 const headline = computed(() => {
-  if (stats.value.count === 0) return isRunning.value ? 'Compressing…' : 'Ready'
+  if (stats.value.count === 0) return isRunning.value ? 'Compressing…' : 'Paused'
   if (stats.value.savedBytes <= 0) return 'No savings'
   return `${formatPercent(stats.value.savedPercent, 0)} smaller`
 })
@@ -63,6 +63,7 @@ const detail = computed(() => {
   }
   if (stats.value.unchanged > 0) parts.push(`${stats.value.unchanged} already optimal`)
   if (failed.value.length > 0) parts.push(`${failed.value.length} failed`)
+  if (!isRunning.value && pending.value.length > 0) parts.push(`${pending.value.length} waiting`)
   return parts.join(' · ')
 })
 

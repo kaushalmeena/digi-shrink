@@ -114,7 +114,9 @@ function onKeydown(event: KeyboardEvent): void {
       :disabled="option.disabled"
       class="relative z-10 rounded-md font-medium whitespace-nowrap transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40"
       :class="[
-        size === 'sm' ? 'h-6 px-2 text-xs sm:px-2.5' : 'h-7 px-3 text-sm',
+        size === 'sm'
+          ? 'h-6 px-2 text-xs sm:px-2.5 pointer-coarse:h-8'
+          : 'h-7 px-3 text-sm pointer-coarse:h-9',
         model === option.value ? 'text-ink' : 'text-ink-soft not-disabled:hover:text-ink',
         columns && model === option.value && 'bg-surface shadow-sm ring-1 ring-line',
       ]"

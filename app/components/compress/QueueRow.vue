@@ -11,7 +11,7 @@
  */
 import { computed, ref } from 'vue'
 
-import { ChevronDown, Columns2, Download, ImageOff, Loader2, RotateCw, X } from '@lucide/vue'
+import { ChevronDown, Columns2, Download, ImageOff, RotateCw, X } from '@lucide/vue'
 import { formatBytes, formatDimensions, formatPercent, savingsPercent } from '~/lib/format'
 import { FORMAT_META } from '~/lib/constants'
 import { saveBlob } from '~/lib/download'
@@ -100,7 +100,7 @@ async function rerun(): Promise<void> {
   <!-- `content-visibility` lets the browser skip layout and paint for rows
        scrolled out of view — a 250-image batch is a long list. `auto` in the
        intrinsic size remembers each row's real height once it has rendered. -->
-  <li class="group [contain-intrinsic-size:auto_61px] [content-visibility:auto]">
+  <li class="group relative [contain-intrinsic-size:auto_61px] [content-visibility:auto]">
     <div class="flex items-center gap-3 py-2.5 pr-2 pl-4 sm:pr-4">
       <!-- Thumbnail. Doubles as the source of the intrinsic dimensions. -->
       <div
@@ -149,16 +149,26 @@ async function rerun(): Promise<void> {
       <!-- Status -->
       <div class="shrink-0 text-right text-sm sm:w-24" data-numeric>
         <span v-if="item.result" :class="savingsTone">{{ savingsLabel }}</span>
-        <span
-          v-else-if="item.status === 'working'"
-          class="inline-flex items-center gap-1.5 text-xs text-ink-soft"
-        >
-          <Loader2 class="size-3.5 animate-spin" />
-          {{ item.stage || 'Working' }}
+        <!-- Determinate: the worker reports real progress, so show it rather
+             than an open-ended spinner. -->
+        <span v-else-if="item.status === 'working'" class="text-xs text-ink-soft">
+          {{ item.stage || 'Working' }} {{ Math.round(item.progress * 100) }}%
         </span>
         <span v-else-if="item.status === 'error'" class="text-xs text-danger">Failed</span>
-        <span v-else class="text-xs text-ink-faint">Queued</span>
+        <span v-else class="text-xs text-ink-faint">Waiting</span>
       </div>
+
+      <!-- A failed row's one useful action, always visible: try again. -->
+      <UiButton
+        v-if="item.status === 'error'"
+        variant="secondary"
+        size="sm"
+        :aria-label="`Retry ${item.name}`"
+        @click="rerun"
+      >
+        <RotateCw class="size-3.5" />
+        Retry
+      </UiButton>
 
       <!-- Actions. Quiet until the row is hovered or focused; always shown on
            touch, where there is no hover. -->
@@ -220,6 +230,14 @@ async function rerun(): Promise<void> {
         </UiButton>
       </div>
     </div>
+
+    <!-- Row-level progress rail, flush with the divider below. -->
+    <div
+      v-if="item.status === 'working'"
+      class="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-accent transition-transform duration-200 ease-out"
+      :style="{ transform: `scaleX(${item.progress})` }"
+      aria-hidden="true"
+    />
 
     <!--
       Per-image overrides. Always mounted and toggled by `data-open` so the

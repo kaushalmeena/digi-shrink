@@ -8,7 +8,7 @@
  */
 import { computed } from 'vue'
 
-import { SlidersHorizontal } from '@lucide/vue'
+import { ChevronDown, SlidersHorizontal } from '@lucide/vue'
 import { useSettings } from '~/composables/useSettings'
 import type { SegmentOption, TargetFormat } from '~/lib/types'
 
@@ -64,15 +64,23 @@ function openAdvanced(): void {
       <div class="flex items-center gap-3 border-b px-4 py-2.5">
         <label class="flex shrink-0 items-center gap-2">
           <span class="field-label">Preset</span>
-          <select
-            v-model="presetId"
-            class="h-7 rounded-md border border-line-strong bg-surface pr-7 pl-2 text-sm text-ink"
-          >
-            <option v-for="preset in presets" :key="preset.id" :value="preset.id">
-              {{ preset.label }}
-            </option>
-            <option value="custom" disabled>Custom</option>
-          </select>
+          <!-- The native arrow hugs the edge and ignores padding, so it's hidden
+               and an icon drawn with a proper inset instead. -->
+          <span class="relative inline-flex">
+            <select
+              v-model="presetId"
+              class="h-7 appearance-none rounded-md border border-line-strong bg-surface pr-8 pl-2.5 text-sm text-ink pointer-coarse:h-9"
+            >
+              <option v-for="preset in presets" :key="preset.id" :value="preset.id">
+                {{ preset.label }}
+              </option>
+              <option value="custom" disabled>Custom</option>
+            </select>
+            <ChevronDown
+              class="pointer-events-none absolute top-1/2 right-2.5 size-3.5 -translate-y-1/2 text-ink-soft"
+              aria-hidden="true"
+            />
+          </span>
         </label>
 
         <p class="hidden min-w-0 flex-1 truncate text-xs text-ink-soft sm:block" :title="note">
