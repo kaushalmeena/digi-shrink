@@ -38,7 +38,7 @@ in the header is the product.
 
 **No hardcoded colours in components.** Use the semantic tokens from
 `app/assets/css/main.css` (`bg-surface`, `text-ink-soft`, `border-(--color-line)`,
-`pop-berry`, …). A hex value in a component means dark mode is now broken.
+`text-success`, …). A hex value in a component means dark mode is now broken.
 
 **Never put two competing Tailwind utilities on one element** — one in `class`
 and one in `:class`, or a base class plus a conditional override for the same
@@ -66,7 +66,7 @@ auto-fixable with `pnpm lint:fix`. Two things to know about that setup:
 
 - `settings["better-tailwindcss"].entryPoint` points at `app/assets/css/main.css`.
   Without it the plugin only knows stock Tailwind and reports every custom
-  `@utility` (`pop-2`, `sticker`, `edge`, `blob-leaf`, …) as unknown.
+  `@utility` (`shell`, `label-caps`, `checker`, …) as unknown.
 - **It only lints template attributes, not `<script>` variables.** The class
   lookup maps the design-system components use (`VARIANTS`, `TONES`, `SIZES`, …)
   are invisible to it — the `variables` setting does not reach them inside a
@@ -80,7 +80,7 @@ auto-fixable with `pnpm lint:fix`. Two things to know about that setup:
   `main.css` untouched, so a long-lived ESLint process (your editor's server)
   keeps serving the old context and reports the new utility as unknown. The CLI
   is unaffected because each run is a fresh process. Either `touch
-app/assets/css/main.css` or restart the ESLint server.
+  app/assets/css/main.css` or restart the ESLint server.
 - `enforce-consistent-line-wrapping` is off: Prettier owns formatting, and two
   tools rewriting the same bytes fight each other.
 
@@ -120,38 +120,36 @@ app/components/ui/   Design-system primitives. Feature code composes these.
 
 ## Design system
 
-Playful Geometric: chunky 2px borders, hard zero-blur offset shadows (stickers),
-primitive-shape decoration, bouncy overshoot motion.
+Quiet Utility: neutral surfaces, 1px hairline borders, one accent (blue), status
+colours only where they carry meaning, Inter, short eased motion. The tool is
+the whole page — no hero, no decoration.
 
 - Tokens and base styles: `app/assets/css/main.css`
-- Visual primitives: `app/assets/css/patterns.css` — `pop-1…4` + `pop-berry` etc.
-  for shadows, `sticker` for the lift/press feel, `edge`, `pattern-dots`, `blob-*`
+- Shared utilities: `app/assets/css/utilities.css` — `shell`, `label-caps`, `checker`
 - Motion: `app/assets/css/transitions.css` — use these `<Transition>` names
-  (`pop`, `fade`, `offcanvas`, `queue`, `roll`) rather than writing one-off
+  (`fade`, `rise`, `offcanvas`, `queue`) rather than writing one-off
   animations. Height disclosure is the `disclose` **utility**, not a transition:
   put it on an always-mounted element and toggle `data-open`, because a
   `v-if`-ed element has no resolved row track to animate from.
-
-Entrances overshoot; exits are quick and linear. All of it collapses under
-`prefers-reduced-motion`.
+- Only one `primary` button on screen at a time — the next step.
 
 ## Deeper reference
 
 Read these before a non-trivial change; they explain the _why_ behind the rules
 above rather than repeating them.
 
-| Working on                                  | Read                                            |
-| ------------------------------------------- | ----------------------------------------------- |
-| Constraints, directory layout               | [overview.md](docs/overview.md)                 |
-| Codecs, encode/decode, worker pool sizing   | [pipeline.md](docs/pipeline.md)                 |
-| State ownership, getting images in and out  | [state.md](docs/state.md)                       |
-| PWA, base paths, cross-origin isolation     | [offline.md](docs/offline.md)                   |
-| Shipping, browser support                   | [deployment.md](docs/deployment.md)             |
-| Token tables for both themes                | [foundations.md](docs/foundations.md)           |
-| Shapes, dot grids, offset shadows           | [primitives.md](docs/primitives.md)             |
-| Transitions, iconography                    | [motion.md](docs/motion.md)                     |
-| Accessibility commitments                   | [accessibility.md](docs/accessibility.md)       |
-| What bites when editing                     | [gotchas.md](docs/gotchas.md)                   |
+| Working on                                 | Read                                      |
+| ------------------------------------------ | ----------------------------------------- |
+| Constraints, directory layout              | [overview.md](docs/overview.md)           |
+| Codecs, encode/decode, worker pool sizing  | [pipeline.md](docs/pipeline.md)           |
+| State ownership, getting images in and out | [state.md](docs/state.md)                 |
+| PWA, base paths, cross-origin isolation    | [offline.md](docs/offline.md)             |
+| Shipping, browser support                  | [deployment.md](docs/deployment.md)       |
+| Token tables for both themes               | [foundations.md](docs/foundations.md)     |
+| UI components, shared utilities            | [primitives.md](docs/primitives.md)       |
+| Transitions, iconography                   | [motion.md](docs/motion.md)               |
+| Accessibility commitments                  | [accessibility.md](docs/accessibility.md) |
+| What bites when editing                    | [gotchas.md](docs/gotchas.md)             |
 
 ## Accessibility
 

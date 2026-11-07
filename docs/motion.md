@@ -2,28 +2,23 @@
 
 ## Transitions
 
-`app/assets/css/transitions.css` defines the whole motion vocabulary as named
-Vue transitions. Use these rather than writing one-off animations, so motion reads
-as one language:
+`app/assets/css/transitions.css` defines every named Vue transition. Use these
+rather than one-off animations:
 
-| Name                                 | Use                                                                                                           |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| `pop`                                | Default for anything appearing in place                                                                       |
-| `fade`                               | Content swaps where movement would be noise                                                                   |
-| `collapse`                           | Disclosure, via `grid-template-rows: 0fr → 1fr` — animates to content height with no JS measurement           |
-| `drawer-right` / `-left` / `-bottom` | Offcanvas panels                                                                                              |
-| `backdrop`                           | The offcanvas scrim                                                                                           |
-| `queue`                              | The image list. `queue-move` is what makes a removal feel considered — the rows below glide up via Vue's FLIP |
-| `roll`                               | Figures and icons that change in place                                                                        |
-| `stagger`                            | Children cascade in, driven by a `--stagger-index` custom property                                            |
+| Name        | Use                                                                |
+| ----------- | ------------------------------------------------------------------ |
+| `fade`      | Default: content swaps, overlays, state changes                    |
+| `rise`      | Fade plus 4px of travel, for small panels appearing                |
+| `offcanvas` | Drawer scrim + panel, driven from the dialog root                  |
+| `queue`     | The file list; `queue-move` slides rows into a removed row's gap   |
+| `disclose`  | A **utility**, not a transition: height disclosure via `data-open` |
+
+Everything is ≤ 260ms with `ease-out-soft` on the way in and a quicker ease-in
+on the way out. Nothing bounces. All of it collapses under
+`prefers-reduced-motion`.
 
 ## Iconography
 
-[Lucide](https://lucide.dev), with a 2.5px stroke and round caps and joins. That
-is set **once** as a base rule on `svg.lucide` rather than repeated per icon —
-it is a system-wide decision, and Tailwind's `stroke-<number>` utility only
-accepts integers, so a fractional value silently does nothing.
-
-A rule of this system: **icons are never left floating alone.** A checkmark is a
-checkmark inside a mint circle. `UiIconBadge` is the single place that is
-enforced, offering circle, squircle and leaf shapes.
+[Lucide](https://lucide.dev) at a 1.75px stroke with round caps and joins, set
+once as a base rule on `svg.lucide` to match the hairline borders. Icons sit
+inline with text at `size-3.5`/`size-4`; they don't get their own containers.

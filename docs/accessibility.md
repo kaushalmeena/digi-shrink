@@ -14,10 +14,10 @@ Not an afterthought here:
   `Escape`, restore focus to the trigger on close, and scroll-lock the page.
 - **Status is never colour alone.** Every state pairs a colour with text and
   usually an icon, so it survives colour blindness and monochrome.
-- **Focus is a signature, not an afterthought** — a thick 3px high-contrast
-  outline with an offset, rather than a soft glow.
-- **Decoration is hidden from assistive tech** (`aria-hidden`) and from narrow
-  screens, where it would otherwise sit under the text.
+- **Focus is always visible** — a 2px accent outline with an offset on every
+  focusable element, never removed.
+- **Row actions stay reachable.** They fade in on hover, but also on
+  `focus-within`, and are always shown on touch devices.
 - **`prefers-reduced-motion` is honoured globally**, collapsing every animation
-  and transition to ~0ms. The bounce and wiggle are personality, never
-  information, so removing them loses nothing.
+  and transition to ~0ms. Motion only confirms a change, so removing it loses
+  nothing.

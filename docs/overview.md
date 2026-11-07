@@ -17,14 +17,13 @@ Two rules shape every decision below:
 ```
 app/
 ├── assets/css/
-│   ├── main.css           Design tokens, base styles, keyframes
-│   ├── patterns.css       Visual primitives as Tailwind utilities
+│   ├── main.css           Design tokens and base styles
+│   ├── utilities.css      Shared Tailwind utilities (shell, label-caps, checker)
 │   └── transitions.css    Shared <Transition> vocabulary
 ├── components/
 │   ├── ui/                Design-system primitives (Button, Card, Segmented, …)
-│   ├── decor/             Purely decorative shapes (Confetti, Squiggle)
 │   ├── app/               Shell: Header, Footer, Logo, ThemeToggle
-│   └── compress/          Feature components: DropZone, Queue, drawers, slider
+│   └── compress/          Feature components: SettingsBar, DropZone, Summary, Queue, drawers
 ├── composables/           Queue, settings, theme, file intake, lifetime stats
 ├── lib/                   Framework-free logic
 ├── plugins/               localStorage hydration and persistence
