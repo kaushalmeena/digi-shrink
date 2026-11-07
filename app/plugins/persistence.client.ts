@@ -45,7 +45,7 @@ function write(key: string, value: unknown): void {
   }
 }
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(() => {
   const { settings } = useSettings()
   const { stats } = useLifetimeStats()
   const { mode, systemPrefersDark } = useThemeMode()
@@ -53,14 +53,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   /* ---- Hydrate ---------------------------------------------------------- */
 
   // `hydrateSettings` reconciles the stored object against the current schema,
-  // so preferences saved by an older build can never break this one.
-  //
-  // Applied after mount, not here: the settings bar renders them on the page,
-  // and the prerendered HTML only knows the defaults. Swapping them in before
-  // hydration makes Vue report (and in production, not repair) a mismatch.
-  nuxtApp.hook('app:mounted', () => {
-    settings.value = read(SETTINGS_STORAGE_KEY, settings.value, hydrateSettings)
-  })
+  // so preferences saved by an older build can never break this one. Safe to
+  // apply before hydration because everything that shows settings renders
+  // client-only (the settings bar is wrapped in `<ClientOnly>`).
+  settings.value = read(SETTINGS_STORAGE_KEY, settings.value, hydrateSettings)
   stats.value = read<LifetimeStats>(LIFETIME_STATS_KEY, emptyLifetimeStats(), (raw) => ({
     ...emptyLifetimeStats(),
     ...(raw as Partial<LifetimeStats>),

@@ -373,8 +373,7 @@ export function useCompressor() {
     // items with their own quality override need a key of their own.
     const sharedKey = JSON.stringify(settings.value)
     return completed.value.filter((item) => {
-      const key =
-        item.qualityOverride === null ? sharedKey : JSON.stringify(settingsFor(item))
+      const key = item.qualityOverride === null ? sharedKey : JSON.stringify(settingsFor(item))
       return item.settingsKey !== key
     })
   })
