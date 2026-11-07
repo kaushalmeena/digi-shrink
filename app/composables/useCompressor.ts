@@ -3,7 +3,7 @@ import { computed, markRaw } from 'vue'
 import { CompressionPool } from '~/lib/workerPool'
 import { MAX_QUEUE_SIZE } from '~/lib/constants'
 import { isAcceptedImage, outputFileName } from '~/lib/image'
-import { sanitizeFileName, uniqueFileName } from '~/lib/format'
+import { describeFailure, sanitizeFileName, uniqueFileName } from '~/lib/format'
 import { useState } from '#imports'
 import { useLifetimeStats } from '~/composables/useLifetimeStats'
 import { useSettings } from '~/composables/useSettings'
@@ -180,10 +180,12 @@ export function useCompressor() {
       )
     }
     if (duplicates > 0) {
-      toasts.info(`${duplicates} duplicate${duplicates === 1 ? '' : 's'} already in the queue.`)
+      toasts.info(`Skipped ${duplicates} image${duplicates === 1 ? '' : 's'} already in the list.`)
     }
     if (overflow > 0) {
-      toasts.warning(`Queue is capped at ${MAX_QUEUE_SIZE} images — ${overflow} didn't fit.`)
+      toasts.warning(
+        `Only ${MAX_QUEUE_SIZE} images fit at once — ${overflow} weren't added. Download or remove some, then add the rest.`,
+      )
     }
 
     return created.length
@@ -196,11 +198,35 @@ export function useCompressor() {
     items.value.splice(index, 1)
   }
 
+  /**
+   * Remove everything, with Undo. The removed items are kept (object URLs and
+   * all) until the undo window closes, and only then released.
+   */
   function clear(): void {
+    const removed = items.value
+    if (removed.length === 0) return
+
     pool?.cancelAll('Queue cleared.')
-    for (const item of items.value) releaseItem(item)
-    items.value = []
     isRunning.value = false
+    items.value = []
+
+    toasts.undoable(
+      `Removed ${removed.length} image${removed.length === 1 ? '' : 's'}.`,
+      () => {
+        // Anything that was mid-encode was cancelled; put it back as waiting.
+        for (const item of removed) {
+          if (item.status === 'working') {
+            item.status = 'queued'
+            item.progress = 0
+            item.stage = ''
+          }
+        }
+        items.value = [...removed, ...items.value]
+      },
+      () => {
+        for (const item of removed) releaseItem(item)
+      },
+    )
   }
 
   /** Drop finished rows but keep anything still queued or failed. */
@@ -329,7 +355,7 @@ export function useCompressor() {
         item.stage = ''
       } else {
         item.status = 'error'
-        item.error = message
+        item.error = describeFailure(message)
         item.progress = 0
       }
     }
@@ -359,7 +385,9 @@ export function useCompressor() {
 
     const errors = failed.value.length
     if (errors > 0) {
-      toasts.error(`${errors} image${errors === 1 ? '' : 's'} couldn't be compressed.`)
+      toasts.error(
+        `${errors} image${errors === 1 ? '' : 's'} couldn't be compressed. Use Retry in the list, or remove ${errors === 1 ? 'it' : 'them'}.`,
+      )
     }
   }
 
@@ -422,8 +450,8 @@ export function useCompressor() {
       if (response.kind !== 'probed') return []
       item.candidates = response.candidates
       return response.candidates
-    } catch (error) {
-      toasts.error(error instanceof Error ? error.message : 'Format comparison failed.')
+    } catch {
+      toasts.error("Couldn't compare formats for this image. Try Re-measure.")
       return []
     } finally {
       item.stage = ''

@@ -12,6 +12,8 @@ mutates queue items.
   Reactivity buys nothing for binary data and a deep proxy over it is a real cost.
 - **Object URLs are revoked.** Every `createObjectURL` has a matching revoke in
   `releaseItem` or `requeue`. Leaking them leaks the whole decoded image.
+  `clear()` is undoable, so it defers `releaseItem` until the Undo toast closes
+  (timeout or dismiss); Undo puts the same items back with their URLs intact.
 - **Worker messages carry plain objects.** `postMessage` cannot
   structured-clone a Vue reactive Proxy, and `toRaw` is not enough because the
   nested settings objects are proxies of their own. `settingsFor()` does a JSON

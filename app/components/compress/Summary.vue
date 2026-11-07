@@ -101,8 +101,8 @@ async function download(): Promise<void> {
     const { createZip } = await import('~/lib/zip')
     const stamp = new Date().toISOString().slice(0, 10)
     downloadBlob(await createZip(entries), `digishrink-${stamp}.zip`)
-  } catch (error) {
-    toasts.error(error instanceof Error ? error.message : 'Could not build the ZIP.')
+  } catch {
+    toasts.error("Couldn't build the ZIP. Try Save to folder, or download images one at a time.")
   } finally {
     isExporting.value = false
   }
@@ -119,8 +119,8 @@ async function saveToFolder(): Promise<void> {
     if (written !== null) {
       toasts.success(`Saved ${written} image${written === 1 ? '' : 's'} to your folder.`)
     }
-  } catch (error) {
-    toasts.error(error instanceof Error ? error.message : 'Could not write to that folder.')
+  } catch {
+    toasts.error("Couldn't save to that folder. Choose another folder, or use Download all.")
   } finally {
     isExporting.value = false
   }

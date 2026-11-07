@@ -23,8 +23,29 @@ export function useToasts() {
     toast[tone](message, { duration: DURATION[tone] })
   }
 
+  /**
+   * A toast with an Undo action, for reversible removals. Exactly one of
+   * `onUndo` / `onExpire` runs: Undo restores, anything else (timeout, swipe)
+   * makes the removal final.
+   */
+  function undoable(message: string, onUndo: () => void, onExpire: () => void): void {
+    let settled = false
+    const settle = (fn: () => void) => () => {
+      if (settled) return
+      settled = true
+      fn()
+    }
+    toast(message, {
+      duration: 6000,
+      action: { label: 'Undo', onClick: settle(onUndo) },
+      onAutoClose: settle(onExpire),
+      onDismiss: settle(onExpire),
+    })
+  }
+
   return {
     push,
+    undoable,
     info: (message: string) => push(message, 'info'),
     success: (message: string) => push(message, 'success'),
     warning: (message: string) => push(message, 'warning'),
