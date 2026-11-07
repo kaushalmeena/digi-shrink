@@ -97,7 +97,10 @@ async function rerun(): Promise<void> {
 </script>
 
 <template>
-  <li class="group">
+  <!-- `content-visibility` lets the browser skip layout and paint for rows
+       scrolled out of view — a 250-image batch is a long list. `auto` in the
+       intrinsic size remembers each row's real height once it has rendered. -->
+  <li class="group [contain-intrinsic-size:auto_61px] [content-visibility:auto]">
     <div class="flex items-center gap-3 py-2.5 pr-2 pl-4 sm:pr-4">
       <!-- Thumbnail. Doubles as the source of the intrinsic dimensions. -->
       <div
