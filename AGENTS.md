@@ -10,7 +10,6 @@ pnpm dev          # dev server
 pnpm lint         # ESLint; Prettier runs as the `prettier/prettier` rule
 pnpm typecheck    # vue-tsc across all Nuxt environments
 pnpm build        # production build
-pnpm build:icons  # regenerate public/icons + favicon.svg
 ```
 
 Run `pnpm lint && pnpm typecheck && pnpm build` before considering a change done.
