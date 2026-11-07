@@ -10,7 +10,6 @@ import { computed, onMounted, ref } from 'vue'
 
 import { Download, FolderDown, Plus, RefreshCw, Trash2 } from '@lucide/vue'
 import { ACCEPT_ATTRIBUTE } from '~/lib/constants'
-import { createZip } from '~/lib/zip'
 import { downloadBlob, saveAllToDirectory, saveBlob, supportsDirectorySave } from '~/lib/download'
 import { formatBytes, formatEta, formatPercent } from '~/lib/format'
 import { useCompressor } from '~/composables/useCompressor'
@@ -97,6 +96,8 @@ async function download(): Promise<void> {
 
   isExporting.value = true
   try {
+    // Loaded on demand: most visits never build a ZIP.
+    const { createZip } = await import('~/lib/zip')
     const stamp = new Date().toISOString().slice(0, 10)
     downloadBlob(await createZip(entries), `digishrink-${stamp}.zip`)
   } catch (error) {
