@@ -89,15 +89,8 @@ function onKeydown(event: KeyboardEvent): void {
   <div
     ref="root"
     role="radiogroup"
-    class="relative bg-surface-2 p-1 edge"
-    :class="
-      columns
-        ? // A pill radius is half the container's height, so on a multi-row grid
-          // the bottom-row cells would sit outside the corner curve. A fixed
-          // radius keeps every cell inside the track.
-          'grid gap-1 rounded-2xl'
-        : 'inline-flex rounded-full'
-    "
+    class="relative rounded-lg bg-surface-2 p-0.5"
+    :class="columns ? 'grid gap-0.5' : 'inline-flex'"
     :style="columns ? { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` } : undefined"
     @keydown="onKeydown"
   >
@@ -105,7 +98,7 @@ function onKeydown(event: KeyboardEvent): void {
          directly, because a pill can't travel sensibly across wrapped rows. -->
     <span
       v-if="pill.ready"
-      class="absolute inset-y-1 left-0 rounded-full bg-accent transition-[translate,width] duration-300 ease-bounce"
+      class="absolute inset-y-0.5 left-0 rounded-md bg-surface shadow-sm ring-1 ring-line transition-[translate,width] duration-200 ease-out-soft"
       :style="{ translate: `${pill.left}px 0`, width: `${pill.width}px` }"
       aria-hidden="true"
     />
@@ -119,13 +112,11 @@ function onKeydown(event: KeyboardEvent): void {
       :aria-checked="model === option.value"
       :title="option.title"
       :disabled="option.disabled"
-      class="relative z-10 rounded-full font-display font-bold transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40"
+      class="relative z-10 rounded-md font-medium whitespace-nowrap transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40"
       :class="[
-        size === 'sm' ? 'h-7 px-3 text-2xs' : 'h-9 px-4 text-xs',
-        model === option.value
-          ? 'text-on-accent'
-          : 'text-ink-soft hover:text-ink not-disabled:hover:bg-surface',
-        columns && model === option.value && 'bg-accent',
+        size === 'sm' ? 'h-6 px-2.5 text-xs' : 'h-7 px-3 text-sm',
+        model === option.value ? 'text-ink' : 'text-ink-soft not-disabled:hover:text-ink',
+        columns && model === option.value && 'bg-surface shadow-sm ring-1 ring-line',
       ]"
       @click="model = option.value"
     >
