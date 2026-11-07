@@ -8,9 +8,9 @@
  */
 import { computed } from 'vue'
 
-import { ChevronDown, SlidersHorizontal } from '@lucide/vue'
+import { SlidersHorizontal } from '@lucide/vue'
 import { useSettings } from '~/composables/useSettings'
-import type { SegmentOption, TargetFormat } from '~/lib/types'
+import type { SegmentOption, SelectOption, TargetFormat } from '~/lib/types'
 
 const emit = defineEmits<{ openAdvanced: [] }>()
 
@@ -25,12 +25,17 @@ const FORMATS: SegmentOption<TargetFormat>[] = [
   { value: 'png', label: 'PNG' },
 ]
 
+/** No "Custom" entry: when nothing matches, the select shows its placeholder. */
 const presetId = computed({
-  get: () => activePresetId.value ?? 'custom',
-  set: (id: string) => {
-    if (id !== 'custom') usePreset(id)
-  },
+  get: () => activePresetId.value ?? '',
+  set: (id: string) => usePreset(id),
 })
+
+const PRESET_OPTIONS: SelectOption<string>[] = presets.map((preset) => ({
+  value: preset.id,
+  label: preset.label,
+  description: preset.blurb,
+}))
 
 const presetBlurb = computed(
   () => presets.find((preset) => preset.id === activePresetId.value)?.blurb ?? null,
@@ -62,26 +67,15 @@ function openAdvanced(): void {
     <ClientOnly>
       <!-- Row 1: what you're getting. -->
       <div class="flex items-center gap-3 border-b px-4 py-2.5">
-        <label class="flex shrink-0 items-center gap-2">
-          <span class="field-label">Preset</span>
-          <!-- The native arrow hugs the edge and ignores padding, so it's hidden
-               and an icon drawn with a proper inset instead. -->
-          <span class="relative inline-flex">
-            <select
-              v-model="presetId"
-              class="h-7 appearance-none rounded-md border border-line-strong bg-surface pr-8 pl-2.5 text-sm text-ink pointer-coarse:h-9"
-            >
-              <option v-for="preset in presets" :key="preset.id" :value="preset.id">
-                {{ preset.label }}
-              </option>
-              <option value="custom" disabled>Custom</option>
-            </select>
-            <ChevronDown
-              class="pointer-events-none absolute top-1/2 right-2.5 size-3.5 -translate-y-1/2 text-ink-soft"
-              aria-hidden="true"
-            />
-          </span>
-        </label>
+        <div class="flex shrink-0 items-center gap-2">
+          <span class="field-label" aria-hidden="true">Preset</span>
+          <UiSelect
+            v-model="presetId"
+            :options="PRESET_OPTIONS"
+            placeholder="Custom"
+            aria-label="Preset"
+          />
+        </div>
 
         <p class="hidden min-w-0 flex-1 truncate text-xs text-ink-soft sm:block" :title="note">
           {{ note }}

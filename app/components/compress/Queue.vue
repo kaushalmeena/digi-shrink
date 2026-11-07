@@ -12,10 +12,9 @@
  */
 import { computed, ref, watch } from 'vue'
 
-import { ArrowDownWideNarrow } from '@lucide/vue'
 import { savingsPercent } from '~/lib/format'
 import { useCompressor } from '~/composables/useCompressor'
-import type { ItemStatus, SegmentOption } from '~/lib/types'
+import type { ItemStatus, SegmentOption, SelectOption } from '~/lib/types'
 
 const emit = defineEmits<{ compare: [id: string] }>()
 
@@ -42,7 +41,7 @@ const FILTERS = computed<SegmentOption<Filter>[]>(() => [
   { value: 'error', label: `Failed ${failed.value.length}`, disabled: failed.value.length === 0 },
 ])
 
-const SORTS: SegmentOption<Sort>[] = [
+const SORTS: SelectOption<Sort>[] = [
   { value: 'added', label: 'Order added' },
   { value: 'savings', label: 'Most saved' },
   { value: 'size', label: 'Largest' },
@@ -89,15 +88,15 @@ watch(visible, (rows) => {
         size="sm"
       />
 
-      <label class="ml-auto flex items-center gap-1.5 text-xs text-ink-soft">
-        <ArrowDownWideNarrow class="size-3.5" aria-hidden="true" />
-        <span class="sr-only">Sort by</span>
-        <select v-model="sort" class="h-6 bg-transparent pr-1 text-xs text-ink-soft hover:text-ink">
-          <option v-for="option in SORTS" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
-      </label>
+      <div class="-mr-1.5 ml-auto">
+        <UiSelect
+          v-model="sort"
+          :options="SORTS"
+          aria-label="Sort by"
+          variant="ghost"
+          align="end"
+        />
+      </div>
     </div>
 
     <TransitionGroup name="queue" tag="ul" class="relative divide-y">

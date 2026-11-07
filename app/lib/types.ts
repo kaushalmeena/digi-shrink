@@ -114,6 +114,14 @@ export interface SegmentOption<T extends string | number> {
   disabled?: boolean
 }
 
+export interface SelectOption<T extends string | number> {
+  value: T
+  label: string
+  /** Secondary line shown under the label in the open list. */
+  description?: string
+  disabled?: boolean
+}
+
 /** A named bundle of settings, surfaced as one-click chips in the UI. */
 export interface Preset {
   id: string
