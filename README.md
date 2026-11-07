@@ -8,13 +8,23 @@
 
 **Shrink images without giving them away.**
 
-A batch image compressor that runs **entirely on your own device** — no uploads, no accounts, no server. It uses the same WebAssembly codecs the pros do, reports honestly what you traded, and keeps working with the network switched off.
+A batch image compressor that runs **entirely on your own device** — no uploads, no accounts, no server. Pick your settings, drop images, download the results. It uses real WebAssembly codecs, reports honestly what you traded, and keeps working with the network switched off.
 
 [**Try it live**](https://kaushalmeena.github.io/digi-shrink/)
 
 </div>
 
 ---
+
+## Using It
+
+1. **Pick settings** — a preset (Balanced, Web ready, Max shrink, Lossless, …),
+   an output format and a quality, all on one bar. Everything else is under
+   **More options** (or press <kbd>S</kbd>).
+2. **Drop images** — anywhere on the window, a whole folder, or paste with
+   <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>V</kbd>. Compression starts straight away.
+3. **Download** — one image saves as itself; a batch saves as a ZIP or straight
+   into a folder you choose.
 
 ## Features
 
@@ -28,16 +38,24 @@ A batch image compressor that runs **entirely on your own device** — no upload
   compression alone.
 - **Batch everything** — drag and drop whole folders, paste from the clipboard,
   then export as a ZIP or straight into a folder you pick once.
+- **Compress on drop** — no extra button press. Change settings afterwards and
+  the app offers to re-compress just the results that are now out of date.
+- **Per-image quality** — override the quality for the one photo in a batch
+  that needs different treatment.
+- **Forgiving** — failed images get a one-click Retry with a plain-language
+  reason, and Clear all can be undone.
 - **Before/after slider** — a draggable divider, side-by-side view and zoom to
   400%, because most artefacts are invisible at "fit".
-- **Format lab** — encode one image to all four formats and compare real sizes
-  and timings instead of trusting rules of thumb.
+- **Compare formats** — encode one image to all four formats and compare real
+  sizes and timings instead of trusting rules of thumb.
 - **Honest reporting** — if a re-encode would come out _bigger_, the original
   file is kept and the app tells you so.
 - **Metadata stripped** — EXIF, GPS coordinates and camera details cannot
   survive the round trip.
 - **Offline-first PWA** — installable, works with the wifi off, and registers as
   a handler so the OS can offer it under "Open with…".
+- **Quiet, accessible interface** — light and dark themes, full keyboard
+  support, and reduced-motion respected without losing feedback.
 
 ## How It Works
 
