@@ -59,26 +59,41 @@ onKeyStroke(['s', 'S'], (event) => {
   <div class="flex min-h-dvh flex-col">
     <AppHeader :offline="isOffline" />
 
-    <main class="shell flex-1 space-y-3 py-6 sm:py-10">
-      <!-- Title only in the empty state; once there's work, the work is the title. -->
-      <div v-if="!hasItems" class="pb-4">
-        <h1 class="text-2xl">Compress images</h1>
-        <p class="mt-2 max-w-[65ch] text-base text-ink-soft">
-          Choose your settings, then drop images. They're compressed right here in your browser with
-          real codecs — MozJPEG, OxiPNG, WebP and AVIF.
-        </p>
+    <main class="shell flex-1 py-6 sm:py-10">
+      <!--
+        Title only in the empty state; once there's work, the work is the title.
+        It collapses (rather than vanishing) so the settings bar glides up into
+        its place instead of jumping.
+      -->
+      <div class="disclose" :data-open="!hasItems" :inert="hasItems">
+        <div>
+          <div class="pb-7">
+            <h1 class="text-2xl">Compress images</h1>
+            <p class="mt-2 max-w-[65ch] text-base text-ink-soft">
+              Choose your settings, then drop images. They're compressed right here in your browser
+              with real codecs — MozJPEG, OxiPNG, WebP and AVIF.
+            </p>
+          </div>
+        </div>
       </div>
 
       <CompressSettingsBar @open-advanced="openSettings" />
 
-      <Transition name="fade" mode="out-in">
-        <CompressDropZone v-if="!hasItems" />
+      <!--
+        Drop zone ↔ working view is a cross-fade in place (`swap`): the leaving
+        view is lifted out of flow while it fades, so the incoming one appears
+        immediately where it was, with no empty frame between them.
+      -->
+      <div class="relative mt-3">
+        <Transition name="swap">
+          <CompressDropZone v-if="!hasItems" />
 
-        <div v-else class="space-y-3">
-          <CompressSummary />
-          <CompressQueue @compare="openCompare" />
-        </div>
-      </Transition>
+          <div v-else class="space-y-3">
+            <CompressSummary />
+            <CompressQueue @compare="openCompare" />
+          </div>
+        </Transition>
+      </div>
     </main>
 
     <AppFooter />

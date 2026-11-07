@@ -99,11 +99,12 @@ watch(visible, (rows) => {
       </div>
     </div>
 
-    <TransitionGroup name="queue" tag="ul" class="relative divide-y">
+    <TransitionGroup name="queue" tag="ul" class="relative divide-y" appear>
       <CompressQueueRow
-        v-for="item in visible"
+        v-for="(item, index) in visible"
         :key="item.id"
         :item="item"
+        :style="{ '--stagger': Math.min(index, 8) }"
         @compare="emit('compare', $event)"
       />
     </TransitionGroup>

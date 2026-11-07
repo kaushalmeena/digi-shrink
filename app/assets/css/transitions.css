@@ -40,6 +40,34 @@
   transform: translateY(4px);
 }
 
+/* ---- swap: two views exchanging places --------------------------------- */
+/*
+ * The empty state ↔ working view change. Both run at once (no `mode`): the
+ * leaving view is taken out of flow and fades quickly; the arriving one rises
+ * the last few pixels into place just behind it. The parent must be
+ * `position: relative`.
+ */
+
+.swap-enter-active {
+  transition:
+    opacity 0.24s var(--ease-out-soft) 0.04s,
+    transform 0.3s var(--ease-out-soft) 0.04s;
+}
+.swap-leave-active {
+  transition: opacity 0.12s ease-in;
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  pointer-events: none;
+}
+.swap-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.swap-leave-to {
+  opacity: 0;
+}
+
 /* ---- offcanvas: scrim + sliding panel ------------------------------------ */
 /*
  * One transition on the dialog root drives both children via descendant
@@ -80,8 +108,13 @@
 
 /* ---- queue: TransitionGroup for the file list ---------------------------- */
 
+/* New rows cascade in when they arrive as a batch: `--stagger` is the row's
+   index, capped at 8 by the list, so the whole cascade stays under ~0.3s. */
 .queue-enter-active {
-  transition: opacity 0.2s var(--ease-out-soft);
+  transition:
+    opacity 0.2s var(--ease-out-soft),
+    transform 0.24s var(--ease-out-soft);
+  transition-delay: calc(var(--stagger, 0) * 30ms + 60ms);
 }
 .queue-leave-active {
   transition: opacity 0.12s ease-in;
@@ -89,7 +122,10 @@
   right: 0;
   left: 0;
 }
-.queue-enter-from,
+.queue-enter-from {
+  opacity: 0;
+  transform: translateY(4px);
+}
 .queue-leave-to {
   opacity: 0;
 }
@@ -126,7 +162,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .rise-enter-from,
-  .rise-leave-to {
+  .rise-leave-to,
+  .swap-enter-from,
+  .queue-enter-from {
     transform: none;
   }
 
