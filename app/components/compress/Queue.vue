@@ -43,9 +43,9 @@ const FILTERS = computed<SegmentOption<Filter>[]>(() => [
 ])
 
 const SORTS: SegmentOption<Sort>[] = [
-  { value: 'added', label: 'Added', title: 'Keep the order images were added' },
-  { value: 'savings', label: 'Savings', title: 'Biggest reduction first' },
-  { value: 'size', label: 'Size', title: 'Largest original first' },
+  { value: 'added', label: 'Order added' },
+  { value: 'savings', label: 'Most saved' },
+  { value: 'size', label: 'Largest' },
 ]
 
 const MATCHES: Record<Filter, (status: ItemStatus) => boolean> = {
@@ -78,9 +78,9 @@ watch(visible, (rows) => {
 </script>
 
 <template>
-  <section aria-labelledby="queue-heading" class="space-y-4">
-    <div class="flex flex-wrap items-center gap-3">
-      <h2 id="queue-heading" class="eyebrow text-ink-soft">Your images</h2>
+  <section aria-labelledby="queue-heading" class="overflow-hidden rounded-xl border bg-surface">
+    <div class="flex flex-wrap items-center gap-3 border-b px-4 py-2">
+      <h2 id="queue-heading" class="sr-only">Images</h2>
 
       <UiSegmented
         v-model="filter"
@@ -89,18 +89,22 @@ watch(visible, (rows) => {
         size="sm"
       />
 
-      <div class="ml-auto flex items-center gap-2">
-        <ArrowDownWideNarrow class="size-3.5 text-ink-soft" aria-hidden="true" />
-        <UiSegmented v-model="sort" :options="SORTS" aria-label="Sort images" size="sm" />
-      </div>
+      <label class="ml-auto flex items-center gap-1.5 text-xs text-ink-soft">
+        <ArrowDownWideNarrow class="size-3.5" aria-hidden="true" />
+        <span class="sr-only">Sort by</span>
+        <select v-model="sort" class="h-6 bg-transparent pr-1 text-xs text-ink-soft hover:text-ink">
+          <option v-for="option in SORTS" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </label>
     </div>
 
-    <TransitionGroup name="queue" tag="div" class="relative space-y-3">
+    <TransitionGroup name="queue" tag="ul" class="relative divide-y">
       <CompressQueueRow
-        v-for="(item, index) in visible"
+        v-for="item in visible"
         :key="item.id"
         :item="item"
-        :index="index"
         @compare="emit('compare', $event)"
       />
     </TransitionGroup>
