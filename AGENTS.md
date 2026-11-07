@@ -65,7 +65,7 @@ auto-fixable with `pnpm lint:fix`. Two things to know about that setup:
 
 - `settings["better-tailwindcss"].entryPoint` points at `app/assets/css/main.css`.
   Without it the plugin only knows stock Tailwind and reports every custom
-  `@utility` (`shell`, `label-caps`, `checker`, …) as unknown.
+  `@utility` (`shell`, `field-label`, `checker`, …) as unknown.
 - **It only lints template attributes, not `<script>` variables.** The class
   lookup maps the design-system components use (`VARIANTS`, `TONES`, `SIZES`, …)
   are invisible to it — the `variables` setting does not reach them inside a
@@ -124,7 +124,7 @@ colours only where they carry meaning, Inter, short eased motion. The tool is
 the whole page — no hero, no decoration.
 
 - Tokens and base styles: `app/assets/css/main.css`
-- Shared utilities: `app/assets/css/utilities.css` — `shell`, `label-caps`, `checker`
+- Shared utilities: `app/assets/css/utilities.css` — `shell`, `field-label`, `checker`
 - Motion: `app/assets/css/transitions.css` — use these `<Transition>` names
   (`fade`, `rise`, `offcanvas`, `queue`) rather than writing one-off
   animations. Height disclosure is the `disclose` **utility**, not a transition:

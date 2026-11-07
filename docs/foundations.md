@@ -48,10 +48,10 @@ Each status colour has a matching `-wash` for a pale background.
 
 [Inter](https://fonts.google.com/specimen/Inter) at 400/500/600, self-hosted by
 `@nuxt/fonts` so the offline PWA keeps it. The scale is deliberately tight
-(`text-base` is 14px): this is a dense tool, not a reading page. Numbers that
+with 16px body text; `text-sm` (14px) and `text-xs` (13px) are reserved for dense UI roles such as file rows and metadata. Numbers that
 change in place get `data-numeric` for tabular figures.
 
-`label-caps` is the small uppercase label used for the settings bar.
+`field-label` is the sentence-case inline label used in the settings bar. No uppercase tracked labels or eyebrows above headings.
 
 ## Radii and motion
 

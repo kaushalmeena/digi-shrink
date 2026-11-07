@@ -18,7 +18,7 @@ Two rules shape every decision below:
 app/
 ├── assets/css/
 │   ├── main.css           Design tokens and base styles
-│   ├── utilities.css      Shared Tailwind utilities (shell, label-caps, checker)
+│   ├── utilities.css      Shared Tailwind utilities (shell, field-label, checker)
 │   └── transitions.css    Shared <Transition> vocabulary
 ├── components/
 │   ├── ui/                Design-system primitives (Button, Card, Segmented, …)

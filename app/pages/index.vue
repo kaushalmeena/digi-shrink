@@ -61,9 +61,9 @@ onKeyStroke(['s', 'S'], (event) => {
 
     <main class="shell flex-1 space-y-3 py-6 sm:py-10">
       <!-- Title only in the empty state; once there's work, the work is the title. -->
-      <div v-if="!hasItems" class="pb-3">
+      <div v-if="!hasItems" class="pb-4">
         <h1 class="text-2xl">Compress images</h1>
-        <p class="mt-1 text-sm text-ink-soft">
+        <p class="mt-2 max-w-[65ch] text-base text-ink-soft">
           Choose your settings, then drop images. They're compressed right here in your browser with
           real codecs — MozJPEG, OxiPNG, WebP and AVIF.
         </p>

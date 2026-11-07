@@ -18,7 +18,7 @@
 ## CSS utilities (`app/assets/css/utilities.css`)
 
 - **`shell`** — page width (56rem) and side gutters.
-- **`label-caps`** — small uppercase label.
+- **`field-label`** — sentence-case inline control label.
 - **`checker`** — checkerboard behind thumbnails and the compare view, so
   transparency reads as transparency.
 
